@@ -285,6 +285,16 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 .chip.tap{cursor:pointer;color:var(--ink);font:inherit;font-size:.8rem;display:inline-flex;align-items:center;gap:4px}
 .chip.tap i{font-style:normal;font-weight:800;color:var(--turf);margin-left:2px}
 .adjn{border-left:3px solid var(--warn);padding-left:8px}
+.lwmine{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}
+.lwmine button{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 .85rem var(--body);padding:8px;border-radius:99px;cursor:pointer}
+.lwmine button[aria-pressed="true"]{border-color:var(--turf);color:var(--turf);background:color-mix(in srgb,var(--turf) 12%,transparent)}
+.tile.mine{border-color:var(--turf);box-shadow:0 0 0 1px var(--turf),0 0 14px -4px var(--turf)}
+.tbets{display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.tbet{display:grid;grid-template-columns:1fr auto;column-gap:6px;align-items:baseline;padding:3px 6px;border-radius:5px;background:color-mix(in srgb,var(--turf) 22%,transparent);font-size:.72rem}
+.tbet .tbp{font-weight:700;color:var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.tbet b{font-family:var(--mono);color:var(--turf)}
+.tbet .tbn{grid-column:1/-1;font-size:.64rem;color:var(--muted)}
+.tbet.up{background:color-mix(in srgb,var(--good) 22%,transparent)}.tbet.up b{color:var(--good)}
+.tbet.dn{background:color-mix(in srgb,var(--bad) 20%,transparent)}.tbet.dn b{color:var(--bad)}
 </style>
 
 </head>
@@ -329,6 +339,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
     <div class="subtabs" role="tablist" aria-label="Live view"><button type="button" class="subtab" data-sub="scores" aria-pressed="true">Scores</button><button type="button" class="subtab" data-sub="status" aria-pressed="false">Player status<span id="lwStCount" class="cnt"></span></button></div>
   </div>
   <div id="lwScores">
+    <div class="lwmine" role="group" aria-label="Which games"><button type="button" data-mine="0">All games</button><button type="button" data-mine="1">My ticket <span id="lwMineN"></span></button></div>
     <div id="lwList"><div class="empty">Loading…</div></div>
     <details class="lwhelp"><summary>What the tiles show</summary><p class="note">Each tile shows the clock, both teams, the score and the app's live win chance. Scores update every 30 seconds while this tab is open. A red edge means <b>Close finish</b> (late and near 50/50). An orange edge means <b>Upset watch</b> (the pregame favorite is losing). A green arrow shows a big swing in the last few minutes. Tap a tile for the situation, latest plays, top performers and in-game injuries.</p></details>
   </div>
@@ -562,7 +573,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
   </div>
   <div class="card">
     <h2>Bet types, plainly</h2>
-    <details><summary>Ticket: copying picks into DraftKings</summary><p>Tap <b>+ Ticket</b> on a game, a parlay or a player prop to collect picks. In leaderboards and player cards, the gold <b>+</b> adds that exact pick, and you can tap any chance chip (like <b>Anytime TD 18%</b> or <b>75+ 36%</b>) to add it. <b>DK ›</b> on any row opens DraftKings at that team's or game's page. The gold <b>Ticket</b> button at the bottom right opens your list with each pick's chance, the combined chance and the fair parlay odds. <b>Find in DraftKings</b> opens that team's odds page in DraftKings, and the gray line under each pick shows where to tap there. Tick each pick off as you add it. DraftKings doesn't let outside apps fill in your betslip, so you still tap the picks in DraftKings yourself. When you've placed the bet, tap <b>Log to Tracker</b> and enter the odds and stake from your DraftKings slip.</p></details>
+    <details><summary>Ticket: copying picks into DraftKings</summary><p>Tap <b>+ Ticket</b> on a game, a parlay or a player prop to collect picks. In leaderboards and player cards, the gold <b>+</b> adds that exact pick, and you can tap any chance chip (like <b>Anytime TD 18%</b> or <b>75+ 36%</b>) to add it. <b>DK ›</b> on any row opens DraftKings at that team's or game's page. The gold <b>Ticket</b> button at the bottom right opens your list with each pick's chance, the combined chance and the fair parlay odds. <b>Find in DraftKings</b> opens that team's odds page in DraftKings, and the gray line under each pick shows where to tap there. Tick each pick off as you add it. On the Live tab, games on your ticket get a gold outline and a strip for each pick showing its live chance and whether it's going your way (green) or not (red). Tap <b>My ticket</b> there to see only those games. DraftKings doesn't let outside apps fill in your betslip, so you still tap the picks in DraftKings yourself. When you've placed the bet, tap <b>Log to Tracker</b> and enter the odds and stake from your DraftKings slip.</p></details>
     <details><summary>Weather and quarterback news</summary><p>For outdoor NFL and college games, Linecheck checks the forecast at the stadium for kickoff (free data from Open-Meteo). Wind over 10 mph lowers the projected total by about a third of a point per mph, up to 8 points. Steady rain takes off about 1.5 points, snow 2.5, and temperatures below 25°F 1 more. Domes are skipped. For NFL games, if a team's starting quarterback (its season passing leader) is listed Out on ESPN's injury report, that team's projection drops 4.5 points; Doubtful counts three-quarters as much. College injury reports aren't published reliably, so college QB news isn't included. A yellow note on the game shows any change.</p></details>
     <details><summary>How injuries change the picks</summary><p><b>NFL:</b> a starting quarterback listed Out lowers his team 4.5 points (Doubtful, three-quarters of that). Players listed Out are left off NFL props. <b>NBA:</b> each player listed Out lowers his team by up to 7 points depending on how much he scores and plays (Doubtful three-quarters, Questionable about a third). Teammates' prop projections go up a little to pick up the missing scoring. <b>WNBA:</b> same as NBA, scaled for the WNBA. <b>NHL:</b> if a team's main goalie (most starts) is listed Out, the backup is expected to start and the team gives up about 0.3 more goals. <b>MLB:</b> each team's probable starting pitcher shifts the runs it's expected to allow, based on his ERA (blended toward league average when he hasn't pitched much, up to 1.2 runs either way). A regular hitter listed Out lowers his team's runs by up to 0.3, depending on how much he produces. A player who has missed most of the season counts less, because the team's results already reflect playing without him. Notes on each game show what changed. College football, college basketball and soccer injuries aren't included, because ESPN doesn't publish usable injury reports for them.</p></details>
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
@@ -1924,7 +1935,7 @@ async function lwInjuries(lg){const c=LW.inj[lg];if(c&&Date.now()-c.at<10*60e3)r
     LW.inj[lg]={at:Date.now(),v};cache.set("inj-"+lg,{at:Date.now(),v});return v}
   catch(e){const s=cache.get("inj-"+lg);if(s){LW.inj[lg]={at:Date.now()-9*60e3,v:s.v};return s.v}return null}}
 function lwLeftEarly(i){if(!LEFTRX.test(i.c||""))return false;const t=Date.parse(i.date);return isFinite(t)&&Date.now()-t<20*3600e3}
-function lwGames(){const all=[];Object.keys(LEAGUES).forEach(lg=>{if(LG!=="all"&&LG!==lg)return;const s=D[lg];((s.live&&s.live.games)||[]).forEach(g0=>all.push({...g0,lg}))});return all}
+function lwGames(){const all=[];const mine=LW.mine&&typeof TK!=="undefined";const keys=mine?new Set(TK.map(l=>l.key)):null;Object.keys(LEAGUES).forEach(lg=>{if(!mine&&LG!=="all"&&LG!==lg)return;const s=D[lg];((s.live&&s.live.games)||[]).forEach(g0=>{if(!keys||keys.has(lg+":"+g0.id))all.push({...g0,lg})})});return all}
 function lwBody(g){const v=LW.sum[g.lg+":"+g.id];if(!v)return`<p class="note">Loading…</p>`;const s=v.v;if(!s)return`<p class="note">No play-by-play for this game yet.</p>`;let h="";
   if(s.hurt.length)h+=`<h4>Injuries during this game</h4><ul class="plays">${s.hurt.slice(-4).reverse().map(x=>`<li><span class="badge st-out">Hurt</span> ${esc(x.w?x.w+" · ":"")}${esc(x.t)}</li>`).join("")}</ul>`;
   if(s.recent.length)h+=`<h4>${g.lg==="soc"?"Key moments":"Latest plays"}</h4><ul class="plays">${s.recent.map(x=>`<li>${x.s?"<b>":""}${esc(x.w?x.w+" · ":"")}${esc(x.t.slice(0,200))}${x.s?"</b>":""}</li>`).join("")}</ul>`;
@@ -1953,6 +1964,20 @@ function tileRows(g,md,live,fin){const sc=g.score||{},sh=sc[g.home],sa=sc[g.away
   return r(g.away,md&&md.pA)+r(g.home,md&&md.pH)}
 function lsTable(g){const LI=lsInfo(g);if(!LI||!(g.score))return"";const sc=g.score;
   return`<div class="lstab"><table><tr><th></th>${LI.labs.map(l=>`<th>${l}</th>`).join("")}<th>T</th></tr>${[g.away,g.home].map(c=>{const arr=c===g.home?g.ls.h:g.ls.a;return`<tr><td>${esc(tAbbr(g,c))}</td>${LI.labs.map((_,i)=>`<td>${arr[i]!=null?arr[i]:""}</td>`).join("")}<td class="tot">${sc[c]??""}</td></tr>`}).join("")}</table></div>`}
+function legSide(l,g){if(l.side!=null)return String(l.side);if(!l.tname)return null;return [g.home,g.away].map(String).find(c=>tname(g,c)===l.tname)||null}
+function legLine(l){if(l.line!=null)return +l.line;const m=String(l.pick).match(/([+-]?\d+(?:\.\d+)?)(?!.*\d)/);return m?+m[1]:null}
+function legLive(l,g){const live=isLive(g),fin=DONE.includes(g.status)&&g.status!=="postponed",sc=g.score||{};const sh=+sc[g.home]||0,sa=+sc[g.away]||0;
+  if(!live&&!fin)return{lab:l.p!=null?pct(l.p,0):"",cls:"",note:"Not started"};
+  const L=LEAGUES[g.lg],md=model(g),gp=["ten","mma"].includes(g.lg)||g.field?null:gameProj(g);const res=(ok,push)=>push?{lab:"Push",cls:"eq",note:"Final"}:ok?{lab:"Won",cls:"up",note:"Final"}:{lab:"Lost",cls:"dn",note:"Final"};
+  const side=legSide(l,g),ln=legLine(l),isH=side===String(g.home);
+  if(l.type==="Moneyline"&&/^Draw/i.test(l.pick)){if(fin)return res(sh===sa);const p=md&&md.pD!=null?md.pD:null;return{lab:p!=null?pct(p,0):"",cls:sh===sa?"up":"dn",note:sh===sa?"Level now":"Not level"}}
+  if(l.type==="Moneyline"&&side){const my=isH?sh:sa,op=isH?sa:sh;if(fin)return res(my>op,my===op);const p=md?(isH?md.pH:md.pA):null;return{lab:p!=null?pct(p,0):"",cls:my>op?"up":my<op?"dn":"eq",note:my>op?`Up ${my-op}`:my<op?`Down ${op-my}`:"Tied"}}
+  if(l.type==="Spread"&&side&&ln!=null){const d=(isH?sh-sa:sa-sh)+ln;if(fin)return res(d>0,d===0);let p=null;if(gp){const mm=(isH?gp.h-gp.a:gp.a-gp.h)+ln;p=Phi(mm/(L.sd*gp.sdF))}return{lab:p!=null?pct(p,0):"",cls:d>0?"up":d<0?"dn":"eq",note:d>0?"Covering":d<0?"Not covering":"On the number"}}
+  if(l.type==="Total"&&ln!=null){const over=/^over/i.test(l.pick),cur=sh+sa;if(fin)return res(over?cur>ln:cur<ln,cur===ln);if(over&&cur>ln)return{lab:"Won",cls:"up",note:`Total ${cur}, already over`};if(!over&&cur>ln)return{lab:"Lost",cls:"dn",note:`Total ${cur}, already over`};
+    let p=null,pace=null;if(gp){pace=gp.tot;const po=Phi((gp.tot-(Number.isInteger(ln)?ln+0.5:ln))/(L.tsd*gp.sdF));p=over?po:1-po}return{lab:p!=null?pct(p,0):"",cls:p==null?"":p>=0.5?"up":"dn",note:`Total ${cur}${pace!=null?`, on pace for ${Math.round(pace)}`:""}`}}
+  return{lab:fin?"Final":"Live",cls:"",note:"Check the player's stats in the game"}}
+function tileBets(g){if(typeof TK==="undefined")return"";const legs=TK.filter(l=>l.key===g.lg+":"+g.id);if(!legs.length)return"";
+  return`<div class="tbets">${legs.map(l=>{const s=legLive(l,g);const short_=String(l.pick).replace(/\s*\([^)]*@[^)]*\)\s*$/,"");return`<div class="tbet ${s.cls}"><span class="tbp">${esc(short_)}</span><b>${esc(s.lab)}</b><span class="tbn">${esc(s.note)}</span></div>`}).join("")}</div>`}
 function lwTile(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||{},k=g.lg+":"+g.id,sel=LW.sel===k;
   const meta=`<div class="tmeta"><span>${live?`<span class="ldot" aria-hidden="true"></span>${esc(fmtClock(g)||"Live")}`:fin?"Final":esc(new Date(g.start_time).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}))}</span><span class="ico" title="${esc(LEAGUES[g.lg].label)}">${icon(g.lg)}</span></div>`;
   if(g.field)return`<button type="button" class="tile${sel?" sel":""}" data-k="${esc(k)}">${meta}<div class="trow"><span class="ab">${esc(g.name||g.title||"Event")}</span></div><div class="tflag">Leaderboard on Games</div></button>`;
@@ -1961,7 +1986,7 @@ function lwTile(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||
     let fl=[];if(F.close)fl.push(`<span class="cl">Close finish</span>`);if(F.upset)fl.push(`<span class="us">Upset watch</span>`);
   if(live&&md){const s=lwSwing(g,md.pH);if(s)fl.push(`<span class="up">▲ ${esc(tAbbr(g,s.d>0?g.home:g.away))} +${Math.round(Math.abs(s.d)*100)}</span>`)}
   if(md&&md.pD!=null)fl.push(`Draw ${pct(md.pD,0)}`);{const LI=g.lg==="mlb"?null:lsInfo(g);if(md&&LI&&LI.labs.length>4&&(live||fin)){const fav=md.pH>=md.pA?g.home:g.away;fl.push(`${esc(tAbbr(g,fav))} ${pct(Math.max(md.pH,md.pA),0)} to win`)}}if(!live&&!fin&&g.sit==null&&!fl.length&&g.title)fl.push(esc(g.title));
-  return`<button type="button" class="tile${sel?" sel":""}${F.close?" close":F.upset?" upset":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div></button>`}
+  const tb=tileBets(g);return`<button type="button" class="tile${sel?" sel":""}${F.close?" close":F.upset?" upset":""}${tb?" mine":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div>${tb}</button>`}
 function lwDetail(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||{},md=fin?null:model(g);
   const side=(c,p)=>`<div class="tm"><div class="nm">${esc(tname(g,c))}${haTag(g,c)}<small>${esc(rec(g,c))}</small></div><div class="sc">${(live||fin)&&sc[c]!=null?sc[c]:""}</div><div class="pc">${md&&p!=null?pct(p,0):""}</div></div>`;
   if(g.field)return`<div class="tdet"><b>${esc(g.name||g.title||"")}</b><p class="note">${live?"In progress. ":""}The leaderboard and finishing chances are on the Games tab.</p></div>`;
@@ -1971,7 +1996,7 @@ function lwDetail(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score
   return`<div class="tdet"><div class="meta" style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:600"><span>${live?`<span class="live">Live</span> ${esc(fmtClock(g))}`:fin?"Final":esc(whenTxt(g))}</span><span class="lgtag">${icon(g.lg)}${esc(LEAGUES[g.lg].label)}${g.title?" · "+esc(g.title):""}</span></div>
     ${side(g.away,md&&md.pA)}${side(g.home,md&&md.pH)}${md&&md.pD!=null?`<div class="tm"><div class="nm drw">Draw</div><div class="sc"></div><div class="pc">${pct(md.pD,0)}</div></div>`:""}
     ${md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}
-    ${(live||fin)?lsTable(g):""}${sit?`<div class="note">${sit}</div>`:""}${sw?`<div>${sw}</div>`:""}
+    ${tileBets(g)?`<div><div class="note"><b>Your ticket</b></div>${tileBets(g)}</div>`:""}${(live||fin)?lsTable(g):""}${sit?`<div class="note">${sit}</div>`:""}${sw?`<div>${sw}</div>`:""}
     ${canX?`<div class="lwbody">${lwBody(g)}</div>`:!live&&!fin?`<p class="note">Starts ${esc(whenTxt(g))}. Full pregame markets are on the Games tab.</p>`:""}
     <div class="row" style="justify-content:flex-end;gap:6px"><button type="button" class="btn sm ghost" data-log="${esc(JSON.stringify({key:g.lg+":"+g.id}))}">Log bet</button>${fin?"":`<button type="button" class="btn sm tkb" data-tkgame="${esc(g.lg+":"+g.id)}">+ Ticket</button>`+dkA(g,null,"btnlike")}</div></div>`}
 function lwInjRow(i){return`<div class="injrow"><span class="badge ${stCls(i.st)}">${esc(lwLeftEarly(i)?"Left early":i.st)}</span><span><b>${esc(i.n)}</b> ${esc(i.pos)}${i.why?" · "+esc(i.why):""}${i.ret&&stSev(i.st)<=1?` · back ${esc(new Date(i.ret+"T12:00:00").toLocaleDateString([], {month:"short",day:"numeric"}))}?`:""}</span>${i.c?`<span class="why">${esc(i.c.slice(0,220))}</span>`:""}</div>`}
@@ -1996,18 +2021,21 @@ function lwDraw(live,soon,fin){const y=window.scrollY;const fin8=fin.slice(0,12)
   const sec=(t,l)=>{if(!l.length)return"";let out=`<h3 class="tsec">${t} (${l.length})</h3>`;const lgs=Object.keys(LEAGUES).filter(k=>l.some(g=>g.lg===k));
     if(lgs.length<2)return out+grp(l);
     lgs.forEach(k=>{const sub=l.filter(g=>g.lg===k);out+=`<h4 class="tgrp">${icon(k)}${esc(LEAGUES[k].label)} <span>${sub.length}</span></h4>`+grp(sub)});return out};
-  $("lwList").innerHTML=(live.length?"":`<div class="empty">No ${LG==="all"?"":esc(LEAGUES[LG].label)+" "}games are live right now.${soon.length?" Here's what starts soon.":""}</div>`)+`<div class="tiles">${sec("Live now",live)}${sec("Starting soon",soon)}${sec("Final today",fin8)}</div>`;
+  $("lwList").innerHTML=(LW.mine&&!every.length?`<div class="empty">${TK.length?"None of your ticket's games are live, starting soon or finished today.":"Your ticket is empty. Tap <b>+ Ticket</b> on games and props to follow them here."}</div>`:live.length?"":`<div class="empty">No ${LW.mine?"ticket":LG==="all"?"":esc(LEAGUES[LG].label)+" "}games are live right now.${soon.length?" Here's what starts soon.":""}</div>`)+`<div class="tiles">${sec("Live now",live)}${sec(LW.mine?"Coming up":"Starting soon",soon)}${sec("Final today",fin8)}</div>`;
   $("lwList").querySelectorAll(".tile").forEach(t=>t.addEventListener("click",async()=>{const k=t.dataset.k;LW.sel=LW.sel===k?null:k;lwDraw(live,soon,fin);
     const g=live.find(x=>x.lg+":"+x.id===k);if(g&&LW.sel===k&&!g.field&&g.lg!=="ten"&&g.lg!=="mma"){await lwSummary(g);if(LW.sel===k)lwDraw(live,soon,fin)}}));
   if(window.scrollY!==y)window.scrollTo(0,y)}
+function lwMine(v){LW.mine=!!v;try{localStorage.setItem("ge-lwmine",LW.mine?"1":"0")}catch(e){}document.querySelectorAll(".lwmine button").forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.mine==="1")===LW.mine)));LW.sel=null;renderLive()}
+document.querySelectorAll(".lwmine button").forEach(b=>b.addEventListener("click",()=>lwMine(b.dataset.mine==="1")));
+try{LW.mine=localStorage.getItem("ge-lwmine")==="1"}catch(e){}document.querySelectorAll(".lwmine button").forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.mine==="1")===!!LW.mine)));
 function lwSub(s){LW.sub=s;try{localStorage.setItem("ge-lwsub",s)}catch(e){}document.querySelectorAll(".subtab").forEach(b=>b.setAttribute("aria-pressed",b.dataset.sub===s));$("lwScores").hidden=s!=="scores";$("lwStatus").hidden=s!=="status"}
 document.querySelectorAll(".subtab").forEach(b=>b.addEventListener("click",()=>lwSub(b.dataset.sub)));
 try{lwSub(localStorage.getItem("ge-lwsub")||"scores")}catch(e){lwSub("scores")}
 async function renderLive(){if($("p-live").hidden)return;
-  $("lwFilterNote").textContent=`Showing: ${filterText()}. Change the sport and day at the top.`;
+  $("lwFilterNote").textContent=LW.mine?"Showing: games on your ticket, all sports.":`Showing: ${filterText()}. Change the sport and day at the top.`;try{const n=$("lwMineN");if(n)n.textContent=TK.length?`(${TK.length})`:""}catch(e){}
   const all=lwGames(),now=Date.now();
   const live=all.filter(g=>isLive(g)&&g.status!=="postponed");
-  const soon=all.filter(g=>!isLive(g)&&!DONE.includes(g.status)&&!g.field&&Date.parse(g.start_time)>now-30*60e3&&Date.parse(g.start_time)<now+3*3600e3).sort((a,b)=>Date.parse(a.start_time)-Date.parse(b.start_time));
+  const soon=all.filter(g=>!isLive(g)&&!DONE.includes(g.status)&&!g.field&&Date.parse(g.start_time)>now-30*60e3&&Date.parse(g.start_time)<now+(LW.mine?8*864e5:3*3600e3)).sort((a,b)=>Date.parse(a.start_time)-Date.parse(b.start_time));
   const fin=all.filter(g=>DONE.includes(g.status)&&g.status!=="postponed"&&!g.field&&Date.parse(g.start_time)>now-8*3600e3).sort((a,b)=>Date.parse(b.start_time)-Date.parse(a.start_time));
   $("lwTag").textContent=live.length?`${live.length} live`:"None live";
   lwDraw(live,soon,fin);
@@ -2042,7 +2070,7 @@ window.addEventListener("resize",()=>document.querySelectorAll(SCSEL).forEach(sc
 armAll();
 /* --- ticket: build picks here, copy them into DraftKings --- */
 let TK=[];try{TK=JSON.parse(localStorage.getItem("ge-ticket")||"[]")||[]}catch(e){TK=[]}
-function tkSave(){try{localStorage.setItem("ge-ticket",JSON.stringify(TK))}catch(e){}tkFab()}
+function tkSave(){setTimeout(()=>{try{const n=$("lwMineN");if(n)n.textContent=TK.length?`(${TK.length})`:"";if(!$("p-live").hidden)renderLive()}catch(e){}},0);try{localStorage.setItem("ge-ticket",JSON.stringify(TK))}catch(e){}tkFab()}
 function dkUrl(l){const s=DKSP[l.lg];if(l.player&&s)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.player)}--odds`;if(l.ev)return l.ev;if(s&&l.tname)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.tname)}--odds`;if(s)return`${DKB}/leagues/${s[0]}/${s[1]}`;return DKB+(DKLG[l.lg]||"")}
 function dkPath(l){if(l.player&&DKSP[l.lg])return`DraftKings search for ${l.player} › pick the prop`;if(!l.ev&&l.type==="Prop")return`Team page › tap the ${l.game} game › Player props`;const where=l.type==="Prop"?"Player props":l.type==="Total"?"Game lines › Total":l.type==="Spread"?"Game lines › Spread":"Game lines › Moneyline";return`${LEAGUES[l.lg]?LEAGUES[l.lg].label:""} › ${l.game} › ${where}`}
 function tkToast(t){let el=$("tkToast");if(!el){el=document.createElement("div");el.id="tkToast";el.setAttribute("role","status");document.body.appendChild(el)}el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1800)}
@@ -2060,7 +2088,7 @@ function tkOpen(){TK.forEach(l=>{if(!l.ev&&!l.evTried)setTimeout(()=>tkEv(l),0)}
   const p=sheet(`<div class="tkhead"><h2>Your ticket <span class="note">${TK.length} pick${TK.length===1?"":"s"}</span></h2><button type="button" class="tkx" aria-label="Close">×</button></div>
    ${TK.length?`<p class="note">Open DraftKings, add each pick, and tick it off here. Picks are saved until you clear them.</p>
    <ol class="tklist">${TK.map(l=>`<li class="${l.done?"done":""}"><label class="tkchk"><input type="checkbox" data-id="${l.id}" ${l.done?"checked":""} aria-label="Added in DraftKings"></label>
-     <div class="tkbody"><div class="tkpick">${icon(l.lg)}<b>${esc(l.pick)}</b>${l.p!=null?`<span class="tkp">${pct(l.p,0)}</span>`:""}</div>
+     <div class="tkbody"><div class="tkpick">${icon(l.lg)}<b>${esc(l.pick)}</b>${l.p!=null?`<span class="tkp">${pct(l.p,0)}</span>`:""}</div>${(()=>{const g=findGame(l.key);if(!g||(!isLive(g)&&!DONE.includes(g.status)))return"";const s=legLive(l,g);return`<div class="tbet ${s.cls}"><span class="tbp">${isLive(g)?"Live":"Final"}</span><b>${esc(s.lab)}</b><span class="tbn">${esc(s.note)}</span></div>`})()}
      <div class="note">${esc(l.game)}${l.when?" · "+esc(new Date(l.when).toLocaleString([], {weekday:"short",hour:"numeric",minute:"2-digit"})):""}</div>
      <div class="note tkpath">${esc(dkPath(l))}</div>
      <div class="row" style="gap:6px;margin-top:4px"><a class="btn sm ghost" href="${esc(dkUrl(l))}" target="_blank" rel="noopener">${l.ev?"Open game in DraftKings ›":"Find in DraftKings ›"}</a><button type="button" class="btn sm ghost tkrm" data-id="${l.id}">Remove</button></div></div></li>`).join("")}</ol>
@@ -2100,10 +2128,10 @@ function tkGame(key){const g=findGame(key)||(()=>{const i=key.indexOf(":"),lg=ke
     let pO=null;if(gp&&!live){const sd=g.lg==="soc"?Math.sqrt(Math.max(gp.preTot,0.5)):L.tsd;pO=g.lg==="soc"?(()=>{let c=0,k=0,lam=gp.preTot,term=Math.exp(-lam);for(k=0;k<=Math.floor(t);k++){c+=term;term*=lam/(k+1)}return 1-c})():Phi((gp.preTot-t)/sd)}
     box.innerHTML=[["Over",pO],["Under",pO!=null?1-pO:null]].map(([o,pp])=>`<button type="button" class="tkopt" data-k="tot" data-o="${o}" data-v="${t}" data-p="${pp!=null?pp:""}"><span>${o} ${t}</span><b>${pp!=null?pct(pp,0):""}</b></button>`).join("");wire(box)};
   const wire=box=>box.querySelectorAll(".tkopt").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k,c=b.dataset.c;let leg;
-    if(k==="ml")leg={...base,type:"Moneyline",pick:`${nm(c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`,p:md?(c===g.home?md.pH:md.pA):null,tname:tname(g,c)};
+    if(k==="ml")leg={...base,type:"Moneyline",pick:`${nm(c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`,p:md?(c===g.home?md.pH:md.pA):null,tname:tname(g,c),side:String(c)};
     else if(k==="draw")leg={...base,type:"Moneyline",pick:`Draw (${base.game})`,p:md.pD,tname:tname(g,g.home)};
-    else if(k==="sp"){const v=+b.dataset.v;leg={...base,type:"Spread",pick:`${nm(c)} ${v>0?"+"+v:v}`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,c)}}
-    else leg={...base,type:"Total",pick:`${b.dataset.o} ${b.dataset.v} (${base.game})`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,g.home)};
+    else if(k==="sp"){const v=+b.dataset.v;leg={...base,type:"Spread",pick:`${nm(c)} ${v>0?"+"+v:v}`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,c),side:String(c),line:v}}
+    else leg={...base,type:"Total",pick:`${b.dataset.o} ${b.dataset.v} (${base.game})`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,g.home),line:+b.dataset.v};
     tkAdd(leg);sheetClose()}));
   wire(p.querySelector(".tkopts"));spOpts();totOpts();
   const a=$("tkSp");if(a)a.addEventListener("input",()=>{a.dataset.ed=1;spOpts()});const b=$("tkTot");if(b)b.addEventListener("input",()=>{b.dataset.ed=1;totOpts()});
@@ -2120,7 +2148,7 @@ function tkProp(btn){const box=btn.closest(".chk,.xchk,.row");if(!box)return;con
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-tkgame],[data-tkprop],[data-tkparlay]");if(!t)return;e.preventDefault();
   if(t.dataset.tkgame)tkGame(t.dataset.tkgame);else if(t.dataset.tkprop!=null)tkProp(t);
   else{try{const legs=JSON.parse(t.dataset.tkparlay);let n=0;legs.forEach(x=>{const g=findGame(x.key);if(!g)return;const md=model(g);const c=x.team;
-    const leg={...legBase(g),type:"Moneyline",pick:`${short(g,c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`,p:md?(c===g.home?md.pH:md.pA):null,tname:tname(g,c)};
+    const leg={...legBase(g),type:"Moneyline",pick:`${short(g,c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`,p:md?(c===g.home?md.pH:md.pA):null,tname:tname(g,c),side:String(c)};
     if(!TK.some(y=>y.key===leg.key&&y.pick===leg.pick)){TK.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),done:false,...leg});n++}});tkSave();tkToast(n?`Added ${n} pick${n===1?"":"s"} to your ticket`:"Already on your ticket")}catch(err){}}});
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-tkq]");if(!t)return;e.preventDefault();e.stopPropagation();
   try{const q=JSON.parse(t.dataset.tkq);const g=findGame(q.key);if(!g)return;tkAdd({...legBase(g),type:q.type,pick:q.pick,p:q.p,tname:q.tid?tname(g,q.tid):tname(g,g.home),player:q.player||undefined});t.classList.add("on");setTimeout(()=>t.classList.remove("on"),900)}catch(err){}});
