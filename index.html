@@ -313,6 +313,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 .pctap{cursor:pointer;border-radius:7px;padding:0 4px;border:1px dashed color-mix(in srgb,var(--turf) 45%,transparent)}.pctap::after{content:"+";font-size:.7em;margin-left:2px;color:var(--turf)}.pctap.onTk{background:color-mix(in srgb,var(--turf) 22%,transparent);border-style:solid}.pctap.onTk::after{content:"✓"}
 .tkopt.sel{border-color:var(--turf);background:var(--turf);color:var(--bg)}.tkopt.sel b,.tkopt.sel::after{color:var(--bg)}.tkopt.sel::after{content:"✓";font-size:1rem}
 .tkopt.added:not(.sel)::after{content:"On ticket";font-size:.68rem}
+.dkupd{font-size:.72rem;color:var(--muted)}
 </style>
 
 </head>
@@ -1326,7 +1327,8 @@ const NBA_TOT_SD=17;
 function nbaLineHtml(g){const p=nbaProj(g);if(!p)return"";const b2b=[g.b2bA&&short(g,g.away),g.b2bH&&short(g,g.home)].filter(Boolean);
   return`<div class="note">Proj score ${esc(short(g,g.away))} ${Math.round(p.a)} – ${Math.round(p.h)} ${esc(short(g,g.home))} · Total ${(Math.round(p.tot*2)/2).toFixed(1)}</div>${b2b.length?`<div class="note"><span class="chip td">Back-to-back</span> ${esc(b2b.join(" and "))} played yesterday (tired legs, -${NBA_REST} pts).</div>`:""}`}
 /* --- totals, team totals, live projections, next TD --- */
-const lineMem={},openMem=new Set();let pendingRender=false;
+const lineMem={},openMem=new Set(),MANUAL=new Set();
+function dkBox(g,f){const c=DKC[g.lg+":"+g.id],v=c&&c.v;if(!v)return null;if(f==="t")return v.total;if(f==="s")return v.spread;if(f==="h"||f==="a"){const te=dkTeamEst(g);return te?te[f]:null}return null}let pendingRender=false;
 function lgAvgPts(lg){const T=D[lg].teams&&D[lg].teams.teams;const a=T?Object.values(T).filter(t=>t.pf!=null&&t.gp):[];return a.length?a.reduce((s,t)=>s+t.pf/t.gp,0)/a.length:LEAGUES[lg].avg}
 function teamOD(lg,id){const t=teamInfo(lg,id);if(!t)return null;if(t.off!=null&&t.def!=null)return{off:t.off,def:t.def};
   if(t.pf==null||t.pa==null||!t.gp)return null;const avg=lgAvgPts(lg),w=t.gp/(t.gp+3);return{off:avg+(t.pf/t.gp-avg)*w,def:avg+(t.pa/t.gp-avg)*w}}
@@ -1351,22 +1353,22 @@ function nextTD(g){const p=gameProj(g);if(!p)return null;const r=p.live?p.r:1;
 function totalsHtml(g){const p=gameProj(g);if(!p)return"";const L=LEAGUES[g.lg],key=g.lg+":"+g.id,A=short(g,g.away),H=short(g,g.home);
   const head=p.live?`Live projection: ${esc(A)} ${Math.round(p.a)} – ${Math.round(p.h)} ${esc(H)} · Final total ${half(p.tot)}`:`Proj score ${esc(A)} ${Math.round(p.a)} – ${Math.round(p.h)} ${esc(H)} · Total ${half(p.tot)}`;
   const b2b=g.lg==="nba"&&!p.live?[g.b2bA&&A,g.b2bH&&H].filter(Boolean):[];
-  const fld=(f,label,proj,sd,min)=>{const v=lineMem[key+f]??"";const o=v!==""&&isFinite(+v)?ouTxt(proj,sd,+v,min):"";
+  const fld=(f,label,proj,sd,min)=>{const dv=dkBox(g,f);const v=MANUAL.has(key+f)?(lineMem[key+f]??""):dv!=null?String(dv):(lineMem[key+f]??(f==="t"?(Math.round(proj*2)/2).toFixed(1):""));const o=v!==""&&isFinite(+v)?ouTxt(proj,sd,+v,min):"";
     return`<div class="row chk ou"><span class="lab tl">${esc(label)} <span class="pv">${half(proj)}</span></span><input type="number" inputmode="decimal" step="0.5" class="ouIn" data-k="${esc(key+f)}" data-proj="${proj.toFixed(2)}" data-sd="${sd.toFixed(2)}"${p.live?` data-min="${min}"`:""} value="${esc(v)}" placeholder="Line" aria-label="${esc(label)} line"><span class="note ouOut">${o}</span></div>`};
   return`<div class="note">${head}</div>${adjNote(g)}${b2b.length?`<div class="note"><span class="chip td">Back-to-back</span> ${esc(b2b.join(" and "))} played yesterday (tired legs, -${NBA_REST} pts).</div>`:""}
   <details class="tot" data-k="${esc(key)}"${openMem.has(key)?" open":""}><summary>Totals and team totals</summary>
-    <div class="row"><button type="button" class="btn sm dkBtn" data-g="${esc(key)}">DK line</button><span class="note">Fills in DraftKings' current total and spread</span></div>
+    <div class="row"><button type="button" class="btn sm dkBtn" data-g="${esc(key)}">DK line</button><span class="note">Snaps every box back to DraftKings' current line</span></div>
     <p class="note dkInfo">${dkInfoMem[key]||""}</p>
     ${fld("t","Game total",p.tot,L.tsd*p.sdF,p.curH+p.curA)}
-    ${(()=>{const v=lineMem[key+"s"]??"",mm=p.h-p.a,sd=L.sd*p.sdF;const o=v!==""&&isFinite(+v)?spTxt(mm,sd,+v):"";return`<div class="row chk ou"><span class="lab tl">${esc(H)} spread <span class="pv">${mm>=0?"-":"+"}${half(Math.abs(mm))}</span></span><input type="number" inputmode="decimal" step="0.5" class="spIn" data-k="${esc(key+"s")}" data-m="${mm.toFixed(2)}" data-sd="${sd.toFixed(2)}" value="${esc(v)}" placeholder="Line" aria-label="${esc(H)} spread"><span class="note spOut">${o}</span></div>`})()}
+    ${(()=>{const dv=dkBox(g,"s");const v=MANUAL.has(key+"s")?(lineMem[key+"s"]??""):dv!=null?String(dv):(lineMem[key+"s"]??""),mm=p.h-p.a,sd=L.sd*p.sdF;const o=v!==""&&isFinite(+v)?spTxt(mm,sd,+v):"";return`<div class="row chk ou"><span class="lab tl">${esc(H)} spread <span class="pv">${mm>=0?"-":"+"}${half(Math.abs(mm))}</span></span><input type="number" inputmode="decimal" step="0.5" class="spIn" data-k="${esc(key+"s")}" data-m="${mm.toFixed(2)}" data-sd="${sd.toFixed(2)}" value="${esc(v)}" placeholder="Line" aria-label="${esc(H)} spread"><span class="note spOut">${o}</span></div>`})()}
     ${fld("a",A+" team total",p.a,L.teamsd*p.sdF,p.curA)}${fld("h",H+" team total",p.h,L.teamsd*p.sdF,p.curH)}
     <p class="note">Tap <b>DK line</b> to load DraftKings' total and spread. Team totals and halves/quarters get estimates from those numbers. Use − / + to adjust any line.${p.live?" Live numbers use the current score and time left.":""}</p></details>`}
 function spTxt(mm,sd,L){const p=Phi((mm+L)/Math.max(sd,0.3));return`Covers <b>${pct(p,0)}</b> · Other side <b>${pct(1-p,0)}</b>`}
-document.addEventListener("input",e=>{const t=e.target;if(!t.classList||!t.classList.contains("spIn"))return;lineMem[t.dataset.k]=t.value;const L=parseFloat(t.value),o=t.closest(".chk").querySelector(".spOut");o.innerHTML=isFinite(L)?spTxt(+t.dataset.m,+t.dataset.sd,L):""});
+document.addEventListener("input",e=>{const t=e.target;if(!t.classList||!t.classList.contains("spIn"))return;lineMem[t.dataset.k]=t.value;MANUAL.add(t.dataset.k);const L=parseFloat(t.value),o=t.closest(".chk").querySelector(".spOut");o.innerHTML=isFinite(L)?spTxt(+t.dataset.m,+t.dataset.sd,L):""});
 function liveTdLine(g){if(!isLive(g)||(g.lg!=="nfl"&&g.lg!=="cfb"))return"";const n=nextTD(g);if(!n)return"";
   const A=short(g,g.away),H=short(g,g.home),poss=n.poss==="h"?H:n.poss==="a"?A:"";
   return`<div class="note">${poss?`<b>${esc(poss)} ball</b>${g.sit&&g.sit.dd?" · "+esc(g.sit.dd):""}<br>`:""}<b>Next TD:</b> ${esc(A)} ${pct(n.a,0)} · ${esc(H)} ${pct(n.h,0)} · No more TDs ${pct(n.none,0)}</div>`}
-document.addEventListener("input",e=>{const t=e.target;if(!t.classList||!t.classList.contains("ouIn"))return;lineMem[t.dataset.k]=t.value;const L=parseFloat(t.value),o=t.closest(".chk,.row").querySelector(".ouOut");
+document.addEventListener("input",e=>{const t=e.target;if(!t.classList||!t.classList.contains("ouIn"))return;lineMem[t.dataset.k]=t.value;MANUAL.add(t.dataset.k);const L=parseFloat(t.value),o=t.closest(".chk,.row").querySelector(".ouOut");
   o.innerHTML=isFinite(L)?ouTxt(+t.dataset.proj,+t.dataset.sd,L,t.dataset.min!=null?+t.dataset.min:null):""});
 document.addEventListener("toggle",e=>{const d=e.target;if(d.classList&&d.classList.contains("tot")){d.open?openMem.add(d.dataset.k):openMem.delete(d.dataset.k)}},true);
 document.addEventListener("focusout",e=>{if(e.target.classList&&["ouIn","pIn","socIn","spIn"].some(c=>e.target.classList.contains(c))&&pendingRender){pendingRender=false;setTimeout(renderGames,50)}});
@@ -1440,7 +1442,7 @@ function periodsHtml(g){if(!PSH[g.lg]||!gameProj(g))return"";const key=g.lg+":"+
   const sel=lineMem[key+"s"]??"0";
   const opts=ds.map(([nm,d,e],k)=>!d||d.state==="done"?"":`<option value="${k}" data-tot="${d.tot.toFixed(2)}" data-sdt="${Math.max(d.sdt,0.3).toFixed(2)}" data-m="${d.mm.toFixed(2)}" data-sdm="${Math.max(d.sdm,0.3).toFixed(2)}" data-min="${d.state==="live"?d.cur:""}"${e?` data-dkt="${e.tot}"${e.spr!=null?` data-dks="${e.spr}"`:""}`:""}${String(k)===String(sel)?" selected":""}>${nm}</option>`).join("");
   return`<details class="tot" data-k="${esc(key)}"${openMem.has(key)?" open":""}><summary>Halves and quarters</summary>
-    ${dkFor(g)?`<p class="note dkc">DK est = estimated from DraftKings' full-game total and spread. Check the exact line in DraftKings.</p>`:`<p class="note">Tap <b>DK line</b> under “Totals and team totals” to add DraftKings estimates here.</p>`}
+    ${dkFor(g)?`<p class="note dkc">DK est = estimated from DraftKings' full-game total and spread. Check the exact line in DraftKings.</p>`:`<p class="note">Open “Totals and team totals” to load DraftKings' line; estimates appear here.</p>`}
     <div class="tablewrap"><table class="ptab"><thead><tr><th>Period</th><th>${esc(A)}–${esc(H)}</th><th>Winner</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table></div>
     ${opts?`<div class="pchk" data-lg="${g.lg}"><div class="row chk"><span class="lab tl">Check a line for</span><select class="pIn pSel" data-k="${esc(key+"s")}" aria-label="Period">${opts}</select></div>
     <div class="row chk ou"><span class="lab tl">Total</span><input type="number" inputmode="decimal" step="0.5" class="pIn pTot" data-k="${esc(key+"t")}" value="${esc(lineMem[key+"t"]??"")}" placeholder="Line" aria-label="Period total line"><span class="note pTotO"></span></div>
@@ -1632,31 +1634,51 @@ function renderSkins(){const box=$("skinPick");if(!box)return;const cur=document
 setSkin(document.documentElement.dataset.skin||"midnight");
 /* --- one-tap DraftKings line (from ESPN's odds feed) --- */
 const SPORTPATH={nfl:"football/nfl",cfb:"football/college-football",nba:"basketball/nba",wnba:"basketball/wnba",ncaab:"basketball/mens-college-basketball",ncaaw:"basketball/womens-college-basketball",mlb:"baseball/mlb",nhl:"hockey/nhl"};
-async function loadDK(g){const k=g.lg+":"+g.id,c=DKC[k];if(c&&Date.now()-c.at<(isLive(g)?60e3:5*60e3))return c.v;
+async function loadDK(g,ttl){const k=g.lg+":"+g.id,c=DKC[k];if(c&&Date.now()-c.at<(ttl!=null?ttl:(isLive(g)?60e3:5*60e3)))return c.v;
   const path=g.lg==="soc"?(g.sl?"soccer/"+g.sl:null):SPORTPATH[g.lg];if(!path)return null;
-  let v=null;try{const j=await getJSON(`${ESPN}/site/v2/sports/${path}/summary?event=${g.id}`);
+  let live=null;try{const sp=path.split("/")[0],lgp=path.split("/").slice(1).join("/");
+    const j=await getJSON(`https://sports.core.api.espn.com/v2/sports/${sp}/leagues/${lgp}/events/${g.id}/competitions/${g.id}/odds`);const it=(j.items||[]).find(x=>x&&x.provider&&/draft/i.test(x.provider.name||""));
+    if(it){const nn=x=>{if(x==null||x==="")return null;if(typeof x==="number")return x;const s=String(x).trim();if(/^even$/i.test(s))return 100;const m=s.match(/[+-]?\d+(\.\d+)?/);return m?+m[0]:null};
+      const cur=it.current||{},hc=(it.homeTeamOdds&&it.homeTeamOdds.current)||{},ac=(it.awayTeamOdds&&it.awayTeamOdds.current)||{},pk=o=>o?(o.alternateDisplayValue??o.american??o.value):null;
+      const v2={prov:"DraftKings",live:isLive(g),total:nn(pk(cur.total))??nn(it.overUnder),oO:nn(pk(cur.over))??nn(it.overOdds),uO:nn(pk(cur.under))??nn(it.underOdds),
+        spread:nn(pk(hc.pointSpread))??nn(it.spread),mlH:nn(pk(hc.moneyLine))??nn(it.homeTeamOdds&&it.homeTeamOdds.moneyLine),mlA:nn(pk(ac.moneyLine))??nn(it.awayTeamOdds&&it.awayTeamOdds.moneyLine),
+        sH:nn(pk(hc.spread))??nn(it.homeTeamOdds&&it.homeTeamOdds.spreadOdds),sA:nn(pk(ac.spread))??nn(it.awayTeamOdds&&it.awayTeamOdds.spreadOdds),draw:nn(it.drawOdds&&it.drawOdds.moneyLine)};
+      if(v2.total!=null||v2.spread!=null)live=v2}}catch(e){}
+  let sum=null;if(!live||!c||!c.sumAt||Date.now()-c.sumAt>10*60e3){sum=await (async()=>{
+    let v=null;try{const j=await getJSON(`${ESPN}/site/v2/sports/${path}/summary?event=${g.id}`);
     const all=[...(j.pickcenter||[]),...(j.odds||[])];const pc=all.find(x=>x&&/draft/i.test((x.provider&&x.provider.name)||""))||all[0];
     if(pc){const n=x=>x==null||x===""?null:+x;v={prov:(pc.provider&&pc.provider.name)||"Sportsbook",spread:n(pc.spread),total:n(pc.overUnder),
       mlH:n(pc.homeTeamOdds&&pc.homeTeamOdds.moneyLine),mlA:n(pc.awayTeamOdds&&pc.awayTeamOdds.moneyLine),oO:n(pc.overOdds),uO:n(pc.underOdds),
       sH:n(pc.homeTeamOdds&&pc.homeTeamOdds.spreadOdds),sA:n(pc.awayTeamOdds&&pc.awayTeamOdds.spreadOdds),draw:n(pc.drawOdds&&pc.drawOdds.moneyLine)}}
     try{const urls=(JSON.stringify([j.pickcenter||[],j.odds||[]]).match(/https?:\\?\/\\?\/[^"\s]*draftkings\.com[^"\s]*/gi)||[]).map(u=>u.replace(/\\\//g,"/"));const ev=urls.find(u=>/\/(event|gamecenter|game)\//i.test(u));if(ev){v=v||{prov:"DraftKings"};v.ev=ev.split("?")[0]}}catch(e){}}catch(e){}
-  DKC[k]={at:Date.now(),v};return v}
+    return v})()}
+  const v=live?{...live,ev:(sum&&sum.ev)||(c&&c.v&&c.v.ev)||undefined}:(sum||(c&&c.v)||null);
+  DKC[k]={at:Date.now(),v,sumAt:sum?Date.now():(c&&c.sumAt)};return v}
 const amer=x=>x==null?"":(x>0?"+":"")+Math.round(x);
-document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest(".dkBtn");if(!b)return;e.preventDefault();
-  const g=findGame(b.dataset.g),box=b.closest("details");const info=box&&box.querySelector(".dkInfo");if(!g||!info)return;
-  info.textContent="Getting DraftKings' line…";const v=await loadDK(g);
-  if(!v||(v.total==null&&v.spread==null&&v.mlH==null)){info.textContent="DraftKings' line isn't posted for this game yet. Try again closer to game time.";return}
-  const key=g.lg+":"+g.id,tIn=box.querySelector(`.ouIn[data-k="${CSS.escape(key+"t")}"]`),sIn=box.querySelector(`.spIn`),gIn=box.querySelector(".socIn");
-  if(v.total!=null){if(tIn)setStepV(tIn,v.total);if(gIn)setStepV(gIn,v.total)}if(v.spread!=null&&sIn)setStepV(sIn,v.spread);
-  const md=model(g),H=short(g,g.home),A=short(g,g.away),parts=[];
+function dkInfoHtml(g,v){const md=model(g),H=short(g,g.home),A=short(g,g.away),parts=[];
   if(v.total!=null)parts.push(`Total ${v.total}${v.oO!=null?` (O ${amer(v.oO)} / U ${amer(v.uO)})`:""}`);
   if(v.spread!=null)parts.push(`${esc(H)} ${v.spread>0?"+":""}${v.spread}`);
   if(v.mlH!=null&&v.mlA!=null&&md){const iH=impl(v.mlH),iA=impl(v.mlA);parts.push(`Moneyline ${esc(A)} ${amer(v.mlA)} · ${esc(H)} ${amer(v.mlH)}`);
     if(iH&&iA){const s=iH+iA+(v.draw!=null&&impl(v.draw)?impl(v.draw):0);parts.push(`DraftKings gives ${esc(H)} ${pct(iH/s,0)}, model says ${pct(md.pH,0)}`)}}
-  const te=dkTeamEst(g);if(te){const ai=box.querySelector(`.ouIn[data-k="${CSS.escape(key+"a")}"]`),hi=box.querySelector(`.ouIn[data-k="${CSS.escape(key+"h")}"]`);if(ai)setStepV(ai,te.a);if(hi)setStepV(hi,te.h)}
-  if(PSH[g.lg]){const pk=key+":p",selK=lineMem[pk+"s"]??"0",ix=(PER[+selK]||PER[0])[1],e=dkPeriodEst(g,ix);if(e){lineMem[pk+"t"]=String(e.tot);if(e.spr!=null)lineMem[pk+"m"]=String(e.spr)}openMem.add(pk)}
-  const html=`<b>${esc(v.prov)}:</b> ${parts.join(" · ")}${te?`<br>Team totals filled with estimates (${esc(A)} ${te.a}, ${esc(H)} ${te.h}) from DraftKings' total and spread.`:""}`;dkInfoMem[key]=html;info.innerHTML=html;
-  setTimeout(renderGames,60)});
+  const te=dkTeamEst(g);const key=g.lg+":"+g.id,man=["t","s","h","a"].some(f=>MANUAL.has(key+f));const at=DKC[key]?new Date(DKC[key].at).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",second:"2-digit"}):"";
+  return`<b>${esc(v.prov)}${v.live?" (live line)":""}:</b> ${parts.join(" · ")}${te?`<br>Team totals estimated from DraftKings' total and spread (${esc(A)} ${te.a}, ${esc(H)} ${te.h}).`:""}<br><span class="dkupd">Boxes follow DraftKings · updated ${esc(at)}${isLive(g)?" · refreshes every 10 sec":" · refreshes every 2 min"}${man?" · boxes you changed stay as you set them (tap DK line to reset)":""}</span>`}
+function dkApply(g,v){const key=g.lg+":"+g.id;if(!v||(v.total==null&&v.spread==null&&v.mlH==null))return false;dkInfoMem[key]=dkInfoHtml(g,v);
+  if(PSH[g.lg]){const pk=key+":p";if(!MANUAL.has(pk+"t")&&!MANUAL.has(pk+"m")){const selK=lineMem[pk+"s"]??"0",ix=(PER[+selK]||PER[0])[1],e=dkPeriodEst(g,ix);if(e){lineMem[pk+"t"]=String(e.tot);if(e.spr!=null)lineMem[pk+"m"]=String(e.spr)}}}return true}
+document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest(".dkBtn");if(!b)return;e.preventDefault();
+  const g=findGame(b.dataset.g),box=b.closest("details");const info=box&&box.querySelector(".dkInfo");if(!g||!info)return;
+  const key=g.lg+":"+g.id;["t","s","h","a",":pt",":pm"].forEach(f=>MANUAL.delete(key+f));
+  info.textContent="Getting DraftKings' line…";const v=await loadDK(g,1);
+  if(!dkApply(g,v)){info.textContent="DraftKings' line isn't posted for this game yet. Try again closer to game time.";return}
+  const gIn=box.querySelector(".socIn");if(v.total!=null&&gIn)setStepV(gIn,v.total);
+  info.innerHTML=dkInfoMem[key];setTimeout(renderGames,60)});
+/* auto-load and keep refreshing DraftKings lines for open totals */
+document.addEventListener("toggle",e=>{const d=e.target;if(!d.classList||!d.classList.contains("tot")||!d.open)return;const k=d.dataset.k;if(!/^[a-z0-9]+:[^:]+$/.test(k||""))return;const g=findGame(k);if(!g||g.field)return;
+  if(DKC[k]&&DKC[k].v)return;loadDK(g).then(v=>{if(dkApply(g,v))renderGames()}).catch(()=>{})},true);
+let dkPollBusy=false;setInterval(async()=>{if(dkPollBusy||document.hidden||$("p-games").hidden)return;dkPollBusy=true;let changed=false;
+  try{const keys=[...openMem].filter(k=>/^[a-z0-9]+:[^:]+$/.test(k));for(const k of keys){const g=findGame(k);if(!g||g.field||DONE.includes(g.status))continue;const live=isLive(g),c=DKC[k];
+    if(c&&Date.now()-c.at<(live?9.5e3:120e3))continue;const before=c&&c.v?JSON.stringify([c.v.total,c.v.spread,c.v.mlH]):"";const v=await loadDK(g,live?8e3:110e3);
+    if(v&&dkApply(g,v)){const after=JSON.stringify([v.total,v.spread,v.mlH]);if(after!==before)changed=true;const inf=document.querySelector(`details.tot[data-k="${CSS.escape(k)}"] .dkInfo`);if(inf)inf.innerHTML=dkInfoMem[k]}}}
+  finally{dkPollBusy=false}if(changed)renderGames()},3000);
 /* --- tap-to-adjust buttons for every line, odds and stake box --- */
 const STEPCFG=[
   [".ouIn,.pTot,.socIn,.xIn,.nline,.totIn,.lineIn,#tkTot",{step:0.5}],
@@ -2206,9 +2228,9 @@ function tkGame(key){try{tkGame0(key)}catch(e){tkToast("Couldn't open picks: "+e
 function tkGame0(key){const g=findGame(key)||(()=>{const i=key.indexOf(":"),lg=key.slice(0,i),id=key.slice(i+1);const s=D[lg];const x=s&&((s.live&&s.live.games)||[]).find(y=>y.id===id);return x?{...x,lg}:null})();if(!g)return;
   const md=model(g),live=isLive(g),L=LEAGUES[g.lg],base=legBase(g),dk=DKC[key]&&DKC[key].v;const teamSport=!["ten","mma"].includes(g.lg)&&!g.field;
   const gp=teamSport?gameProj(g):null;
-  let spH=lineMem[key+"s"]!=null&&lineMem[key+"s"]!==""&&isFinite(+lineMem[key+"s"])?+lineMem[key+"s"]:dk&&dk.spread!=null?dk.spread:null;if(spH==null&&md){spH=-Math.round(md.m*2)/2;if(spH===0)spH=-0.5;if(Number.isInteger(spH))spH+=spH<0?-0.5:0.5}
+  let spH=MANUAL.has(key+"s")&&lineMem[key+"s"]!==""&&isFinite(+lineMem[key+"s"])?+lineMem[key+"s"]:dk&&dk.spread!=null?dk.spread:null;if(spH==null&&md){spH=-Math.round(md.m*2)/2;if(spH===0)spH=-0.5;if(Number.isInteger(spH))spH+=spH<0?-0.5:0.5}
   if(g.lg==="mlb"||g.lg==="nhl")spH=md&&md.m>0?-1.5:1.5;
-  let tot=lineMem[key+"t"]!=null&&lineMem[key+"t"]!==""&&isFinite(+lineMem[key+"t"])?+lineMem[key+"t"]:dk&&dk.total!=null?dk.total:gp?Math.floor((live?gp.tot:gp.preTot))+0.5:null;
+  let tot=MANUAL.has(key+"t")&&lineMem[key+"t"]!==""&&isFinite(+lineMem[key+"t"])?+lineMem[key+"t"]:dk&&dk.total!=null?dk.total:gp?Math.round((live?gp.tot:gp.preTot)*2)/2:null;
   const nm=c=>short(g,c);
   const p=sheet(`<div class="tkhead"><h2>Add to ticket</h2><button type="button" class="tkx" aria-label="Close">×</button></div>
     <p class="tkhint">Tap the picks you want (as many as you like), then tap <b>Add to ticket</b>.</p><p class="note">${icon(g.lg)} ${esc(tname(g,g.away))} @ ${esc(tname(g,g.home))} · ${esc(live?fmtClock(g):whenTxt(g))}${dk?` · ${esc(dk.prov)} lines filled in`:""}</p>
@@ -2245,8 +2267,8 @@ function tkGame0(key){const g=findGame(key)||(()=>{const i=key.indexOf(":"),lg=k
   wire(p.querySelector(".tkopts"));spOpts();totOpts();tkFoot();
   const a=$("tkSp");if(a)a.addEventListener("input",()=>{a.dataset.ed=1;spOpts()});const b=$("tkTot");if(b)b.addEventListener("input",()=>{b.dataset.ed=1;totOpts()});
   if(!dk&&teamSport){p.dataset.k=key;loadDK(g).then(v=>{if(!v||p.dataset.k!==key||!$("tkSheet").classList.contains("on"))return;let ch=false;
-    if(a&&!a.dataset.ed&&v.spread!=null&&g.lg!=="mlb"&&g.lg!=="nhl"){a.value=v.spread;ch=true;spOpts()}if(b&&!b.dataset.ed&&v.total!=null){b.value=v.total;ch=true;totOpts()}
-    const n=p.querySelector(".note");if(ch&&n&&!/lines filled/.test(n.textContent))n.insertAdjacentHTML("beforeend",` · ${esc(v.prov)} lines filled in`)}).catch(()=>{})}}
+    if(a&&!a.dataset.ed&&v.spread!=null&&g.lg!=="mlb"&&g.lg!=="nhl"){a.value=v.spread;ch=true;spOpts()}
+    if(b&&!b.dataset.ed&&v.total!=null){b.value=v.total;ch=true;totOpts()}const n=p.querySelector(".note");if(ch&&n&&!/lines filled/.test(n.textContent))n.insertAdjacentHTML("beforeend",` · ${esc(v.prov)} lines filled in`)}).catch(()=>{})}}
 /* props: read the line and chance from the checker row */
 function tkProp(btn){const box=btn.closest(".chk,.xchk,.row");if(!box)return;const inp=box.querySelector("input[type=number]"),out=box.querySelector(".lineOut,.xOut,.nout");
   const L=inp&&parseFloat(inp.value);if(!isFinite(L)){if(out)out.innerHTML=`<b>Enter the DraftKings line first</b>`;if(inp)inp.focus();return}
