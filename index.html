@@ -315,7 +315,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 <section class="panel" id="p-games">
   <div class="card">
     <h2>This week's games</h2>
-    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances come from each team's season results plus home field. They don't use DraftKings' odds. Football projections include the forecast weather and an NFL starting quarterback listed out; tap <b>Dig in</b> for other injuries. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
+    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances come from each team's season results plus home field. They don't use DraftKings' odds. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
     <p class="note" id="statsAsOf"></p></details>
   </div>
   <div id="gameList" style="display:flex;flex-direction:column;gap:10px"><div class="empty">Loading this week's games…</div></div>
@@ -564,6 +564,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
     <h2>Bet types, plainly</h2>
     <details><summary>Ticket: copying picks into DraftKings</summary><p>Tap <b>+ Ticket</b> on a game, a parlay or a player prop to collect picks. In leaderboards and player cards, the gold <b>+</b> adds that exact pick, and you can tap any chance chip (like <b>Anytime TD 18%</b> or <b>75+ 36%</b>) to add it. <b>DK ›</b> on any row opens DraftKings at that team's or game's page. The gold <b>Ticket</b> button at the bottom right opens your list with each pick's chance, the combined chance and the fair parlay odds. <b>Find in DraftKings</b> opens that team's odds page in DraftKings, and the gray line under each pick shows where to tap there. Tick each pick off as you add it. DraftKings doesn't let outside apps fill in your betslip, so you still tap the picks in DraftKings yourself. When you've placed the bet, tap <b>Log to Tracker</b> and enter the odds and stake from your DraftKings slip.</p></details>
     <details><summary>Weather and quarterback news</summary><p>For outdoor NFL and college games, Linecheck checks the forecast at the stadium for kickoff (free data from Open-Meteo). Wind over 10 mph lowers the projected total by about a third of a point per mph, up to 8 points. Steady rain takes off about 1.5 points, snow 2.5, and temperatures below 25°F 1 more. Domes are skipped. For NFL games, if a team's starting quarterback (its season passing leader) is listed Out on ESPN's injury report, that team's projection drops 4.5 points; Doubtful counts three-quarters as much. College injury reports aren't published reliably, so college QB news isn't included. A yellow note on the game shows any change.</p></details>
+    <details><summary>How injuries change the picks</summary><p><b>NFL:</b> a starting quarterback listed Out lowers his team 4.5 points (Doubtful, three-quarters of that). Players listed Out are left off NFL props. <b>NBA:</b> each player listed Out lowers his team by up to 7 points depending on how much he scores and plays (Doubtful three-quarters, Questionable about a third). Teammates' prop projections go up a little to pick up the missing scoring. <b>WNBA:</b> same as NBA, scaled for the WNBA. <b>NHL:</b> if a team's main goalie (most starts) is listed Out, the backup is expected to start and the team gives up about 0.3 more goals. <b>MLB:</b> each team's probable starting pitcher shifts the runs it's expected to allow, based on his ERA (blended toward league average when he hasn't pitched much, up to 1.2 runs either way). A regular hitter listed Out lowers his team's runs by up to 0.3, depending on how much he produces. A player who has missed most of the season counts less, because the team's results already reflect playing without him. Notes on each game show what changed. College football, college basketball and soccer injuries aren't included, because ESPN doesn't publish usable injury reports for them.</p></details>
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
     <details><summary>Who is home and who is away</summary><p>Games are always listed away team first, home team second, the same as "Cowboys @ Packers" on DraftKings. Each team also has an <b>Away</b> or <b>Home</b> tag, and live tiles put an <b>@</b> in front of the home team. A tag with a * means the game is at a neutral site, so neither team really has home advantage and the app doesn't give one.</p></details>
     <details><summary>Live tab and player status</summary><p>The Live tab follows the sport picked at the top. It has two sub-tabs. <b>Scores</b> shows every game as a small tile: live games with their win chances, games starting in the next 3 hours and today's finals. Tap a tile for details. <b>Player status</b> shows the injury report. <b>Upset watch</b> flags a pregame favorite that is losing. <b>Close finish</b> flags a late game that is still near 50/50. Player status lists each team's injury report: Out and Suspended players won't play, Doubtful players probably won't, Questionable is close to a coin flip, and Day-to-day is minor. <b>Left early</b> means a news note says the player exited a game in the last day. Check status before betting a player prop. Books usually void a prop if the player doesn't play at all, but not if he leaves early.</p></details>
@@ -778,7 +779,7 @@ function model(g){
   if(g.lg==="mma")return mmaModel(g);
   if(g.lg==="soc"){const P=socModel(g);return P?{m:P.lh-P.la,pH:P.full.H,pA:P.full.A,pD:P.full.D}:null}
   const L=LEAGUES[g.lg],rh=rating(g.lg,g.home),ra=rating(g.lg,g.away);if(rh==null||ra==null)return null;
-  let m=rh-ra+(g.neutral?0:L.hfa);{const aj=adjOf(g);if(aj&&aj.qb)m+=(aj.qb.a||0)-(aj.qb.h||0)}{const rs=g.lg==="nba"?NBA_REST:(TEAMLG[g.lg]&&TEAMLG[g.lg].b2b)||0;if(rs){if(g.b2bH)m-=rs;if(g.b2bA)m+=rs}}let pH=Phi(m/L.sd);
+  let m=rh-ra+(g.neutral?0:L.hfa);{const aj=adjOf(g);if(aj&&aj.qb)m+=(aj.qb.a||0)-(aj.qb.h||0);if(aj&&aj.pl)m+=(aj.pl.a||0)-(aj.pl.h||0)}{const rs=g.lg==="nba"?NBA_REST:(TEAMLG[g.lg]&&TEAMLG[g.lg].b2b)||0;if(rs){if(g.b2bH)m-=rs;if(g.b2bA)m+=rs}}let pH=Phi(m/L.sd);
   const sc=g.score||{};const sh=sc[g.home]??sc[norm(g.home)],sa=sc[g.away]??sc[norm(g.away)];
   if(isLive(g)&&sh!=null&&sa!=null){const r=remaining(g),lead=sh-sa;pH=r<=0.001?(lead>0?1:lead<0?0:.5):Phi((lead+m*r)/(L.sd*Math.sqrt(r)))}
   return{m,pH,pA:1-pH};
@@ -796,7 +797,7 @@ const USST={AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",
 function adjOf(g){return ADJ[g.lg+":"+g.id]||null}
 function adjNote(g){const a=adjOf(g);if(!a)return"";const out=[];
   if(a.wx)out.push(a.wx.pts>0?`<b>Weather:</b> ${esc(a.wx.txt)}. Total lowered ${a.wx.pts} pts.`:`<b>Weather:</b> ${Math.round(a.wx.temp)}°F, wind ${Math.round(a.wx.wind)} mph. No effect on scoring.`);
-  if(a.qb)out.push(`<b>QB news:</b> ${a.qb.txt.map(esc).join("; ")}.`);return out.length?`<div class="note adjn">${out.join("<br>")}</div>`:""}
+  if(a.qb)out.push(`<b>QB news:</b> ${a.qb.txt.map(esc).join("; ")}.`);if(a.pl)out.push(`<b>${g.lg==="mlb"?"Pitchers and injuries":"Injuries"}:</b> ${a.pl.txt.map(esc).join("; ")}.`);return out.length?`<div class="note adjn">${out.join("<br>")}</div>`:""}
 async function wxGeo(v){const k="geo-"+slugify([v.city,v.state,v.country].join("-"));const c=cache.get(k);if(c)return c;
   const j=await getJSON(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(v.city)}&count=10&language=en&format=json`);const rs=j.results||[];
   const want=USST[v.state]||v.state;const r=rs.find(x=>want&&x.admin1===want)||rs.find(x=>x.country_code==="US")||rs[0];if(!r)return null;const o={lat:r.latitude,lon:r.longitude};cache.set(k,o);return o}
@@ -821,6 +822,35 @@ async function loadAdj(force){if(adjBusy||(!force&&Date.now()-adjAt<10*60e3))ret
         [["h",g.home],["a",g.away]].forEach(([s,tid])=>{const qb=(pg[tid]||pg[String(tid)]||[]).find(p=>p.kind==="pass");if(!qb)return;const it=(inj[String(tid)]||[]).find(i=>qbNorm(i.n)===qbNorm(qb.name));if(!it)return;
           const sev=stSev(it.st),w=sev===0?1:sev===1?0.75:0;if(!w)return;const v=+(QBV*w).toFixed(1);r[s]=v;r.txt.push(`${short(g,tid)} starter ${qb.name} is listed ${String(it.st).toLowerCase()}, so ${short(g,tid)} projection lowered ${v} pts`)});
         const k=g.lg+":"+g.id,a=ADJ[k]||(ADJ[k]={}),nv=r.h||r.a?r:null;if(JSON.stringify(a.qb||null)!==JSON.stringify(nv)){a.qb=nv;changed=true}}))}
+    const setPl=(g,v)=>{const k=g.lg+":"+g.id,a=ADJ[k]||(ADJ[k]={}),nv=v&&(v.h||v.a||v.tot)&&v.txt&&v.txt.length?v:null;if(JSON.stringify(a.pl||null)!==JSON.stringify(nv)){a.pl=nv;changed=true}};
+    const up=lg=>((D[lg].live&&D[lg].live.games)||[]).map(g=>({...g,lg})).filter(g=>!DONE.includes(g.status)&&!isLive(g)&&Date.parse(g.start_time)<now+3*864e5);
+    const bbAdj=(g,inj,plist,lgk,cap,base,mins)=>{const r={h:0,a:0,tot:0,txt:[]};
+      [["h",g.home],["a",g.away]].forEach(([s,tid])=>{const tg=(teamInfo(lgk,tid)||{}).gp||0;let v=0;const who=[];
+        plist(tid).forEach(p=>{const it=(inj[String(tid)]||[]).find(i=>qbNorm(i.n)===qbNorm(p.name));if(!it)return;const sv=stSev(it.st),w=sv===0?1:sv===1?0.75:sv===2?0.3:0;if(!w)return;
+          const share=tg?Math.min(1,(p.gpCur||0)/tg):(p.gpCur?1:0.5);const val=Math.min(cap,Math.max(0,0.3*(p.pts-base)))*Math.min(1,p.min/mins)*w*share;if(val<0.3)return;v+=val;who.push(`${p.name} (${String(it.st).toLowerCase()}, ${val.toFixed(1)})`)});
+        v=Math.min(10,v);if(v>=0.3){r[s]=+v.toFixed(1);r.txt.push(`${short(g,tid)} without ${who.join(", ")}: −${v.toFixed(1)} pts`)}});
+      r.tot=-0.2*(r.h+r.a);return r};
+    const nbaG=up("nba");if(nbaG.length&&typeof loadNbaPlayers==="function"){try{await loadNbaPlayers();const inj=await lwInjuries("nba");if(inj)nbaG.forEach(g=>setPl(g,bbAdj(g,inj,teamPlayers,"nba",7,5,30)))}catch(e){}}
+    const wnG=up("wnba");if(wnG.length){try{const y=seasonYear(true);const ck=cache.get("wnba-pl");let W=ck&&Date.now()-ck.at<6*3600e3?ck.v:null;
+      if(!W){W=parseByAthlete(await getJSON(BY("basketball/wnba","&sort=offensive.avgPoints:desc",y,250)));cache.set("wnba-pl",{at:Date.now(),v:W})}
+      const inj=await lwInjuries("wnba");const wp=tid=>Object.values(W).filter(p=>p.team===String(tid)&&p.min>=14).map(p=>({...p,gpCur:p.gp}));
+      if(inj)wnG.forEach(g=>setPl(g,bbAdj(g,inj,wp,"wnba",6,4,28)))}catch(e){}}
+    const mlbG=up("mlb");if(mlbG.length&&typeof loadMlbStats==="function"){try{await loadMlbStats();const inj=await lwInjuries("mlb");const B=XP.mlb.bat||{},Pt=XP.mlb.pit||{};
+      mlbG.forEach(g=>{const r={h:0,a:0,tot:0,txt:[]};
+        [["h",g.home],["a",g.away]].forEach(([s,tid])=>{const sp=g.prob&&g.prob[String(tid)],ps=sp&&Pt[sp.id]&&Pt[sp.id].v;
+          if(ps&&ps["pitching.ERA"]!=null&&(ps["pitching.innings"]||0)>=10){const ip=ps["pitching.innings"],era=(ps["pitching.ERA"]*ip+4.15*40)/(ip+40);const d=Math.max(-1.2,Math.min(1.2,(era-4.15)*5.5/9));
+            if(Math.abs(d)>=0.1){r[s]+=d;r.tot+=d;r.txt.push(`${short(g,tid)} starter ${sp.name} (ERA ${(+ps["pitching.ERA"]).toFixed(2)}) expected to allow ${Math.abs(d).toFixed(1)} ${d>0?"more":"fewer"} runs than average`)}}
+          if(inj){const tg=(teamInfo("mlb",tid)||{}).gp||0;let v=0;const who=[];
+            Object.values(B).filter(p=>p.team===String(tid)&&(p.v["batting.gamesPlayed"]||0)>=15).forEach(p=>{const it=(inj[String(tid)]||[]).find(i=>qbNorm(i.n)===qbNorm(p.name));if(!it)return;const sv=stSev(it.st),w=sv===0?1:sv===1?0.75:sv===2?0.3:0;if(!w)return;
+              const gpb=p.v["batting.gamesPlayed"],rr=((p.v["batting.runs"]||0)+(p.v["batting.RBIs"]||0))/2/gpb,share=tg?Math.min(1,gpb/tg):1,val=Math.min(0.3,Math.max(0,0.6*(rr-0.33)))*w*share;if(val<0.05)return;v+=val;who.push(`${p.name} (${String(it.st).toLowerCase()})`)});
+            v=Math.min(0.6,v);if(v>=0.05){r[s]+=v;r.tot-=v;r.txt.push(`${short(g,tid)} without ${who.join(", ")}: −${v.toFixed(2)} runs`)}}});
+        r.h=+r.h.toFixed(2);r.a=+r.a.toFixed(2);r.tot=+r.tot.toFixed(2);setPl(g,r)})}catch(e){}}
+    const nhlG=up("nhl");if(nhlG.length&&typeof loadNhlStats==="function"){try{await loadNhlStats();const inj=await lwInjuries("nhl");const Lp=XP.nhl.last||{},Cp=XP.nhl.cur||{};
+      const gp=P=>P?(P.v["general.games"]||P.v["general.gamesPlayed"]||0):0;
+      if(inj)nhlG.forEach(g=>{const r={h:0,a:0,tot:0,txt:[]};[["h",g.home],["a",g.away]].forEach(([s,tid])=>{const gs=new Map();
+        [Cp,Lp].forEach((P,pi)=>Object.entries(P).forEach(([id,x])=>{const tm=(Cp[id]&&Cp[id].team)||x.team;if(x.pos!=="G"||String(tm)!==String(tid))return;const e=gs.get(id)||{name:x.name,cur:0,last:0};if(pi===0)e.cur=gp(x);else e.last=gp(x);gs.set(id,e)}));
+        const arr=[...gs.values()].filter(e=>e.name);if(!arr.length)return;const useCur=arr.reduce((t,e)=>t+e.cur,0)>=5;const st=arr.sort((a,b)=>(useCur?b.cur-a.cur:b.last-a.last))[0];
+        const it=(inj[String(tid)]||[]).find(i=>qbNorm(i.n)===qbNorm(st.name));if(!it||stSev(it.st)>1)return;const v=stSev(it.st)===0?0.3:0.22;r[s]=v;r.tot+=v;r.txt.push(`${short(g,tid)} starting goalie ${st.name} is listed ${String(it.st).toLowerCase()}, backup expected: +${v} goals against`)});setPl(g,r)})}catch(e){}}
     Object.keys(ADJ).forEach(k=>{const [lg,id]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)];const s=D[lg];if(s&&s.live&&!((s.live.games)||[]).some(x=>x.id===id))delete ADJ[k]});
     cache.set("adj",ADJ)}finally{adjBusy=false}
   if(changed){renderGames();try{if(!$("p-live").hidden)renderLive()}catch(e){}}}
@@ -1267,7 +1297,7 @@ function teamOD(lg,id){const t=teamInfo(lg,id);if(!t)return null;if(t.off!=null&
   if(t.pf==null||t.pa==null||!t.gp)return null;const avg=lgAvgPts(lg),w=t.gp/(t.gp+3);return{off:avg+(t.pf/t.gp-avg)*w,def:avg+(t.pa/t.gp-avg)*w}}
 function gameProj(g){const H=teamOD(g.lg,g.home),A=teamOD(g.lg,g.away),md=model(g);if(!H||!A||!md)return null;
   const FT=D[g.lg].teams&&D[g.lg].teams.fit,fh=teamInfo(g.lg,g.home),fa=teamInfo(g.lg,g.away);
-  let tot=FT&&fh&&fa&&fh.fit&&fa.fit?H.off+A.def+A.off+H.def-2*FT.mu:(H.off+A.def+A.off+H.def)/2;{const aj=adjOf(g);if(aj){if(aj.wx&&aj.wx.pts)tot-=aj.wx.pts;if(aj.qb)tot-=(aj.qb.h||0)+(aj.qb.a||0)}}if(g.lg==="nba")tot-=(g.b2bH?1:0)+(g.b2bA?1:0);
+  let tot=FT&&fh&&fa&&fh.fit&&fa.fit?H.off+A.def+A.off+H.def-2*FT.mu:(H.off+A.def+A.off+H.def)/2;{const aj=adjOf(g);if(aj){if(aj.wx&&aj.wx.pts)tot-=aj.wx.pts;if(aj.qb)tot-=(aj.qb.h||0)+(aj.qb.a||0);if(aj.pl)tot+=aj.pl.tot||0}}if(g.lg==="nba")tot-=(g.b2bH?1:0)+(g.b2bA?1:0);
   const m=md.m,preH=tot/2+m/2,preA=tot/2-m/2;
   if(isLive(g)&&g.score){const r=remaining(g),sh=+g.score[g.home]||0,sa=+g.score[g.away]||0;
     return{live:true,r,m,preH,preA,preTot:tot,h:sh+preH*r,a:sa+preA*r,tot:sh+sa+tot*r,curH:sh,curA:sa,sdF:Math.sqrt(Math.max(r,1e-4))}}
@@ -1669,17 +1699,18 @@ async function renderNflProps(){
   const missing=gs.filter(g=>!PROPS[g.id]);
   if(missing.length&&!propsLoading){propsLoading=true;$("propMsg").textContent="Loading player stats…";
     await Promise.all(missing.map(g=>loadProps(g).catch(()=>{PROPS[g.id]={}})));propsLoading=false;$("propMsg").textContent="";}
-  const tds=[];
+  const tds=[];let ninj=null;try{ninj=await lwInjuries("nfl")}catch(e){}
   $("propList-nfl").innerHTML=gs.map(g=>{const pg=PROPS[g.id]||{};
-    const teams=[g.away,g.home].map(tid=>{const ps=(pg[tid]||[]);
-      const rows=ps.map((p,i)=>{const pr=projFor(g,tid,p);if(!pr)return"";const cfg=PROPCFG[p.kind];
+    const teams=[g.away,g.home].map(tid=>{const ps=(pg[tid]||[]);const outN=[];
+      const rows=ps.map((p,i)=>{const it=ninj&&(ninj[String(tid)]||[]).find(x=>qbNorm(x.n)===qbNorm(p.name));if(it&&stSev(it.st)===0){outN.push(p.name);return""}
+        const pr=projFor(g,tid,p);if(!pr)return"";const cfg=PROPCFG[p.kind];
         if(pr.anyTD!=null&&p.td>0)tds.push({p,g,tid,ch:pr.anyTD});
-        return`<div class="prop" data-kind="${esc(p.kind)}" data-td="${pr.anyTD!=null?1:0}"><div class="ph"><span><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)} · ${esc(p.line)}</span></span>${dkA(g,tid,"",p.name)}</div>
+        return`<div class="prop" data-kind="${esc(p.kind)}" data-td="${pr.anyTD!=null?1:0}"><div class="ph"><span><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)} · ${esc(p.line)}</span>${it&&stSev(it.st)<=3?` <span class="qtag">${esc(it.st)}</span>`:""}</span>${dkA(g,tid,"",p.name)}</div>
           <div class="pr"><span class="lab">${cfg.label}</span><span class="pv">Proj ${Math.round(pr.proj)}</span></div>
           <div class="chips">${cfg.lines.map(L=>`<button type="button" class="chip tap" data-tkq="${tkQ(g,tid,`${p.name} ${L}+ ${cfg.label.toLowerCase()}`,overP(pr,L),"Prop",p.name)}">${L}+ <b>${pct(overP(pr,L),0)}</b><i>+</i></button>`).join("")}
           ${pr.anyTD!=null?`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" anytime TD",pr.anyTD,"Prop",p.name)}">Anytime TD <b>${pct(pr.anyTD,0)}</b><i>+</i></button>`:""}${pr.anyTD!=null?(()=>{const nt=nextTD(g),gp=teamGp(tid);if(!nt||!gp)return"";const f=(String(tid)===String(g.home)?nt.h:nt.a)*tdShare(tid,p.td,p.yds,gp);return`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" first TD",f,"Prop",p.name)}">First TD <b>${pct(f,0)}</b><i>+</i></button>`})():""}${pr.twoPass!=null?`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" 2+ passing TDs",pr.twoPass,"Prop",p.name)}">2+ pass TD <b>${pct(pr.twoPass,0)}</b><i>+</i></button>`:""}</div>
           <div class="row chk"><input type="number" inputmode="decimal" step="0.5" placeholder="Your line, e.g. ${cfg.lines[1]-0.5}" id="ln-${esc(g.id)}-${esc(tid)}-${i}" data-proj="${pr.proj.toFixed(2)}" data-sd="${pr.sd.toFixed(2)}" class="lineIn" aria-label="Check a ${cfg.label} line for ${esc(p.name)}"><span class="note lineOut"></span><button type="button" class="btn sm ghost logprop" data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}">Log bet</button><button type="button" class="btn sm tkb" data-tkprop data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}" data-team="${esc(tid)}">+ Ticket</button></div></div>`}).join("");
-      return`<div class="pteam"><h3>${esc(tname(g,tid))}</h3>${rows||`<p class="note">Player stats not available yet.</p>`}<p class="note pfnone" hidden></p></div>`}).join("");
+      return`<div class="pteam"><h3>${esc(tname(g,tid))}</h3>${outN.length?`<p class="note"><b>Out (not shown):</b> ${esc(outN.join(", "))}</p>`:""}${rows||(outN.length?"":`<p class="note">Player stats not available yet.</p>`)}<p class="note pfnone" hidden></p></div>`}).join("");
     return`<div class="gm"><div class="meta"><span>${esc(whenTxt(g))}</span><span>${esc(short(g,g.away))} @ ${esc(short(g,g.home))}</span></div>${teams}</div>`}).join("");
   document.querySelectorAll(".lineIn").forEach(inp=>inp.addEventListener("input",()=>{const L=parseFloat(inp.value),o=inp.closest(".chk,.row").querySelector(".lineOut");if(!isFinite(L)){o.textContent="";return}
     const p=Phi((+inp.dataset.proj-L)/+inp.dataset.sd);o.innerHTML=`Over <b>${pct(p,0)}</b> · Under <b>${pct(1-p,0)}</b>`}));
@@ -1775,16 +1806,18 @@ async function renderNbaProps(){
   const board=[];
   $("propList-nba").innerHTML=gs.map((g,gi)=>{const inj=NBAP.inj[g.id]||{};const P=nbaProj(g);
     const teams=[g.away,g.home].map(tid=>{const all=teamPlayers(tid);const out=[],q=[];const act=[];
-      all.forEach(p=>{const st=(inj[p.id]||{}).status;if(injBad(st))out.push(p.name);else{if(injQ(st))q.push(p.name);act.push({...p,st})}});
+      let outPts=0;const tg=(teamInfo("nba",tid)||{}).gp||0;
+      all.forEach(p=>{const st=(inj[p.id]||{}).status;if(injBad(st)){out.push(p.name);outPts+=p.pts*(tg?Math.min(1,(p.gpCur||0)/tg):(p.gpCur?1:0.5))}else{if(injQ(st))q.push(p.name);act.push({...p,st})}});
+      const actSum=act.slice(0,8).reduce((s,p)=>s+p.pts,0)||1,bf=1+Math.min(0.15,0.55*outPts/actSum),bst=p=>bf>1.005?{...p,pts:p.pts*bf,ast:p.ast*bf,tpm:p.tpm*bf,reb:p.reb*(1+(bf-1)/2)}:p;
       const top=act.slice(0,3);
-      const rows=top.map((p,i)=>{const s=nbaStats(g,tid,p);const d=ddP(s);board.push({p,g,tid,s});
+      const rows=top.map((p,i)=>{const s=nbaStats(g,tid,bst(p));const d=ddP(s);board.push({p,g,tid,s});
         const opts=ORDER.map(k=>`<option value="${k}" data-proj="${s[k].proj.toFixed(3)}" data-sd="${(s[k].sd||0).toFixed(3)}" data-pois="${s[k].pois?1:""}">${STL[k]}</option>`).join("");
         return`<details class="prop"${gi===0&&i===0?" open":""}><summary><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)}${injQ(p.st)?` · <span class="qtag">${esc(p.st)}</span>`:""}</span><span class="psum">${one(s.pts.proj)} pts · ${one(s.reb.proj)} reb · ${one(s.ast.proj)} ast</span></summary>
           ${ORDER.map(k=>`<div class="pr"><span class="lab">${STL[k]}</span><span class="pv">Proj ${one(s[k].proj)}</span></div><div class="chips">${chipRow(s[k],k)}</div>`).join("")}
           <div class="chips">${d.dd>=0.08?`<span class="chip td">Double-double <b>${pct(d.dd,0)}</b></span>`:""}${d.td>=0.04?`<span class="chip td">Triple-double <b>${pct(d.td,0)}</b></span>`:""}</div>
           <div class="note">${p.gpCur?`${p.gpCur} game${p.gpCur>1?"s":""} this season, blended with last season`:"Based on last season (no games this season yet)"}</div>
           <div class="row chk"><select class="nsel" aria-label="Stat for ${esc(p.name)}">${opts}</select><input type="number" inputmode="decimal" step="0.5" class="nline" placeholder="Line, e.g. 24.5" aria-label="Line for ${esc(p.name)}"><span class="note nout"></span><button type="button" class="btn sm ghost lognba" data-key="${esc("nba:"+g.id)}" data-name="${esc(p.name)}">Log bet</button><button type="button" class="btn sm tkb" data-tkprop data-key="${esc("nba:"+g.id)}" data-name="${esc(p.name)}">+ Ticket</button></div></details>`}).join("");
-      const flags=[out.length?`<b>Out:</b> ${esc(out.join(", "))}`:"",q.length?`<b>Questionable:</b> ${esc(q.join(", "))}`:""].filter(Boolean).join(" · ");
+      const flags=[out.length?`<b>Out:</b> ${esc(out.join(", "))}`:"",q.length?`<b>Questionable:</b> ${esc(q.join(", "))}`:"",bf>1.005?`<b>Teammates boosted</b> ${Math.round((bf-1)*100)}% for the missing scoring`:""].filter(Boolean).join(" · ");
       return`<div class="pteam"><h3>${esc(tname(g,tid))}</h3>${flags?`<p class="note">${flags}</p>`:""}${rows||`<p class="note">Player stats not available yet.</p>`}</div>`}).join("");
     const fav=P&&(P.m>=0?g.home:g.away),sp=P?Math.round(Math.abs(P.m)*2)/2:0;
     const lines=P?`<div class="glines"><div class="pr"><span class="lab">Model line</span><span class="pv">${esc(short(g,fav))} ${sp?"-"+sp:"pick'em"} · Total ${(Math.round(P.tot*2)/2).toFixed(1)}</span></div>
