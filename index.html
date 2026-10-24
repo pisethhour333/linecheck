@@ -314,6 +314,8 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 .tkopt.sel{border-color:var(--turf);background:var(--turf);color:var(--bg)}.tkopt.sel b,.tkopt.sel::after{color:var(--bg)}.tkopt.sel::after{content:"✓";font-size:1rem}
 .tkopt.added:not(.sel)::after{content:"On ticket";font-size:.68rem}
 .dkupd{font-size:.72rem;color:var(--muted)}
+.dsep{opacity:.5}.down{color:var(--ink);text-transform:none;letter-spacing:0}.down.rz,.tdown.rz{color:var(--bad)}
+.tdown{font-size:.68rem;font-weight:700;color:var(--ink);margin-top:-2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 
 </head>
@@ -891,6 +893,7 @@ function tkQ(g,tid,pick,p,type,player){return esc(JSON.stringify({key:g.lg+":"+g
 function rowAct(g,tid,pick,p,type,player){return`<span class="ra"><button type="button" class="rab add" data-tkq="${tkQ(g,tid,pick,p,type,player)}" aria-label="Add ${esc(pick)} to ticket">+</button>${dkA(g,tid,"",player)}</span>`}
 function tkArr(){try{return TK||[]}catch(e){return[]}}
 function tksArr(){try{return TKS||[]}catch(e){return[]}}
+function downTxt(g){if(!isLive(g)||!g.sit||!g.sit.dd||!(g.lg==="nfl"||g.lg==="cfb"))return"";const d=String(g.sit.dd).replace(/\s+at\s+/i," · ").trim();const pa=g.teams&&g.teams[g.sit.poss]&&(g.teams[g.sit.poss].abbr||short(g,g.sit.poss));return d+(pa?` (${pa} ball)`:"")}
 function quickPick(g){const md=model(g);if(!md)return null;let c=md.pH>=md.pA?g.home:g.away;const solo=g.lg==="ten"||g.lg==="mma";
   return{c:String(c),pick:`${short(g,c)} ${solo?"to win":"ML"}`,p:c===g.home||String(c)===String(g.home)?md.pH:md.pA}}
 function quickTk(g){return`<button type="button" class="btn sm tkb" data-tkgame="${esc(g.lg+":"+g.id)}">+ Ticket</button>`}
@@ -938,7 +941,7 @@ function renderGames(){
     if(g.field)return head+fieldCardHtml(g);
     const side=(c,p,fav)=>`<div class="tm${fav?" fav":""}"><div class="nm">${esc(tname(g,c))}${haTag(g,c)}<small>${esc(rec(g,c))}</small></div><div class="sc">${(live||fin)&&sc[c]!=null?sc[c]:""}</div><div class="pc${md&&!fin?" pctap":""}${md&&!fin&&tkArr().some(l=>l.key===g.lg+":"+g.id&&l.pick===`${short(g,c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`)?" onTk":""}"${md&&!fin?` data-tkml="${esc(g.lg+":"+g.id+"|"+c)}" role="button" title="Add ${esc(short(g,c))} to your ticket"`:""}>${md?pct(p,0):fin?"":"—"}</div></div>`;
     const favH=md&&md.pH>=md.pA;const sp=md?Math.round(Math.abs(md.m)*2)/2:0;
-    return`${head}<div class="gm"><div class="meta"><span>${live?`<span class="live">Live</span> ${esc(g.detail||"")}`:fin?"Final":esc(whenTxt(g))}</span><span class="lgtag">${icon(g.lg)}${esc(LEAGUES[g.lg].label)}${g.title?" · "+esc(g.title):""}</span></div>
+    return`${head}<div class="gm"><div class="meta"><span>${live?`<span class="live">Live</span> ${esc(fmtClock(g)||g.detail||"")}${downTxt(g)?` <span class="dsep">|</span> <span class="down${g.sit&&g.sit.rz?" rz":""}">${esc(downTxt(g))}</span>`:""}`:fin?"Final":esc(whenTxt(g))}</span><span class="lgtag">${icon(g.lg)}${esc(LEAGUES[g.lg].label)}${g.title?" · "+esc(g.title):""}</span></div>
       ${side(g.away,md&&md.pA,md&&!favH)}${side(g.home,md&&md.pH,md&&favH)}${md&&md.pD!=null?`<div class="tm"><div class="nm drw">Draw</div><div class="sc"></div><div class="pc">${pct(md.pD,0)}</div></div>`:""}
       ${md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}
       ${!fin?(g.lg==="soc"?soccerHtml(g):g.lg==="ten"?tennisHtml(g):g.lg==="mma"?mmaHtml(g):totalsHtml(g)+periodsHtml(g)):(g.lg==="ten"&&g.sets?`<div class="note">Sets: ${g.sets.h.map((v,i)=>`${v}-${g.sets.a[i]??0}`).join(", ")}</div>`:"")}${liveTdLine(g)}
@@ -1637,10 +1640,10 @@ const SPORTPATH={nfl:"football/nfl",cfb:"football/college-football",nba:"basketb
 async function loadDK(g,ttl){const k=g.lg+":"+g.id,c=DKC[k];if(c&&Date.now()-c.at<(ttl!=null?ttl:(isLive(g)?60e3:5*60e3)))return c.v;
   const path=g.lg==="soc"?(g.sl?"soccer/"+g.sl:null):SPORTPATH[g.lg];if(!path)return null;
   let live=null;try{const sp=path.split("/")[0],lgp=path.split("/").slice(1).join("/");
-    const j=await getJSON(`https://sports.core.api.espn.com/v2/sports/${sp}/leagues/${lgp}/events/${g.id}/competitions/${g.id}/odds`);const it=(j.items||[]).find(x=>x&&x.provider&&/draft/i.test(x.provider.name||""));
+    const j=await getJSON(`https://sports.core.api.espn.com/v2/sports/${sp}/leagues/${lgp}/events/${g.id}/competitions/${g.id}/odds`);const dks=(j.items||[]).filter(x=>x&&x.provider&&/draft/i.test(x.provider.name||""));const it=(isLive(g)&&dks.find(x=>/live/i.test(x.provider.name||"")))||dks.slice().sort((a,b)=>(+a.provider.priority||9)-(+b.provider.priority||9))[0];
     if(it){const nn=x=>{if(x==null||x==="")return null;if(typeof x==="number")return x;const s=String(x).trim();if(/^even$/i.test(s))return 100;const m=s.match(/[+-]?\d+(\.\d+)?/);return m?+m[0]:null};
       const cur=it.current||{},hc=(it.homeTeamOdds&&it.homeTeamOdds.current)||{},ac=(it.awayTeamOdds&&it.awayTeamOdds.current)||{},pk=o=>o?(o.alternateDisplayValue??o.american??o.value):null;
-      const v2={prov:"DraftKings",live:isLive(g),total:nn(pk(cur.total))??nn(it.overUnder),oO:nn(pk(cur.over))??nn(it.overOdds),uO:nn(pk(cur.under))??nn(it.underOdds),
+      const v2={prov:it.provider.name||"DraftKings",live:isLive(g)&&/live/i.test(it.provider.name||""),liveFeed:true,total:nn(pk(cur.total))??nn(it.overUnder),oO:nn(pk(cur.over))??nn(it.overOdds),uO:nn(pk(cur.under))??nn(it.underOdds),
         spread:nn(pk(hc.pointSpread))??nn(it.spread),mlH:nn(pk(hc.moneyLine))??nn(it.homeTeamOdds&&it.homeTeamOdds.moneyLine),mlA:nn(pk(ac.moneyLine))??nn(it.awayTeamOdds&&it.awayTeamOdds.moneyLine),
         sH:nn(pk(hc.spread))??nn(it.homeTeamOdds&&it.homeTeamOdds.spreadOdds),sA:nn(pk(ac.spread))??nn(it.awayTeamOdds&&it.awayTeamOdds.spreadOdds),draw:nn(it.drawOdds&&it.drawOdds.moneyLine)};
       if(v2.total!=null||v2.spread!=null)live=v2}}catch(e){}
@@ -1661,7 +1664,7 @@ function dkInfoHtml(g,v){const md=model(g),H=short(g,g.home),A=short(g,g.away),p
   if(v.mlH!=null&&v.mlA!=null&&md){const iH=impl(v.mlH),iA=impl(v.mlA);parts.push(`Moneyline ${esc(A)} ${amer(v.mlA)} · ${esc(H)} ${amer(v.mlH)}`);
     if(iH&&iA){const s=iH+iA+(v.draw!=null&&impl(v.draw)?impl(v.draw):0);parts.push(`DraftKings gives ${esc(H)} ${pct(iH/s,0)}, model says ${pct(md.pH,0)}`)}}
   const te=dkTeamEst(g);const key=g.lg+":"+g.id,man=["t","s","h","a"].some(f=>MANUAL.has(key+f));const at=DKC[key]?new Date(DKC[key].at).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",second:"2-digit"}):"";
-  return`<b>${esc(v.prov)}${v.live?" (live line)":""}:</b> ${parts.join(" · ")}${te?`<br>Team totals estimated from DraftKings' total and spread (${esc(A)} ${te.a}, ${esc(H)} ${te.h}).`:""}<br><span class="dkupd">Boxes follow DraftKings · updated ${esc(at)}${isLive(g)?" · refreshes every 10 sec":" · refreshes every 2 min"}${man?" · boxes you changed stay as you set them (tap DK line to reset)":""}</span>`}
+  return`<b>${esc(v.prov)}${v.liveFeed&&isLive(g)&&!/live/i.test(v.prov)?" (no separate live line in ESPN's feed; this may be the pregame line)":""}:</b> ${parts.join(" · ")}${te?`<br>Team totals estimated from DraftKings' total and spread (${esc(A)} ${te.a}, ${esc(H)} ${te.h}).`:""}<br><span class="dkupd">Boxes follow DraftKings · updated ${esc(at)}${isLive(g)?" · refreshes every 10 sec":" · refreshes every 2 min"}${man?" · boxes you changed stay as you set them (tap DK line to reset)":""}</span>`}
 function dkApply(g,v){const key=g.lg+":"+g.id;if(!v||(v.total==null&&v.spread==null&&v.mlH==null))return false;dkInfoMem[key]=dkInfoHtml(g,v);
   if(PSH[g.lg]){const pk=key+":p";if(!MANUAL.has(pk+"t")&&!MANUAL.has(pk+"m")){const selK=lineMem[pk+"s"]??"0",ix=(PER[+selK]||PER[0])[1],e=dkPeriodEst(g,ix);if(e){lineMem[pk+"t"]=String(e.tot);if(e.spr!=null)lineMem[pk+"m"]=String(e.spr)}}}return true}
 document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest(".dkBtn");if(!b)return;e.preventDefault();
@@ -2028,13 +2031,14 @@ function tileBets(g){try{TK}catch(e){return""}const legs=legsSel().filter(l=>l.k
   return`<div class="tbets">${legs.map(l=>{const s=legLive(l,g);const short_=String(l.pick).replace(/\s*\([^)]*@[^)]*\)\s*$/,"");return`<div class="tbet ${s.cls}"><span class="tbp">${esc(short_)}${l.tkName&&(LW.tsel||"all")==="all"&&TKS.length>0?` <i class="tkn">${esc(l.tkName)}</i>`:""}</span><b>${esc(s.lab)}</b><span class="tbn">${esc(s.note)}</span></div>`}).join("")}</div>`}
 function lwTile(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||{},k=g.lg+":"+g.id,sel=LW.sel===k;
   const meta=`<div class="tmeta"><span>${live?`<span class="ldot" aria-hidden="true"></span>${esc(fmtClock(g)||"Live")}`:fin?"Final":esc(new Date(g.start_time).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}))}</span><span class="ico" title="${esc(LEAGUES[g.lg].label)}">${icon(g.lg)}</span></div>`;
+  const dn=downTxt(g);
   if(g.field)return`<button type="button" class="tile${sel?" sel":""}" data-k="${esc(k)}">${meta}<div class="trow"><span class="ab">${esc(g.name||g.title||"Event")}</span></div><div class="tflag">Leaderboard on Games</div></button>`;
   const md=fin?null:model(g);if(live&&md)lwTrack(g,md.pH);const F=lwFlags(g,md);
   const sh=sc[g.home],sa=sc[g.away],lead=c=>(live||fin)&&sh!=null&&sa!=null&&(c===g.home?sh>sa:sa>sh);
     let fl=[];if(F.close)fl.push(`<span class="cl">Close finish</span>`);if(F.upset)fl.push(`<span class="us">Upset watch</span>`);
   if(live&&md){const s=lwSwing(g,md.pH);if(s)fl.push(`<span class="up">▲ ${esc(tAbbr(g,s.d>0?g.home:g.away))} +${Math.round(Math.abs(s.d)*100)}</span>`)}
   if(md&&md.pD!=null)fl.push(`Draw ${pct(md.pD,0)}`);{const LI=g.lg==="mlb"?null:lsInfo(g);if(md&&LI&&LI.labs.length>4&&(live||fin)){const fav=md.pH>=md.pA?g.home:g.away;fl.push(`${esc(tAbbr(g,fav))} ${pct(Math.max(md.pH,md.pA),0)} to win`)}}if(!live&&!fin&&g.sit==null&&!fl.length&&g.title)fl.push(esc(g.title));
-  const tb=tileBets(g);return`<button type="button" class="tile${sel?" sel":""}${F.close?" close":F.upset?" upset":""}${tb?" mine":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div>${tb}</button>`}
+  const tb=tileBets(g);return`<button type="button" class="tile${sel?" sel":""}${F.close?" close":F.upset?" upset":""}${tb?" mine":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${dn?`<div class="tdown${g.sit&&g.sit.rz?" rz":""}">${esc(dn)}</div>`:""}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div>${tb}</button>`}
 function lwDetail(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||{},md=fin?null:model(g);
   const side=(c,p)=>`<div class="tm"><div class="nm">${esc(tname(g,c))}${haTag(g,c)}<small>${esc(rec(g,c))}</small></div><div class="sc">${(live||fin)&&sc[c]!=null?sc[c]:""}</div><div class="pc">${md&&p!=null?pct(p,0):""}</div></div>`;
   if(g.field)return`<div class="tdet"><b>${esc(g.name||g.title||"")}</b><p class="note">${live?"In progress. ":""}The leaderboard and finishing chances are on the Games tab.</p></div>`;
