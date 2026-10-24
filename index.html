@@ -273,7 +273,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 .tkpath{font-size:.75rem}
 .tksum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}.tksum div{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column}.tksum span{font-size:.75rem;color:var(--muted)}.tksum b{font:700 1.2rem var(--mono);color:var(--turf)}
 .tkacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.tkacts .btn{flex:1 1 auto;text-align:center;text-decoration:none}
-#tkToast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:50;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:99px;font:600 .85rem var(--body);transition:all .2s;max-width:86vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tkToast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-20px);opacity:0;pointer-events:none;z-index:50;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:99px;font:600 .85rem var(--body);transition:all .2s;max-width:86vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tkToast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .ra{display:inline-flex;gap:5px;margin-left:8px;vertical-align:middle}
 .rab{display:inline-flex;align-items:center;justify-content:center;gap:1px;min-width:30px;height:26px;padding:0 7px;border-radius:7px;border:1px solid var(--turf);background:transparent;color:var(--turf);font:700 .72rem var(--body);text-decoration:none;cursor:pointer;line-height:1}
@@ -303,6 +303,11 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 #tkView{font-family:var(--display);font-size:1.05rem;text-transform:uppercase;letter-spacing:.03em;margin-right:10px}
 .lwtk{display:flex;align-items:center;gap:8px;margin:0 0 10px}.lwtk .lab{white-space:nowrap;font-size:.75rem}
 .tkn{font-style:normal;font-weight:600;color:var(--muted);font-size:.9em}
+.tkhint{margin:4px 0 2px;font-weight:700;color:var(--turf)}
+.tkopt::after{content:"+";font:800 1.1rem var(--body);color:var(--turf);margin-left:6px}
+.tkopt.added{border-color:var(--turf);background:color-mix(in srgb,var(--turf) 18%,var(--bg))}.tkopt.added::after{content:"✓ Added";font-size:.72rem;letter-spacing:.03em}
+.tkfoot{position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px;margin:12px -16px calc(-18px - env(safe-area-inset-bottom,0px));padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line)}
+.tkfoot span{flex:1;font-weight:600;font-size:.85rem;color:var(--muted)}
 </style>
 
 </head>
@@ -2087,8 +2092,8 @@ function tkSave(){setTimeout(()=>{try{const n=$("lwMineN");if(n)n.textContent=TK
 function dkUrl(l){const s=DKSP[l.lg];if(l.player&&s)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.player)}--odds`;if(l.ev)return l.ev;if(s&&l.tname)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.tname)}--odds`;if(s)return`${DKB}/leagues/${s[0]}/${s[1]}`;return DKB+(DKLG[l.lg]||"")}
 function dkPath(l){if(l.player&&DKSP[l.lg])return`DraftKings search for ${l.player} › pick the prop`;if(!l.ev&&l.type==="Prop")return`Team page › tap the ${l.game} game › Player props`;const where=l.type==="Prop"?"Player props":l.type==="Total"?"Game lines › Total":l.type==="Spread"?"Game lines › Spread":"Game lines › Moneyline";return`${LEAGUES[l.lg]?LEAGUES[l.lg].label:""} › ${l.game} › ${where}`}
 function tkToast(t){let el=$("tkToast");if(!el){el=document.createElement("div");el.id="tkToast";el.setAttribute("role","status");document.body.appendChild(el)}el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1800)}
-function tkAdd(leg){if(TK.some(x=>x.key===leg.key&&x.pick===leg.pick)){tkToast("Already on your ticket");return}
-  const nl={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),done:false,...leg};TK.push(nl);tkSave();tkToast("Added: "+leg.pick);tkEv(nl)}
+function tkAdd(leg){if(TK.some(x=>x.key===leg.key&&x.pick===leg.pick)){tkToast("Already on your ticket");return false}
+  const nl={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),done:false,...leg};TK.push(nl);tkSave();tkToast("Added: "+leg.pick);tkEv(nl);return true}
 function tkEv(l){if(l.ev||l.evTried)return;l.evTried=1;const g=findGame(l.key);if(!g)return;loadDK(g).then(v=>{if(v&&v.ev){TK.forEach(x=>{if(x.key===l.key)x.ev=v.ev});tkSave();if($("tkSheet")&&$("tkSheet").classList.contains("on")&&$("tkSheet").querySelector(".tklist"))tkOpen()}}).catch(()=>{})}
 function legBase(g){return{lg:g.lg,key:g.lg+":"+g.id,gid:g.id,game:`${short(g,g.away)} @ ${short(g,g.home)}`,when:g.start_time}}
 function tkFab(){let b=$("tkFab");if(!b){b=document.createElement("button");b.id="tkFab";b.type="button";b.setAttribute("aria-label","Open ticket");b.addEventListener("click",tkOpen);document.body.appendChild(b)}
@@ -2196,27 +2201,31 @@ function tkGame0(key){const g=findGame(key)||(()=>{const i=key.indexOf(":"),lg=k
   let tot=lineMem[key+"t"]!=null&&lineMem[key+"t"]!==""&&isFinite(+lineMem[key+"t"])?+lineMem[key+"t"]:dk&&dk.total!=null?dk.total:gp?Math.floor((live?gp.tot:gp.preTot))+0.5:null;
   const nm=c=>short(g,c);
   const p=sheet(`<div class="tkhead"><h2>Add to ticket</h2><button type="button" class="tkx" aria-label="Close">×</button></div>
-    <p class="note">${icon(g.lg)} ${esc(tname(g,g.away))} @ ${esc(tname(g,g.home))} · ${esc(live?fmtClock(g):whenTxt(g))}${dk?` · ${esc(dk.prov)} lines filled in`:""}</p>
+    <p class="tkhint">Tap any pick to add it to your ticket.</p><p class="note">${icon(g.lg)} ${esc(tname(g,g.away))} @ ${esc(tname(g,g.home))} · ${esc(live?fmtClock(g):whenTxt(g))}${dk?` · ${esc(dk.prov)} lines filled in`:""}</p>
     <h3>${g.lg==="ten"?"Match winner":g.lg==="mma"?"Fight winner":"Moneyline"}</h3><div class="tkopts">
       ${[g.away,g.home].map(c=>`<button type="button" class="tkopt" data-k="ml" data-c="${esc(c)}"><span>${esc(nm(c))}</span><b>${md?pct(c===g.home?md.pH:md.pA,0):""}</b></button>`).join("")}
       ${md&&md.pD!=null?`<button type="button" class="tkopt" data-k="draw"><span>Draw</span><b>${pct(md.pD,0)}</b></button>`:""}</div>
     ${teamSport&&g.lg!=="soc"?`<h3>${g.lg==="mlb"?"Run line":g.lg==="nhl"?"Puck line":"Spread"}</h3><label class="f"><span class="lab">${esc(nm(g.home))} spread</span><input type="number" inputmode="decimal" step="0.5" id="tkSp" value="${spH!=null?spH:""}"></label><div class="tkopts" id="tkSpOpts"></div>`:""}
     ${teamSport?`<h3>${g.lg==="soc"?"Total goals":"Total"}</h3><label class="f"><span class="lab">Total line</span><input type="number" inputmode="decimal" step="0.5" id="tkTot" value="${tot!=null?tot:""}"></label><div class="tkopts" id="tkTotOpts"></div>`:""}
-    ${live?`<p class="note">This game is live, so these chances use the current score and time left.</p>`:""}`);
+    ${live?`<p class="note">This game is live, so these chances use the current score and time left.</p>`:""}
+    <div class="tkfoot"><span id="tkFootN"></span><button type="button" class="btn ghost" id="tkFootView">View ticket</button><button type="button" class="btn" id="tkFootDone">Done</button></div>`);
+  const tkFoot=()=>{const n=$("tkFootN");if(n)n.textContent=TK.length?`${TK.length} pick${TK.length===1?"":"s"} on your ticket`:"Your ticket is empty";
+    p.querySelectorAll(".tkopt").forEach(o=>{const lab=o.querySelector("span").textContent.trim();const on=TK.some(l=>l.key===key&&(l.pick===lab+" ML"||l.pick===lab+" to win"||l.pick===lab||l.pick.startsWith(lab+" (")||(o.dataset.k==="draw"&&/^Draw/.test(l.pick))));o.classList.toggle("added",on)})};
+  $("tkFootView").addEventListener("click",()=>tkOpen("cur"));$("tkFootDone").addEventListener("click",sheetClose);
   p.querySelector(".tkx").addEventListener("click",sheetClose);
   const spOpts=()=>{const box=$("tkSpOpts");if(!box)return;const s=parseFloat($("tkSp").value);if(!isFinite(s)){box.innerHTML="";return}
     let pH=null;if(md&&!live)pH=Phi((md.m+s)/L.sd);else if(gp&&live)pH=Phi(((gp.h-gp.a)+s)/(L.sd*gp.sdF));const lab=v=>v>0?"+"+v:String(v);
-    box.innerHTML=[[g.away,-s,pH!=null?1-pH:null],[g.home,s,pH]].map(([c,v,pp])=>`<button type="button" class="tkopt" data-k="sp" data-c="${esc(c)}" data-v="${v}" data-p="${pp!=null?pp:""}"><span>${esc(nm(c))} ${lab(v)}</span><b>${pp!=null?pct(pp,0):""}</b></button>`).join("");wire(box)};
+    box.innerHTML=[[g.away,-s,pH!=null?1-pH:null],[g.home,s,pH]].map(([c,v,pp])=>`<button type="button" class="tkopt" data-k="sp" data-c="${esc(c)}" data-v="${v}" data-p="${pp!=null?pp:""}"><span>${esc(nm(c))} ${lab(v)}</span><b>${pp!=null?pct(pp,0):""}</b></button>`).join("");wire(box);tkFoot()};
   const totOpts=()=>{const box=$("tkTotOpts");if(!box)return;const t=parseFloat($("tkTot").value);if(!isFinite(t)){box.innerHTML="";return}
     let pO=null;if(gp&&live&&g.lg!=="soc"){const cur=gp.curH+gp.curA;pO=cur>t?1:Phi((gp.tot-t)/(L.tsd*gp.sdF))}else if(gp&&!live){const sd=g.lg==="soc"?Math.sqrt(Math.max(gp.preTot,0.5)):L.tsd;pO=g.lg==="soc"?(()=>{let c=0,k=0,lam=gp.preTot,term=Math.exp(-lam);for(k=0;k<=Math.floor(t);k++){c+=term;term*=lam/(k+1)}return 1-c})():Phi((gp.preTot-t)/sd)}
-    box.innerHTML=[["Over",pO],["Under",pO!=null?1-pO:null]].map(([o,pp])=>`<button type="button" class="tkopt" data-k="tot" data-o="${o}" data-v="${t}" data-p="${pp!=null?pp:""}"><span>${o} ${t}</span><b>${pp!=null?pct(pp,0):""}</b></button>`).join("");wire(box)};
+    box.innerHTML=[["Over",pO],["Under",pO!=null?1-pO:null]].map(([o,pp])=>`<button type="button" class="tkopt" data-k="tot" data-o="${o}" data-v="${t}" data-p="${pp!=null?pp:""}"><span>${o} ${t}</span><b>${pp!=null?pct(pp,0):""}</b></button>`).join("");wire(box);tkFoot()};
   const wire=box=>box.querySelectorAll(".tkopt").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k,c=b.dataset.c;let leg;
     if(k==="ml")leg={...base,type:"Moneyline",pick:`${nm(c)} ${g.lg==="ten"||g.lg==="mma"?"to win":"ML"}`,p:md?(c===g.home?md.pH:md.pA):null,tname:tname(g,c),side:String(c)};
     else if(k==="draw")leg={...base,type:"Moneyline",pick:`Draw (${base.game})`,p:md.pD,tname:tname(g,g.home)};
     else if(k==="sp"){const v=+b.dataset.v;leg={...base,type:"Spread",pick:`${nm(c)} ${v>0?"+"+v:v}`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,c),side:String(c),line:v}}
     else leg={...base,type:"Total",pick:`${b.dataset.o} ${b.dataset.v} (${base.game})`,p:b.dataset.p?+b.dataset.p:null,tname:tname(g,g.home),line:+b.dataset.v};
-    tkAdd(leg);sheetClose()}));
-  wire(p.querySelector(".tkopts"));spOpts();totOpts();
+    tkAdd(leg);b.classList.add("added");tkFoot()}));
+  wire(p.querySelector(".tkopts"));spOpts();totOpts();tkFoot();
   const a=$("tkSp");if(a)a.addEventListener("input",()=>{a.dataset.ed=1;spOpts()});const b=$("tkTot");if(b)b.addEventListener("input",()=>{b.dataset.ed=1;totOpts()});
   if(!dk&&teamSport){p.dataset.k=key;loadDK(g).then(v=>{if(!v||p.dataset.k!==key||!$("tkSheet").classList.contains("on"))return;let ch=false;
     if(a&&!a.dataset.ed&&v.spread!=null&&g.lg!=="mlb"&&g.lg!=="nhl"){a.value=v.spread;ch=true;spOpts()}if(b&&!b.dataset.ed&&v.total!=null){b.value=v.total;ch=true;totOpts()}
