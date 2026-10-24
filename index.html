@@ -829,7 +829,7 @@ function model(g){
 const tname=(g,c)=>(g.teams&&g.teams[c]&&g.teams[c].name)||(teamInfo(g.lg,c)||{}).name||c;
 const short=(g,c)=>{const n=tname(g,c);if(g.lg==="cfb"){const w=n.split(" ");return w.length>2?w.slice(0,-1).join(" "):w[0]}return n.split(" ").slice(-1)[0]};
 const DKB="https://sportsbook.draftkings.com";
-const DKSP={nfl:["football","nfl"],nba:["basketball","nba"],wnba:["basketball","wnba"],mlb:["baseball","mlb"],nhl:["hockey","nhl"],cfb:["football","cfb"],ncaab:["basketball","cbb"]};
+const DKSP={nfl:["football","nfl"],nba:["basketball","nba"],wnba:["basketball","wnba"],mlb:["baseball","mlb"],nhl:["hockey","nhl"],cfb:["football","cfb"],ncaab:["basketball","cbb"],ncaaw:["basketball","wcbb"],soc:["soccer","soccer"],ten:["tennis","tennis"],mma:["mma","ufc"],golf:["golf","golf"],f1:["motorsports","f1"],nas:["motorsports","nascar"]};
 const DKLG={ncaaw:"/leagues/basketball/ncaaw",soc:"/sports/soccer",ten:"/sports/tennis",mma:"/sports/mma",golf:"/sports/golf",f1:"/sports/motorsports",nas:"/sports/motorsports"};
 const slugify=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const DKC={};
@@ -896,7 +896,7 @@ async function loadAdj(force){if(adjBusy||(!force&&Date.now()-adjAt<10*60e3))ret
     Object.keys(ADJ).forEach(k=>{const [lg,id]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)];const s=D[lg];if(s&&s.live&&!((s.live.games)||[]).some(x=>x.id===id))delete ADJ[k]});
     cache.set("adj",ADJ)}finally{adjBusy=false}
   if(changed){renderGames();try{if(!$("p-live").hidden)renderLive()}catch(e){}}}
-function dkLink(g,tid){const k=g.lg+":"+g.id,c=DKC[k]&&DKC[k].v;if(c&&c.ev)return c.ev;return dkUrl({lg:g.lg,tname:tid!=null?tname(g,tid):tname(g,g.home)})}
+function dkLink(g,tid){const k=g.lg+":"+g.id,c=DKC[k]&&DKC[k].v;if(c&&c.ev)return c.ev;if(g.field)return dkUrl({lg:g.lg,tname:g.title||g.name||LEAGUES[g.lg].label});return dkUrl({lg:g.lg,tname:tid!=null?tname(g,tid):tname(g,g.home)})}
 function dkA(g,tid,cls,player){const s=DKSP[g.lg];const href=player&&s?`${DKB}/teams/${s[0]}/${s[1]}/${slugify(player)}--odds`:dkLink(g,tid);return`<a class="rab dk${cls?" "+cls:""}" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Open in DraftKings">DK<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>`}
 function tkQ(g,tid,pick,p,type,player){return esc(JSON.stringify({key:g.lg+":"+g.id,pick,p:p==null?null:+(+p).toFixed(4),type:type||"Prop",tid:tid==null?null:String(tid),player:player||null}))}
 function rowAct(g,tid,pick,p,type,player){return`<span class="ra"><button type="button" class="rab add" data-tkq="${tkQ(g,tid,pick,p,type,player)}" aria-label="Add ${esc(pick)} to ticket">+</button>${dkA(g,tid,"",player)}</span>`}
@@ -1304,7 +1304,7 @@ function fieldCardHtml(g){const live=isLive(g),fin=DONE.includes(g.status),b=x=>
   const opt=rows.map((p,i)=>`<option value="${i}" data-win="${p.win}" data-t1="${p[cols[1][0]]}" data-t2="${p[cols[2][0]]}" data-t3="${p[cols[3][0]]}" data-mu="${g.kind==="golf"?p.mu:0}" data-sd="${g.kind==="golf"?p.sd:0}" data-w="${p.w||0}"${p.frl!=null?` data-frl="${p.frl}"`:""}>${esc(p.name)}</option>`).join("");
   const mk=[["win","Win"],["t1",cols[1][1]],["t2",cols[2][1]],["t3",cols[3][1]]].concat(rows[0].frl!=null?[["frl","1st-round leader"]]:[]);
   const frl=rows[0].frl!=null?`<p class="note">1st-round leader favorites: ${rows.slice().sort((a,b)=>b.frl-a.frl).slice(0,3).map(p=>`${esc(p.name)} <b>${b(p.frl)}</b>`).join(" · ")}</p>`:"";
-  return`<div class="gm fev" data-g="${esc(key)}">${head}${table(rows.slice(0,12))}${rows.length>12?`<details class="tot"><summary>Show the rest of the ${g.kind==="golf"?"field":"grid"} (${rows.length-12})</summary>${table(rows.slice(12))}</details>`:""}${frl}
+  return`<div class="gm fev" data-g="${esc(key)}">${head}${table(rows.slice(0,12))}<div class="row" style="justify-content:flex-end;margin-top:4px">${fin?"":dkA(g,null,"btnlike")}</div>${rows.length>12?`<details class="tot"><summary>Show the rest of the ${g.kind==="golf"?"field":"grid"} (${rows.length-12})</summary>${table(rows.slice(12))}</details>`:""}${frl}
   <details class="tot" data-k="${esc(key+":m")}"${openMem.has(key+":m")?" open":""}><summary>Matchups and odds check</summary>
    <div class="fchk"><div class="row chk"><span class="lab tl">Matchup</span><select class="fA">${opt}</select><span class="note">vs</span><select class="fB">${opt.replace('value="1"','value="1" selected')}</select></div><p class="note fMOut"></p></div>
    <div class="fchk"><div class="row chk"><span class="lab tl">Odds check</span><select class="fP">${opt}</select><select class="fM">${mk.map(([k,t])=>`<option value="${k}">${t}</option>`).join("")}</select></div>
@@ -2152,7 +2152,7 @@ armAll();
 /* --- ticket: build picks here, copy them into DraftKings --- */
 let TK=[];try{TK=JSON.parse(localStorage.getItem("ge-ticket")||"[]")||[]}catch(e){TK=[]}
 function tkSave(){setTimeout(()=>{try{const n=$("lwMineN");if(n)n.textContent=TK.length?`(${TK.length})`:"";if(!$("p-live").hidden)renderLive()}catch(e){}},0);try{localStorage.setItem("ge-ticket",JSON.stringify(TK))}catch(e){}tkFab()}
-function dkUrl(l){const s=DKSP[l.lg];if(l.player&&s)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.player)}--odds`;if(l.ev)return l.ev;if(s&&l.tname)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.tname)}--odds`;if(s)return`${DKB}/leagues/${s[0]}/${s[1]}`;return DKB+(DKLG[l.lg]||"")}
+function dkUrl(l){const s=DKSP[l.lg];if(l.player&&s)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.player)}--odds`;if(l.ev)return l.ev;if(s&&l.tname)return`${DKB}/teams/${s[0]}/${s[1]}/${slugify(l.tname)}--odds`;if(s&&["nfl","nba","mlb","nhl"].includes(l.lg))return`${DKB}/leagues/${s[0]}/${s[1]}`;return DKB}
 function dkPath(l){if(l.player&&DKSP[l.lg])return`DraftKings search for ${l.player} › pick the prop`;if(!l.ev&&l.type==="Prop")return`Team page › tap the ${l.game} game › Player props`;const where=l.type==="Prop"?"Player props":l.type==="Total"?"Game lines › Total":l.type==="Spread"?"Game lines › Spread":"Game lines › Moneyline";return`${LEAGUES[l.lg]?LEAGUES[l.lg].label:""} › ${l.game} › ${where}`}
 function tkToast(t){let el=$("tkToast");if(!el){el=document.createElement("div");el.id="tkToast";el.setAttribute("role","status");document.body.appendChild(el)}el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1800)}
 function tkAdd(leg){if(TK.some(x=>x.key===leg.key&&x.pick===leg.pick)){tkToast("Already on your ticket");return false}
