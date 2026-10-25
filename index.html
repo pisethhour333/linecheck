@@ -601,7 +601,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 60. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 61. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -2143,16 +2143,22 @@ async function pushSync(force){try{if(!AL.on||!pushOK()||Notification.permission
   const tickets=psTickets();const sig=JSON.stringify(tickets);let last="",at=0;try{last=localStorage.getItem("ge-pushsig")||"";at=+localStorage.getItem("ge-pushat")||0}catch(e){}
   if(!force&&sig===last&&Date.now()-at<12*3600e3)return;
   const r=await fetch(url+"/sync",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sub:sub.toJSON(),tickets})});const j=await r.json();
-  if(!r.ok)throw new Error(j.error||("HTTP "+r.status));PS.err="";PS.skipped=j.skipped||[];try{localStorage.setItem("ge-pushsig",sig);localStorage.setItem("ge-pushat",String(Date.now()))}catch(e){}alUI();return j}catch(e){PS.err="Couldn't reach the alert server";alUI()}}
+  if(!r.ok)throw new Error(j.error||("HTTP "+r.status));PS.err="";PS.skipped=j.skipped||[];try{localStorage.setItem("ge-pushsig",sig);localStorage.setItem("ge-pushat",String(Date.now()))}catch(e){}alUI();return j}catch(e){PS.err="Couldn't reach the alert server ("+String((e&&e.message)||e).slice(0,80)+")";alUI()}}
 function b64uBytes(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
-async function pushEnable(){if(PS.busy)return;PS.busy=true;alUI();try{
+async function pushEnable(){if(PS.busy)return;PS.busy=true;alUI();let step="start";try{
   if(!pushOK()){lcToast(/iPhone|iPad/i.test(navigator.userAgent)?"On iPhone, add Linecheck to the Home Screen first (Share › Add to Home Screen), then open it from there and tap this again.":"This browser can't do phone notifications.");return}
-  const perm=await Notification.requestPermission();if(perm!=="granted"){lcToast("Notifications were not allowed. You can allow them in your phone's settings for this app.");return}
-  const url=await psConfig();if(!url){lcToast("Alerts while the app is closed aren't set up yet. Alerts still show while Linecheck is open.");return}
-  const key=(await (await fetch(url+"/vapid")).json()).key;const reg=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error("sw")),10000))]);
-  PS.sub=(await reg.pushManager.getSubscription())||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBytes(key)});
-  const j=await pushSync(true);if(j&&j.ok){await fetch(url+"/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:PS.sub.endpoint})}).catch(()=>{});lcToast("Ticket won notifications are on, even when Linecheck is closed. A test notification is on its way.")}
-}catch(e){PS.err="Couldn't turn on notifications";lcToast("Couldn't turn on notifications. Check your connection and try again.")}finally{PS.busy=false;alUI()}}
+  step="permission";const perm=await Notification.requestPermission();if(perm!=="granted"){lcToast("Notifications were not allowed. You can allow them in your phone's settings for this app.");return}
+  step="config";PS.url=null;const url=await psConfig();if(!url){lcToast("Alerts while the app is closed aren't set up yet. Alerts still show while Linecheck is open.");return}
+  step="server key";const kr=await fetch(url+"/vapid",{cache:"no-store"});if(!kr.ok)throw new Error("HTTP "+kr.status);const key=(await kr.json()).key;if(!key)throw new Error("no key");
+  step="app service";const reg=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error("not ready")),10000))]);
+  step="phone push";const ask=()=>reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBytes(key)});
+  let sub=await reg.pushManager.getSubscription();
+  if(sub){const k=sub.options&&sub.options.applicationServerKey;const same=k&&btoa(String.fromCharCode(...new Uint8Array(k))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")===key;if(!same){try{await sub.unsubscribe()}catch(e){}sub=null}}
+  if(!sub){try{sub=await ask()}catch(e1){await new Promise(r=>setTimeout(r,1500));const old=await reg.pushManager.getSubscription();if(old){try{await old.unsubscribe()}catch(e){}}sub=await ask()}}
+  PS.sub=sub;
+  step="sending tickets";PS.err="";const j=await pushSync(true);if(!j||!j.ok)throw new Error(PS.err||"sync failed");
+  step="test";await fetch(url+"/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:PS.sub.endpoint})}).catch(()=>{});lcToast("Ticket won notifications are on, even when Linecheck is closed. A test notification is on its way.")
+}catch(e){const why=((e&&(e.name&&e.name!=="Error"?e.name+": ":"")+(e.message||e))||"unknown").toString().slice(0,140);PS.err=`Couldn't turn on notifications (step: ${step} · ${why})`;lcToast(`Couldn't turn on notifications.\nStep: ${step}\n${why}`)}finally{PS.busy=false;alUI()}}
 async function pushDisable(){try{const url=await psConfig();const sub=PS.sub||await psCurrent();if(url&&sub)await fetch(url+"/unsync",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:sub.endpoint})});try{localStorage.removeItem("ge-pushsig")}catch(e){}}catch(e){}}
 function alUI(){const c=$("alOn"),b=$("alNotif"),n=$("alNote");if(!c)return;c.checked=AL.on;
   const perm="Notification" in window?Notification.permission:"unsupported",on=AL.on&&perm==="granted"&&!!PS.sub&&!!PS.url;
