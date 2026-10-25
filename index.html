@@ -326,6 +326,7 @@ nav button[aria-selected="true"]{color:var(--turf)!important;background:color-mi
 header{margin-bottom:0}
 .bx{width:100%;border-collapse:collapse;font-size:12.5px}.bx th{font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.bx th:first-child,.bx td:first-child{text-align:left}.bx td{padding:3px 4px;text-align:right;border-top:1px solid rgba(127,127,127,.15);white-space:nowrap}.bx td:first-child{white-space:normal}.bxh{margin:8px 0 2px}
 #lcToast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,20px);max-width:min(92vw,420px);background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.35;box-shadow:0 6px 24px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;text-align:center}#lcToast.on{opacity:1;transform:translate(-50%,0)}
+.pfon{margin:6px 0 2px;padding:6px 10px;border-radius:10px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.35);font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pfon .btn{margin-left:auto}
 </style>
 
 </head>
@@ -599,7 +600,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 57. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 58. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -1772,9 +1773,12 @@ function propGames(){return slate().filter(g=>g.lg==="nfl"&&upcoming(g))}
 /* --- NFL prop stat filter --- */
 const NFLPF=[["all","All"],["pass","Passing"],["rush","Rushing"],["rec","Receiving"],["td","Touchdowns"]];
 let NFLF="all";try{NFLF=localStorage.getItem("ge-pfnfl")||"all"}catch(e){}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-pfall]");if(!b)return;NFLF="all";try{localStorage.setItem("ge-pfnfl","all")}catch(x){}nflFilterBar();applyNflFilter()});
 function nflFilterBar(){const box=$("pf-nfl");if(!box)return;box.innerHTML=NFLPF.map(([k,t])=>`<button type="button" class="btn sm ghost" data-pf="${k}" aria-pressed="${NFLF===k}">${t}</button>`).join("");
   box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{NFLF=b.dataset.pf;try{localStorage.setItem("ge-pfnfl",NFLF)}catch(e){}nflFilterBar();applyNflFilter()}))}
-function applyNflFilter(){const lab={pass:"passing",rush:"rushing",rec:"receiving",td:"touchdown"}[NFLF];
+function applyNflFilter(){const lab={pass:"passing",rush:"rushing",rec:"receiving",td:"touchdown"}[NFLF];const nm=(NFLPF.find(x=>x[0]===NFLF)||[])[1]||"";
+  document.querySelectorAll("#propList-nfl > *").forEach(card=>{if(card.classList.contains("empty"))return;let n=card.querySelector(":scope > .pfon");if(NFLF==="all"){if(n)n.remove();return}
+    if(!n){n=document.createElement("div");n.className="pfon";const f=card.firstElementChild;f&&f.nextSibling?card.insertBefore(n,f.nextSibling):card.appendChild(n)}n.innerHTML=`Filter on: <b>${esc(nm)} only</b> <button type="button" class="btn sm ghost" data-pfall="1">Show all</button>`});
   document.querySelectorAll("#propList-nfl .prop").forEach(el=>{el.hidden=NFLF==="all"?false:NFLF==="td"?el.dataset.td!=="1":el.dataset.kind!==NFLF;
     el.querySelectorAll(".chip").forEach(c=>{c.hidden=NFLF==="td"&&!c.classList.contains("td")});const pr=el.querySelector(".pr"),ck=el.querySelector(".chk");if(pr)pr.hidden=NFLF==="td";if(ck)ck.hidden=NFLF==="td"});
   document.querySelectorAll("#propList-nfl .pteam").forEach(t=>{const all=t.querySelectorAll(".prop").length,vis=[...t.querySelectorAll(".prop")].filter(x=>!x.hidden).length,n=t.querySelector(".pfnone");if(n){n.hidden=!(all&&!vis);n.textContent=`No ${lab||""} props for this team.`}});
