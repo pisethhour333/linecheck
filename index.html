@@ -601,7 +601,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 61. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 62. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -2129,7 +2129,7 @@ async function alTick(){try{const tks=alTickets();if(!tks.length)return;const no
 /* push to phone via the Cloudflare watcher */
 var PS={url:null,key:null,sub:null,err:"",busy:false,last:""};
 const pushOK=()=>"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
-async function psConfig(){if(PS.url!==null)return PS.url;try{const j=await (await fetch("alerts.json",{cache:"no-store"})).json();PS.url=String(j.url||"").replace(/\/+$/,"")}catch(e){PS.url=""}return PS.url}
+async function psConfig(){if(PS.url!==null)return PS.url;try{const j=await (await fetch("alerts.json",{cache:"no-store"})).json();let u=String(j.url||"").trim().replace(/\/+$/,"");if(u&&!/^https?:\/\//i.test(u))u="https://"+u;if(!/^http:\/\/(localhost|127\.)/i.test(u))u=u.replace(/^http:\/\//i,"https://");PS.url=u}catch(e){PS.url=""}return PS.url}
 async function psCurrent(){try{if(!pushOK())return null;const r=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error("sw")),8000))]);PS.sub=await r.pushManager.getSubscription();return PS.sub}catch(e){return null}}
 const etDate=ms=>{try{const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(ms));const v=t=>(p.find(x=>x.type===t)||{}).value;return v("year")+v("month")+v("day")}catch(e){return""}};
 function psLeg(l){const g=alGame(l.key),lg=l.lg||String(l.key).split(":")[0],gid=l.gid||String(l.key).split(":")[1];const start=Date.parse((g&&g.start_time)||l.when||"")||0;
@@ -2149,7 +2149,7 @@ async function pushEnable(){if(PS.busy)return;PS.busy=true;alUI();let step="star
   if(!pushOK()){lcToast(/iPhone|iPad/i.test(navigator.userAgent)?"On iPhone, add Linecheck to the Home Screen first (Share › Add to Home Screen), then open it from there and tap this again.":"This browser can't do phone notifications.");return}
   step="permission";const perm=await Notification.requestPermission();if(perm!=="granted"){lcToast("Notifications were not allowed. You can allow them in your phone's settings for this app.");return}
   step="config";PS.url=null;const url=await psConfig();if(!url){lcToast("Alerts while the app is closed aren't set up yet. Alerts still show while Linecheck is open.");return}
-  step="server key";const kr=await fetch(url+"/vapid",{cache:"no-store"});if(!kr.ok)throw new Error("HTTP "+kr.status);const key=(await kr.json()).key;if(!key)throw new Error("no key");
+  step="server key";let kr;try{kr=await fetch(url+"/vapid",{cache:"no-store"})}catch(fe){let probe="unreachable";try{await fetch(url+"/vapid",{mode:"no-cors",cache:"no-store"});probe="reachable but blocked (missing permission header)"}catch(e2){}throw new Error(`${fe.message} · ${url} is ${probe}`)}if(!kr.ok)throw new Error("HTTP "+kr.status);const key=(await kr.json()).key;if(!key)throw new Error("no key");
   step="app service";const reg=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error("not ready")),10000))]);
   step="phone push";const ask=()=>reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBytes(key)});
   let sub=await reg.pushManager.getSubscription();
