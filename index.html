@@ -330,6 +330,7 @@ header{margin-bottom:0}
 .pfon{margin:6px 0 2px;padding:6px 10px;border-radius:10px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.35);font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pfon .btn{margin-left:auto}
 .tpl{display:flex;align-items:center;gap:8px;margin:8px 0}.tpl select{flex:1;min-width:0}.tpw{max-height:70vh;overflow:auto}.tpt{border-collapse:collapse;font-size:.8rem;width:100%}.tpt th{position:sticky;top:0;background:var(--surface);text-align:right;padding:4px 6px;font-size:.68rem;color:var(--muted);white-space:nowrap;z-index:1}.tpt th:first-child,.tpt td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;min-width:9.5em;max-width:12em}.tpt td{padding:5px 6px;border-top:1px solid color-mix(in srgb,var(--muted) 18%,transparent);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.tpt td:first-child{white-space:normal}.tpt td.tdy{text-align:left;white-space:normal;min-width:11em;color:var(--good)}.tpmore summary{cursor:pointer;margin:8px 0;color:var(--turf);font-weight:600}
 .tvbox{margin:6px 0 4px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.tvbox summary{cursor:pointer;font-weight:700;color:var(--turf)}.tvq{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}.tvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px;margin:10px 0}.tvg b{grid-column:1/-1;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.tvg label{display:flex;align-items:center;gap:8px;font-size:.92rem}.tvg input{width:18px;height:18px;accent-color:var(--turf)}
+.gsearch{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted)}.gsearch input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-size:16px;outline:none}.gsearch:focus-within{border-color:var(--turf)}
 </style>
 
 </head>
@@ -363,6 +364,7 @@ header{margin-bottom:0}
     <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances come from each team's season results plus home field. They don't use DraftKings' odds. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
     <p class="note" id="statsAsOf"></p></details>
   </div>
+  <div class="gsearch" role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="gSearch" placeholder="Search team or player" aria-label="Search games by team or player" autocomplete="off" enterkeyhint="search"><span class="note" id="gSearchN"></span></div>
   <div id="gameList" style="display:flex;flex-direction:column;gap:10px"><div class="empty">Loading this week's games…</div></div>
 </section>
 
@@ -614,7 +616,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 65. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 67. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -627,6 +629,7 @@ header{margin-bottom:0}
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>DK line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
+    <details><summary>Search games</summary><p>Type part of a team or player name in the search box above the Games list (for example "lak" or "sinner") to show only matching games. It works together with the sport and day picked at the top and shows how many games match. Tap ✕ or <b>Clear search</b> to see everything again.</p></details>
     <details><summary>Team players</summary><p>At the top of the Props tab, pick any team with a game coming up, live or just finished (it follows the sport and day picked at the top). You'll see every player with season numbers from ESPN: TDs and passing, rushing and receiving yards for football; points, rebounds, assists and threes per game for basketball; average, home runs, RBIs, ERA and strikeouts for baseball; goals, assists and points for hockey; goals and assists for soccer leaders. NFL players also show their chance to score a TD in the next game, and NBA players their projected points. When the team is playing, a <b>Today</b> column shows live stats that refresh every 30 seconds. College teams show the roster and live stats; season stats appear when ESPN has them.</p></details>
     <details><summary>Customize the live tiles</summary><p>On the Live tab, open <b>Customize tiles</b> to choose what each tile shows (win chances, quarter scores, down and distance, tags, your ticket bets) and what appears when you tap a tile (win bar, ticket, quarter table, situation, next TD, scorers and box score, injuries, latest plays, top performers). <b>Scores only</b> shows just the teams, the score and the quarter-by-quarter line. <b>Show everything</b> turns it all back on. Your choice is saved on this phone.</p></details>
     <details><summary>NBA player points</summary><p>On the Games tab, open <b>Player points projection</b> on any NBA game to see each team's main players with projected points, the chance of 20 or more, rebounds and assists. Projections blend this season with last season (early on), adjust for the opponent's defense and back-to-backs, and leave off players listed Out, sharing their points among teammates. During the game, the Live tile shows the real box score with a projected final for each player. For any other line, use the Props tab.</p></details>
@@ -960,6 +963,13 @@ function slate(){
 }
 function rec(g,c){if(g.lg==="ten"){const r=tenRank(c,tname(g,c),g.tour);return r?"#"+r.rank:""}const t=teamInfo(g.lg,c);return (t&&t.rec)||(g.teams&&g.teams[c]&&g.teams[c].rec)||""}
 function renderLg(){document.querySelectorAll(".lgsel button").forEach(b=>{b.setAttribute("aria-pressed",b.dataset.lg===LG);if(b.dataset.lg===LG&&!b.dataset.seen){b.dataset.seen=1;const box=b.parentElement;if(box&&box.scrollWidth>box.clientWidth)box.scrollLeft=Math.max(0,b.offsetLeft-box.offsetLeft-12)}else if(b.dataset.lg!==LG)delete b.dataset.seen})}
+var GQ="";try{GQ=sessionStorage.getItem("ge-gq")||""}catch(e){}
+function gqNorm(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\s+/g," ").trim()}
+function gqText(g){const parts=[g.name,g.title,LEAGUES[g.lg]&&LEAGUES[g.lg].label];try{[g.home,g.away].forEach(c=>{if(c==null)return;parts.push(tname(g,c),short(g,c),tAbbr(g,c))})}catch(e){}
+  (g.players||g.field&&g.entrants||[]).forEach(p=>parts.push(p&&(p.name||p.n)));return gqNorm(parts.filter(Boolean).join(" | "))}
+let gqT=null;document.addEventListener("input",e=>{if(e.target&&e.target.id==="gSearch"){GQ=e.target.value;try{sessionStorage.setItem("ge-gq",GQ)}catch(x){}clearTimeout(gqT);gqT=setTimeout(renderGames,150)}});
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-gqclear]")){GQ="";try{sessionStorage.removeItem("ge-gq")}catch(x){}const i=$("gSearch");if(i)i.value="";renderGames()}});
+setTimeout(()=>{const i=$("gSearch");if(i&&GQ)i.value=GQ},0);
 function renderGames(){
   const ae=document.activeElement;if(ae&&ae.classList&&(ae.classList.contains("ouIn")||ae.classList.contains("pIn")||ae.classList.contains("socIn")||ae.classList.contains("spIn")||ae.classList.contains("fOdds"))){pendingRender=true;return}
   renderLg();
@@ -983,7 +993,10 @@ function renderGames(){
   $("dayFilter").innerHTML=[["all",`All (${gs.length})`],["live",`<span class="ldot" aria-hidden="true"></span>Live (${liveN})`],...days.map(k=>[k,`${dLab(k)} (${gs.filter(g=>dayKey(g)===k).length})`])]
     .map(([k,t])=>`<button class="btn sm ghost" data-df="${k}" aria-pressed="${df===k}">${t}</button>`).join("");
   $("dayFilter").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{DF=b.dataset.df;try{localStorage.setItem("ge-df",DF)}catch(e){}filterChanged()}));
-  const shown=df==="all"?gs:df==="live"?gs.filter(isLive):gs.filter(g=>dayKey(g)===df);
+  let shown=df==="all"?gs:df==="live"?gs.filter(isLive):gs.filter(g=>dayKey(g)===df);
+  const q=gqNorm(GQ);const nAll=shown.length;if(q){shown=shown.filter(g=>gqText(g).includes(q))}
+  try{$("gSearchN").textContent=q?`${shown.length} of ${nAll}`:""}catch(e){}
+  if(q&&!shown.length){PH($("gameList")).html=`<div class="empty">No games match “${esc(GQ.trim())}” for ${esc(filterText())}. <button type="button" class="btn sm ghost" data-gqclear="1">Clear search</button></div>`;renderParlays(gs);return}
   if(!shown.length){PH($("gameList")).html=`<div class="empty">${df==="live"?"No games are live right now. Tap Today to see what's coming up.":`No ${LGN[LG]==="All sports"?"":LGN[LG]+" "}games on ${dLab(df)}. Pick another day above.`}</div>`;renderParlays(gs);return}
   let lastDay="";
   PH($("gameList")).html=shown.map(g=>{
@@ -1855,7 +1868,7 @@ const TPLG=["nfl","cfb","nba","wnba","ncaab","ncaaw","mlb","nhl","soc"];
 function tpPath(g){return g.lg==="soc"?(g.sl?"soccer/"+g.sl:null):SPORTPATH[g.lg]}
 function tpGames(){const out=[],now=Date.now();TPLG.filter(lg=>LG==="all"||LG===lg).forEach(lg=>{((D[lg]&&D[lg].live&&D[lg].live.games)||[]).forEach(g0=>{const g={...g0,lg};if(g.field||!g.home||!g.away)return;
   if(DONE.includes(g.status)&&now-Date.parse(g.start_time)>10*3600e3)return;out.push(g)})});
-  let gs=out;try{gs=dateFilter(out)}catch(e){}if(!gs.length&&DF!=="all")gs=out;return gs.sort((a,b)=>(isLive(b)-isLive(a))||Date.parse(a.start_time)-Date.parse(b.start_time))}
+  let gs=out;try{gs=dateFilter(out)}catch(e){}if(DF==="live")gs=gs.filter(isLive);return gs.sort((a,b)=>(isLive(b)-isLive(a))||Date.parse(a.start_time)-Date.parse(b.start_time))}
 const sv=(v,...ns)=>{if(!v)return null;for(const n of ns){if(v[n]!=null)return v[n];const k=Object.keys(v).find(x=>x.endsWith("."+n));if(k&&v[k]!=null)return v[k]}return null};
 async function tpStats(g){const lg=g.lg;if(TP.stats[lg]&&Date.now()-TP.stats[lg].at<3*3600e3)return TP.stats[lg].v;let v={};const y=seasonYear(true),yw=seasonYear(false);
   const merge=(...ds)=>{const o={};ds.forEach(d=>Object.entries(d||{}).forEach(([id,p])=>{if(!o[id])o[id]={...p,v:{...(p.v||{})}};else Object.assign(o[id].v,p.v||{})}));return o};
@@ -1890,7 +1903,7 @@ async function tpRender(){const card=$("tpCard");if(!card)return;const gs=tpGame
   const sel=$("tpSel");const opts=[];const byLg={};gs.forEach(g=>(byLg[g.lg]=byLg[g.lg]||[]).push(g));
   Object.keys(byLg).forEach(lg=>{opts.push(`<optgroup label="${esc(LEAGUES[lg].label)}">`);byLg[lg].forEach(g=>[g.away,g.home].forEach(tid=>{const v=`${lg}:${tid}:${g.id}`,opp=String(tid)===String(g.home)?g.away:g.home;
     opts.push(`<option value="${esc(v)}">${esc(tname(g,tid))} ${String(tid)===String(g.home)?"vs":"@"} ${esc(short(g,opp))} · ${isLive(g)?"LIVE":DONE.includes(g.status)?"Final":esc(whenTxt(g))}</option>`)}));opts.push("</optgroup>")});
-  if(!gs.length){sel.innerHTML=`<option value="">No games for this sport and day</option>`;PH($("tpBody")).html=`<p class="note">No team games for ${esc(filterText())}. Change the sport or day at the top.</p>`;$("tpTag").hidden=true;return}
+  if(!gs.length){sel.innerHTML=`<option value="">No games for this sport and day</option>`;PH($("tpBody")).html=`<p class="note">${DF==="live"?`No ${LG==="all"?"team":esc(LEAGUES[LG].label)} games are live right now.`:`No ${LG==="all"?"team":esc(LEAGUES[LG].label)} games for ${esc(filterText())}.`} Pick another sport or day at the top to see more teams.</p>`;$("tpTag").hidden=true;return}
   const html=`<option value="">Choose a team…</option>`+opts.join("");if(sel.dataset.h!==html){sel.innerHTML=html;sel.dataset.h=html}
   const valid=TP.sel&&gs.some(g=>TP.sel.startsWith(g.lg+":")&&TP.sel.endsWith(":"+g.id));sel.value=valid?TP.sel:"";
   if(!valid){PH($("tpBody")).html=`<p class="note">Pick a team to see every player's numbers: season stats, next-game chances, and live stats while they play.</p>`;$("tpTag").hidden=true;return}
