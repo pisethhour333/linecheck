@@ -614,7 +614,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 64. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 65. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -974,7 +974,7 @@ function renderGames(){
   $("statsAsOf").textContent=notes.join(" ")+(notes.length?" Source: ESPN.":"");
   const gs=slate();
   const loaded=Object.values(D).some(s=>s.live);
-  if(!gs.length){$("dayFilter").innerHTML="";PH($("gameList")).html=`<div class="empty">${loaded?"No games in the next week.":"Loading this week's games…"}</div>`;renderParlays([]);return}
+  if(!gs.length){$("dayFilter").innerHTML="";PH($("gameList")).html=`<div class="empty">${loaded?(LG==="all"?"No games coming up right now.":`No ${esc(LEAGUES[LG].label)} games coming up in the schedule Linecheck can see right now. Try All or another sport.`):"Loading this week's games…"}</div>`;renderParlays([]);return}
   const dayKey=g=>localDate(effT(g)),todayK=localDate(Date.now()),tomK=localDate(Date.now()+864e5);
   const liveN=gs.filter(isLive).length,days=[...new Set(gs.map(dayKey))];
   if(DF!=="all"&&DF!=="live"&&DF<todayK){DF="all";try{localStorage.setItem("ge-df",DF)}catch(e){}}
@@ -1111,8 +1111,16 @@ async function loadScores(lg){
   if(TEAMLG[lg])return loadDayScores(lg);
   if(lg==="nba")return loadNbaScores();
   if(lg==="soc")return loadSoccerScores();
-  const j=await getJSON(`${ESPN}/site/v2/sports/${PATH[lg]}/scoreboard`+(lg==="cfb"?"?groups=80&limit=300":""));
-  const recs={};const games=parseEvents(j,recs);if(lg==="cfb"&&j.week&&j.week.number)D.cfb.week=+j.week.number;
+  const base=`${ESPN}/site/v2/sports/${PATH[lg]}/scoreboard`,gq=lg==="cfb"?"groups=80&limit=300":"limit=100";
+  const j=await getJSON(base+"?"+gq);
+  const recs={};let games=parseEvents(j,recs);if(lg==="cfb"&&j.week&&j.week.number)D.cfb.week=+j.week.number;
+  const left=games.filter(g=>!DONE.includes(g.status)&&g.status!=="postponed").length;
+  if(!left||games.every(g=>Date.parse(g.start_time)<Date.now()-12*3600e3)){
+    // ESPN keeps showing the finished week until midweek; also pull next week's schedule
+    const wk=j.week&&j.week.number,st=(j.season&&j.season.type)||2;let more=[];
+    try{if(wk){const j2=await getJSON(`${base}?${gq}&week=${wk+1}&seasontype=${st}`);more=parseEvents(j2,recs)}}catch(e){}
+    if(!more.length){try{const d=new Date(),f=x=>`${x.getFullYear()}${String(x.getMonth()+1).padStart(2,"0")}${String(x.getDate()).padStart(2,"0")}`,e=new Date(Date.now()+8*864e5);const j3=await getJSON(`${base}?${gq}&dates=${f(d)}-${f(e)}`);more=parseEvents(j3,recs)}catch(e){}}
+    const ids=new Set(games.map(g=>String(g.id)));games=games.concat(more.filter(g=>!ids.has(String(g.id))))}
   D[lg].recs=recs;D[lg].live={games};D[lg].liveAt=Date.now();cache.set(lg+"-live",{live:D[lg].live,recs,at:D[lg].liveAt});
 }
 let feedErr=false,fcTimer=null;
@@ -1142,9 +1150,9 @@ function setTag(){
 }
 /* --- more team sports: MLB, NHL, WNBA, college basketball --- */
 const TEAMLG={
-  mlb:{path:"baseball/mlb",cal:true,k:20,reg:0.5,qs:"",days:[-1,0,1,2],b2b:0},
-  nhl:{path:"hockey/nhl",cal:false,k:12,reg:0.6,qs:"",days:[-1,0,1,2],b2b:0.25},
-  wnba:{path:"basketball/wnba",cal:true,k:10,reg:0.6,qs:"",days:[-1,0,1,2],b2b:1.5},
+  mlb:{path:"baseball/mlb",cal:true,k:20,reg:0.5,qs:"",days:[-1,0,1,2,3,4],b2b:0},
+  nhl:{path:"hockey/nhl",cal:false,k:12,reg:0.6,qs:"",days:[-1,0,1,2,3,4],b2b:0.25},
+  wnba:{path:"basketball/wnba",cal:true,k:10,reg:0.6,qs:"",days:[-1,0,1,2,3,4],b2b:1.5},
   ncaab:{path:"basketball/mens-college-basketball",cal:false,k:8,reg:0.65,qs:"&groups=50&limit=400",days:[0,1,2],b2b:0},
   ncaaw:{path:"basketball/womens-college-basketball",cal:false,k:8,reg:0.65,qs:"&groups=50&limit=400",days:[0,1,2],b2b:0}};
 const CLOCK={nfl:[4,15],cfb:[4,15],nba:[4,12],wnba:[4,10],ncaab:[2,20],ncaaw:[4,10],nhl:[3,20]};
@@ -1370,7 +1378,9 @@ async function loadNbaScores(){
   t.forEach(g=>{g.b2bH=played.has(g.home);g.b2bA=played.has(g.away)});
   const today=new Set();t.forEach(g=>{today.add(g.home);today.add(g.away)});
   (n||[]).forEach(g=>{g.b2bH=today.has(g.home);g.b2bA=today.has(g.away)});
-  const seen=new Set(),games=[];[...(y||[]),...t,...(n||[])].forEach(g=>{if(!seen.has(g.id)){seen.add(g.id);games.push(g)}});
+  let prevSet=new Set();(n||[]).forEach(g=>{prevSet.add(g.home);prevSet.add(g.away)});const extra=[];
+  for(const o of [2,3,4]){let v=null;try{v=parseEvents(await getJSON(`${ESPN}/site/v2/sports/${PATH.nba}/scoreboard?dates=${ymd(o)}`),recs)}catch(e){}const ps=prevSet;prevSet=new Set();(v||[]).forEach(g=>{g.b2bH=ps.has(g.home);g.b2bA=ps.has(g.away);prevSet.add(g.home);prevSet.add(g.away);extra.push(g)})}
+  const seen=new Set(),games=[];[...(y||[]),...t,...(n||[]),...extra].forEach(g=>{if(!seen.has(g.id)){seen.add(g.id);games.push(g)}});
   D.nba.recs=recs;D.nba.live={games};D.nba.liveAt=Date.now();cache.set("nba-live",{live:D.nba.live,recs,at:D.nba.liveAt});
 }
 function nbaProj(g){return gameProj(g)}
