@@ -332,6 +332,7 @@ header{margin-bottom:0}
 .tvbox{margin:6px 0 4px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.tvbox summary{cursor:pointer;font-weight:700;color:var(--turf)}.tvq{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}.tvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px;margin:10px 0}.tvg b{grid-column:1/-1;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.tvg label{display:flex;align-items:center;gap:8px;font-size:.92rem}.tvg input{width:18px;height:18px;accent-color:var(--turf)}
 .gsearch{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted)}.gsearch input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-size:16px;outline:none}.gsearch:focus-within{border-color:var(--turf)}
 .acctbtn{display:inline-flex;align-items:center;gap:4px}.acctbtn span:empty{display:none}.acctabs{gap:6px;flex-wrap:wrap}.acform{display:flex;flex-direction:column;gap:10px;margin-top:8px}.acform input{font-size:16px}.reccode{display:flex;flex-direction:column;gap:4px;padding:12px;border:2px dashed var(--flag);border-radius:10px}.reccode b{font-family:var(--mono,monospace);font-size:1.4rem;letter-spacing:.08em}
+.btk{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--turf) 10%,transparent)}
 </style>
 
 </head>
@@ -585,6 +586,8 @@ header{margin-bottom:0}
   </div>
   <form class="card" id="betForm">
     <h3>Log a bet</h3>
+    <label class="f"><span class="lab">From a ticket</span><select id="b-tsel" aria-label="Log a saved ticket"></select></label>
+    <div class="note btk" id="b-tnote" hidden></div>
     <div class="grid2">
       <label class="f"><span class="lab">Game</span><select id="b-gsel"><option value="">Choose a game, or type it below</option></select></label>
       <label class="f"><span class="lab">Type</span><select id="b-type"><option>Moneyline</option><option>Spread</option><option>Total</option><option>Parlay</option><option>Prop</option></select></label>
@@ -619,7 +622,7 @@ header{margin-bottom:0}
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 70. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 71. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -632,6 +635,7 @@ header{margin-bottom:0}
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>DK line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
+    <details><summary>Bet tracker</summary><p>The Tracker tab keeps a record of the bets you actually placed. The easiest way: after you place a bet on DraftKings, open Tracker, pick the ticket in <b>From a ticket</b>, enter the odds and stake from your DraftKings slip, and tap <b>Save bet</b>. Ticket bets settle by themselves: <b>Won</b> when every pick hits, <b>Lost</b> as soon as any pick misses, <b>Push</b> if every pick pushes, including player props. You can also pick a single game from the <b>Game</b> list, or type any bet by hand (those, and anything Linecheck can't check like tennis or UFC parlays, you mark Won, Lost or Push yourself). The top card shows your record, win rate, profit and ROI. When you're signed in, the tracker syncs to your account.</p></details>
     <details><summary>Your account (sync across devices)</summary><p>Tap the person button at the top, or scroll to <b>Your account</b> at the top of this Guide. <b>Create account</b> with a username and password; whatever is on this phone (current ticket, saved tickets, bet tracker, color theme, tile layout, alerts on/off, NFL prop filter) becomes your account's data. On any other phone or computer, <b>Sign in</b> with the same username and password and it all appears there; changes on one device reach the others within about a minute. Sport and day filters stay separate on each device.</p><p>When you create the account you get a <b>recovery code</b>. Save it: it's the only way to reset a forgotten password (<b>Forgot password</b>). Your password never leaves your phone in readable form; the server stores only a scrambled version. After 8 wrong passwords the account locks for 15 minutes.</p></details>
     <details><summary>Analyze tab</summary><p>Pick a game from the <b>Game</b> list at the top (it follows the sport and day picked at the top, like the other tabs). Both teams fill in by themselves: points (or goals or runs) for and against per game, and games played. Then change the boxes if you know something the numbers don't: a starting quarterback out (football only), other key players out, or rest. The model shows its win chance, its own spread and a fair price, and you can compare it with DraftKings' odds below. It uses each sport's own home edge and scoring spread. You can also type your own numbers for any matchup. The <b>Dig in</b> button on a game card opens the same thing.</p></details>
     <details><summary>Search games</summary><p>Type part of a team or player name in the search box above the Games list (for example "lak" or "sinner") to show only matching games. It works together with the sport and day picked at the top and shows how many games match. Tap ✕ or <b>Clear search</b> to see everything again.</p></details>
@@ -824,7 +828,7 @@ odds:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1
 tracker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l2 2 3-3M4 15l2 2 3-3M12 8h8M12 16h8"/></svg>',
 guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>'};
 document.querySelectorAll("nav button").forEach(b=>{const t=b.textContent.trim();if(TABICO[b.dataset.tab])b.innerHTML=TABICO[b.dataset.tab]+`<span>${t}</span>`});
-function show(t){if(t==="analyze")setTimeout(()=>{try{anFill();const fb=AN_LG==="nfl"||AN_LG==="cfb";document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!fb})}catch(e){}},0);document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);try{localStorage.setItem("ge-tab",t)}catch(e){}}
+function show(t){if(t==="tracker")setTimeout(()=>{try{fillTicketSelect();settleLegs()}catch(e){}},0);if(t==="analyze")setTimeout(()=>{try{anFill();const fb=AN_LG==="nfl"||AN_LG==="cfb";document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!fb})}catch(e){}},0);document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);try{localStorage.setItem("ge-tab",t)}catch(e){}}
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
 try{const t=localStorage.getItem("ge-tab");if(t&&$("p-"+t))show(t)}catch(e){}
 if(TABS.includes(location.hash.slice(1)))show(location.hash.slice(1));
@@ -2080,7 +2084,7 @@ function localStore(){
     remove:async id=>{const a=read().filter(x=>x.id!==id);write(a);bets=a;render()}
   };
 }
-$("storeTag").textContent="Saved on this phone";store=localStore();
+$("storeTag").textContent=(typeof ACC!=="undefined"&&ACC.tok)?"Synced to your account":"Saved on this phone";store=localStore();
 $("bkFill").addEventListener("click",()=>{$("bkText").value=JSON.stringify(bets);$("bkText").select();$("bkMsg").textContent="Copy this text and keep it somewhere safe.";try{navigator.clipboard.writeText($("bkText").value).then(()=>{$("bkMsg").textContent="Copied. Paste it into a note to keep it safe."}).catch(()=>{})}catch(e){}});
 $("bkLoad").addEventListener("click",()=>{try{const a=JSON.parse($("bkText").value);if(!Array.isArray(a))throw 0;const cur=JSON.parse(localStorage.getItem("ge-bets")||"[]");const ids=new Set(cur.map(x=>x.id));a.forEach(x=>{if(x&&x.game&&!ids.has(x.id))cur.push({...x,id:x.id||"b"+Date.now()+Math.random().toString(36).slice(2,6)})});localStorage.setItem("ge-bets",JSON.stringify(cur));bets=cur;render();$("bkMsg").textContent="Bets restored."}catch(e){$("bkMsg").textContent="That text isn't a bet backup. Paste the full text from “Copy my bets”."}});
 
@@ -2090,7 +2094,7 @@ $("betForm").addEventListener("submit",async e=>{
   const o=num("b-odds");if(!dec(o)){$("b-msg").textContent="Odds must be -100 or lower, or +100 or higher.";return}
   const b={date:$("b-date").value||today(),game:$("b-game").value.trim(),pick:$("b-pick").value.trim(),type:$("b-type").value,odds:o,stake:num("b-stake"),result:$("b-res").value,createdAt:Date.now(),...betMeta()};
   if(!store){$("b-msg").textContent="Still connecting, try again in a moment.";return}
-  try{await store.add(b);$("b-msg").textContent="Saved.";$("b-pick").value="";$("b-game").value="";$("b-res").value="pending";$("b-msg").textContent="Saved.";resetQuick()}catch(err){$("b-msg").textContent="Couldn't save that bet. Check your connection and try again."}
+  try{await store.add(b);BTK=null;try{$("b-tsel").value="";$("b-tnote").hidden=true}catch(x){}$("b-msg").textContent="Saved.";$("b-pick").value="";$("b-game").value="";$("b-res").value="pending";$("b-msg").textContent="Saved.";resetQuick()}catch(err){$("b-msg").textContent="Couldn't save that bet. Check your connection and try again."}
 });
 
 function profit(b){const d=dec(b.odds)||1;return b.result==="won"?b.stake*(d-1):b.result==="lost"?-b.stake:0}
@@ -2334,7 +2338,7 @@ function accApply(keys){const g=k=>{try{return localStorage.getItem(k)}catch(e){
   lcToast("Updated from your account: "+keys.map(k=>({"ge-ticket":"current ticket","ge-tickets":"saved tickets","ge-bets":"bet tracker","ge-skin":"theme","ge-lwview":"tile layout","ge-alon":"alerts","ge-pfnfl":"prop filter"})[k]).join(", "))}
 function accAgo(t){if(!t)return"not yet";const s=(Date.now()-t)/1000;return s<60?"just now":s<3600?Math.round(s/60)+" min ago":new Date(t).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}
 var ACCV="in";
-function accUI(){const b=$("acctBody");if(!b)return;const L=$("acctBtnL");if(L)L.textContent=ACC.tok&&ACC.u?ACC.u.slice(0,10):"";const tag=$("acctTag");
+function accUI(){try{$("storeTag").textContent=ACC.tok?"Synced to your account":"Saved on this phone"}catch(e){}const b=$("acctBody");if(!b)return;const L=$("acctBtnL");if(L)L.textContent=ACC.tok&&ACC.u?ACC.u.slice(0,10):"";const tag=$("acctTag");
   if(ACC.tok){if(tag){tag.hidden=false;tag.textContent="Synced"}
     b.innerHTML=`<p>Signed in as <b>${esc(ACC.u)}</b>. Your current ticket, saved tickets, bet tracker, color theme, tile layout and alert setting sync to every phone or computer where you sign in.</p><p class="note">Last synced ${esc(accAgo(ACC.last))}.${ACC.msg?" "+esc(ACC.msg):""}</p><div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-acc="sync">Sync now</button><button type="button" class="btn sm ghost" data-acc="out">Sign out</button></div>`;return}
   if(tag)tag.hidden=true;
@@ -2701,7 +2705,20 @@ function chooseGame(key){Q={g:findGame(key),side:null,ou:null,line:null};const g
   if(g){$("b-gsel").value=key;$("b-game").value=`${short(g,g.away)} @ ${short(g,g.home)}`;$("b-date").value=localDate(g.start_time)}renderQuick()}
 $("b-gsel").addEventListener("change",e=>chooseGame(e.target.value));
 $("b-type").addEventListener("change",()=>{renderQuick();updPick()});
-function betMeta(){const g=Q.g;if(!g)return{};const t=$("b-type").value,m={gameId:g.id,lg:g.lg};
+var BTK=null;
+function fillTicketSelect(){const s=$("b-tsel");if(!s||document.activeElement===s)return;let tks=[];try{tks=alTickets()}catch(e){}
+  const html=`<option value="">${tks.length?"Pick a ticket to log it (optional)":"No tickets yet. Add picks with + Ticket"}</option>`+tks.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} · ${t.legs.length} pick${t.legs.length>1?"s":""}</option>`).join("");
+  if(s.dataset.h!==html){const c=s.value;s.innerHTML=html;s.dataset.h=html;if(c&&tks.some(t=>t.id===c))s.value=c;else if(c){s.value="";BTK=null;const n=$("b-tnote");if(n)n.hidden=true}}}
+function pickTicket(id){const n=$("b-tnote");let t=null;try{t=alTickets().find(x=>x.id===id)}catch(e){}
+  if(!t){BTK=null;n.hidden=true;return}
+  resetQuick();const L=t.legs;BTK=L.map(l=>({key:l.key,lg:l.lg,gid:l.gid,type:l.type,pick:l.pick,side:l.side,line:l.line,tname:l.tname,player:l.player,when:l.when,sl:l.sl,game:l.game}));
+  const one=L.length===1,l0=L[0];$("b-type").value=one?(["Moneyline","Spread","Total"].includes(l0.type)?l0.type:"Prop"):"Parlay";
+  $("b-game").value=one?(l0.game||t.name):`${t.name} (${L.length}-leg ticket)`;$("b-pick").value=L.map(l=>String(l.pick).replace(/\s*\([^)]*@[^)]*\)\s*$/,"")).join(" + ");
+  const ws=L.map(l=>Date.parse(l.when)).filter(isFinite);if(ws.length)$("b-date").value=localDate(Math.min(...ws));
+  n.innerHTML=`<b>${esc(t.name)}</b>: ${L.map(l=>esc(l.pick)).join(" · ")}<br>Settles by itself when all ${one?"the game is":"its games are"} final.`;n.hidden=false;
+  syncManual();$("b-msg").textContent="Now enter the odds and stake from your DraftKings slip, then Save.";$("b-odds").focus()}
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="b-tsel")pickTicket(e.target.value);if(e.target&&e.target.id==="b-gsel"&&e.target.value){BTK=null;const s=$("b-tsel");if(s)s.value="";const n=$("b-tnote");if(n)n.hidden=true}});
+function betMeta(){if(BTK&&!Q.g)return{legs:BTK};const g=Q.g;if(!g)return{};const t=$("b-type").value,m={gameId:g.id,lg:g.lg};
   if(t==="Moneyline"&&Q.side)Object.assign(m,{kind:"ml",side:Q.side});
   else if(t==="Spread"&&Q.side&&Q.line!=null)Object.assign(m,{kind:"spread",side:Q.side,line:Q.line});
   else if(t==="Total"&&Q.ou&&Q.line!=null)Object.assign(m,{kind:"total",ou:Q.ou,line:Q.line});
@@ -2711,7 +2728,15 @@ function startLog(opts){show("tracker");window.scrollTo(0,0);resetQuick();$("b-g
   if(opts.type)$("b-type").value=opts.type;if(opts.key)chooseGame(opts.key);
   if(opts.game)$("b-game").value=opts.game;if(opts.pick)$("b-pick").value=opts.pick;if(opts.date)$("b-date").value=opts.date;
   renderQuick();$("b-msg").textContent="Now enter the odds and stake from your DraftKings slip.";$("b-odds").focus()}
-function autoSettle(){if(!store)return;bets.filter(b=>b.result==="pending"&&b.gameId&&b.kind).forEach(b=>{
+function settleLegs(){if(!store)return;bets.filter(b=>b.result==="pending"&&Array.isArray(b.legs)&&b.legs.length).forEach(b=>{
+  const res=[];let wait=false;for(const l of b.legs){const g=alGame(l.key);if(!g){res.push("?");continue}
+    if(g.status==="postponed"||/cancel/.test(g.status)){res.push("Push");continue}if(!DONE.includes(g.status)){res.push("open");continue}
+    if(l.type==="Prop"&&!LW.sum[g.lg+":"+g.id]&&g.lg!=="ten"&&g.lg!=="mma"&&!g.field){wait=true;lwSummary(g,600e3).then(()=>setTimeout(settleLegs,200)).catch(()=>{});res.push("open");continue}
+    let s={};try{s=legLive(l,g)}catch(e){}res.push(s.lab||"?")}
+  if(res.includes("Lost")){store.update(b.id,{result:"lost",auto:true});return}
+  if(wait||!res.every(x=>x==="Won"||x==="Push"))return;
+  store.update(b.id,{result:res.includes("Won")?"won":"push",auto:true})})}
+function autoSettle(){try{settleLegs()}catch(e){}try{fillTicketSelect()}catch(e){}if(!store)return;bets.filter(b=>b.result==="pending"&&b.gameId&&b.kind).forEach(b=>{
   const s=D[b.lg];const g=s&&((s.live&&s.live.games)||[]).find(x=>x.id===b.gameId);if(!g||g.status!=="closed"||!g.score)return;
   const sc=g.score,tot=(sc[g.home]||0)+(sc[g.away]||0);let d=null;
   if(b.kind==="ml"||b.kind==="spread"){const other=b.side===g.home?g.away:g.home;d=(sc[b.side]||0)-(sc[other]||0)+(b.kind==="spread"?b.line:0)}
