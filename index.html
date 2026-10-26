@@ -617,7 +617,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 68. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 69. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -961,9 +961,9 @@ function hasHA(g){return !g.field&&g.lg!=="ten"&&g.lg!=="mma"}
 function haTag(g,c){if(!hasHA(g))return"";const hm=c===g.home;return`<span class="ha${hm?" hm":""}">${g.neutral?(hm?"Home*":"Away*"):hm?"Home":"Away"}</span>`}
 function whenTxt(g){return new Date(g.start_time).toLocaleString([], {weekday:"short",hour:"numeric",minute:"2-digit"})}
 function slate(){
-  const now=Date.now(),out=[];
+  const now=Date.now(),out=[];const d0=new Date();d0.setHours(0,0,0,0);const cut=new Date().getHours()>=6?d0.getTime():d0.getTime()-864e5; // older finals drop off at 6 AM
   Object.keys(LEAGUES).forEach(lg=>{if(LG!=="all"&&LG!==lg)return;const s=D[lg];const src=(s.live&&s.live.games)||(s.sched&&s.sched.games)||[];
-    src.forEach(g0=>{const g={...g0,lg};if(g.status!=="postponed"&&(isLive(g)||(g.field&&!DONE.includes(g.status)&&Date.parse(g.start_time)>now-5*864e5&&Date.parse(g.start_time)<now+8*864e5)||(Date.parse(g.start_time)>now-(DONE.includes(g.status)?14:4)*3600e3&&Date.parse(g.start_time)<now+8*864e5)))out.push(g)})});
+    src.forEach(g0=>{const g={...g0,lg};if(DONE.includes(g.status)&&!g.field&&Date.parse(g.start_time)<cut)return;if(g.status!=="postponed"&&(isLive(g)||(g.field&&!DONE.includes(g.status)&&Date.parse(g.start_time)>now-5*864e5&&Date.parse(g.start_time)<now+8*864e5)||(Date.parse(g.start_time)>now-(DONE.includes(g.status)?14:4)*3600e3&&Date.parse(g.start_time)<now+8*864e5)))out.push(g)})});
   return out.sort((a,b)=>Date.parse(a.start_time)-Date.parse(b.start_time));
 }
 function rec(g,c){if(g.lg==="ten"){const r=tenRank(c,tname(g,c),g.tour);return r?"#"+r.rank:""}const t=teamInfo(g.lg,c);return (t&&t.rec)||(g.teams&&g.teams[c]&&g.teams[c].rec)||""}
