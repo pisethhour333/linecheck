@@ -339,6 +339,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 .bl-h{all:unset;box-sizing:border-box;width:100%;display:flex;justify-content:space-between;gap:10px;padding:10px 12px;cursor:pointer}.bl-h:focus-visible{outline:2px solid var(--turf)}.bl-n{display:flex;flex-direction:column;min-width:0}.bl-n b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bl-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:0 0 auto;font-variant-numeric:tabular-nums}.bl-s{font-weight:700}.bl-pl{font-size:.8rem;color:var(--muted)}.bl-pl.pos{color:var(--good)}.bl-pl.neg{color:var(--bad)}
 .bl-b{font-size:.7rem}.bl-b.won{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}.bl-b.lost{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}.bl-b.pending{background:color-mix(in srgb,var(--flag) 22%,transparent);color:var(--flag)}
 .bl-d{padding:4px 12px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}.blegs{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.blegs li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--muted) 10%,transparent)}.blegs li .note{grid-column:1/-1;font-size:.75rem}.blegs li.up b{color:var(--good)}.blegs li.dn b{color:var(--bad)}.bl-g{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:.85rem;color:var(--muted)}.bl-g b{color:var(--ink)}
+.mixn{font-size:.8rem}.mixd{color:var(--warn)}
 </style>
 
 </head>
@@ -346,7 +347,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <div class="wrap">
 <header>
   <div class="row hdrow" style="justify-content:space-between;align-items:center"><h1>Line<span>check</span></h1><span class="row" style="gap:6px"><span class="tag" id="liveTag">Loading…</span><button class="btn sm ghost acctbtn" id="acctBtn" type="button" aria-label="Account" title="Account"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span id="acctBtnL"></span></button><button class="btn sm ghost" id="refreshBtn" aria-label="Refresh" title="Refresh"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button></span></div>
-  <p>Research and math for football, basketball, baseball, hockey, soccer, tennis, UFC, golf and racing. Built for betting on DraftKings. Your own win estimate, compared with the line. You place every bet yourself.</p>
+  <p>Research and math for football, basketball, baseball, hockey, soccer, tennis, UFC, golf and racing. Built for betting on DraftKings. Win chances blend the betting market with Linecheck's own model. You place every bet yourself.</p>
 </header>
 
 <div class="card sportbar">
@@ -369,7 +370,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-games">
   <div class="card">
     <h2>This week's games</h2>
-    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances come from each team's season results plus home field. They don't use DraftKings' odds. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
+    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances blend two sources. The betting market: DraftKings' moneyline (or spread) from the ESPN feed, with the bookmaker's margin removed. That counts 65% (75% for college, where team stats are rougher). Linecheck's own model: each team's season results plus home field. That counts the rest. Each card shows both numbers under the bar, and flags when the model disagrees a lot with the market. Projected totals blend the market total the same way. Games without odds in the feed use the model alone. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
     <p class="note" id="statsAsOf"></p></details>
   </div>
   <div class="gsearch" role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="gSearch" placeholder="Search team or player" aria-label="Search games by team or player" autocomplete="off" enterkeyhint="search"><span class="note" id="gSearchN"></span></div>
@@ -628,7 +629,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 73. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 74. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -720,7 +721,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 </div>
 
 <script>
-(function(){var SYNCK=["ge-ticket","ge-tickets","ge-bets","ge-skin","ge-lwview","ge-alon","ge-pfnfl"],ACC={u:null,tok:null,meta:{},applying:false,last:0,t:null,busy:false};try{ACC.u=localStorage.getItem("ge-acct-u");ACC.tok=localStorage.getItem("ge-acct-t");ACC.meta=JSON.parse(localStorage.getItem("ge-syncmeta")||"{}")||{}}catch(e){}
+(function(){var MKT=(()=>{try{const o=JSON.parse(localStorage.getItem("ge-mkt")||"{}")||{},c=Date.now()-4*864e5;Object.keys(o).forEach(k=>{if(!o[k]||o[k].at<c)delete o[k]});return o}catch(e){return{}}})(),MKTT=null;var SYNCK=["ge-ticket","ge-tickets","ge-bets","ge-skin","ge-lwview","ge-alon","ge-pfnfl"],ACC={u:null,tok:null,meta:{},applying:false,last:0,t:null,busy:false};try{ACC.u=localStorage.getItem("ge-acct-u");ACC.tok=localStorage.getItem("ge-acct-t");ACC.meta=JSON.parse(localStorage.getItem("ge-syncmeta")||"{}")||{}}catch(e){}
 try{const P=Storage.prototype,oS=P.setItem,oR=P.removeItem;const st=(s,k,old,v)=>{try{if(s===window.localStorage&&SYNCK.includes(k)&&!ACC.applying&&old!==v&&!(old==null&&(k==="ge-skin"||k==="ge-lwview"||k==="ge-alon"||k==="ge-pfnfl"))){ACC.meta[k]=Date.now();oS.call(s,"ge-syncmeta",JSON.stringify(ACC.meta));if(ACC.tok)accSyncSoon()}}catch(e){}};P.setItem=function(k,v){let old=null;try{old=this.getItem(k)}catch(e){}oS.call(this,k,v);st(this,k,old,String(v))};P.removeItem=function(k){let old=null;try{old=this.getItem(k)}catch(e){}oR.call(this,k);st(this,k,old,null)}}catch(e){}
 var TVD={tWin:1,tQtr:1,tDown:1,tFlags:1,tBets:1,dWin:1,dBets:1,dQtr:1,dSit:1,dNext:1,dScore:1,dHurt:1,dPlays:1,dLead:1},TV=(()=>{try{return Object.assign({},TVD,JSON.parse(localStorage.getItem("ge-lwview")||"{}"))}catch(e){return Object.assign({},TVD)}})();var BBL=/^(nba|wnba|ncaab|ncaaw)$/,NBPP={},nbplBusy=new Set();
 const $=id=>document.getElementById(id);
@@ -863,15 +864,27 @@ function remaining(g){
 }
 function model(g){
   if(g.field)return null;
-  if(g.lg==="ten")return tennisModel(g);
-  if(g.lg==="mma")return mmaModel(g);
-  if(g.lg==="soc"){const P=socModel(g);return P?{m:P.lh-P.la,pH:P.full.H,pA:P.full.A,pD:P.full.D}:null}
+  const mk0=MKT[g.id];
+  if(g.lg==="ten"||g.lg==="mma"){const r0=g.lg==="ten"?tennisModel(g):mmaModel(g),r=r0?{...r0}:r0;if(r&&mk0&&!isLive(g)&&mk0.mlH!=null&&mk0.mlA!=null&&r.pH!=null){const ia=impl(mk0.mlA),ih=impl(mk0.mlH);if(ia&&ih){const pm=ih/(ia+ih),w=0.65,pM=r.pH;r.pH=w*pm+(1-w)*pM;r.pA=1-r.pH;r.mix={w,prov:mk0.prov,pModel:pM,pMkt:pm}}}return r}
+  if(g.lg==="soc"){const P=socModel(g);if(!P)return null;let pH=P.full.H,pA=P.full.A,pD=P.full.D,mix=null;
+    if(mk0&&!isLive(g)&&mk0.mlH!=null&&mk0.mlA!=null&&mk0.draw!=null){const ih=impl(mk0.mlH),ia=impl(mk0.mlA),idr=impl(mk0.draw);if(ih&&ia&&idr){const s=ih+ia+idr,w=0.65;mix={w,prov:mk0.prov,pModel:pH,pMkt:ih/s};pH=w*ih/s+(1-w)*pH;pA=w*ia/s+(1-w)*pA;pD=1-pH-pA}}
+    return{m:P.lh-P.la,pH,pA,pD,mix}}
   const L=LEAGUES[g.lg],rh=rating(g.lg,g.home),ra=rating(g.lg,g.away);if(rh==null||ra==null)return null;
-  let m=rh-ra+(g.neutral?0:L.hfa);{const aj=adjOf(g);if(aj&&aj.qb)m+=(aj.qb.a||0)-(aj.qb.h||0);if(aj&&aj.pl)m+=(aj.pl.a||0)-(aj.pl.h||0)}{const rs=g.lg==="nba"?NBA_REST:(TEAMLG[g.lg]&&TEAMLG[g.lg].b2b)||0;if(rs){if(g.b2bH)m-=rs;if(g.b2bA)m+=rs}}let pH=Phi(m/L.sd);
+  let m=rh-ra+(g.neutral?0:L.hfa);{const aj=adjOf(g);if(aj&&aj.qb)m+=(aj.qb.a||0)-(aj.qb.h||0);if(aj&&aj.pl)m+=(aj.pl.a||0)-(aj.pl.h||0)}{const rs=g.lg==="nba"?NBA_REST:(TEAMLG[g.lg]&&TEAMLG[g.lg].b2b)||0;if(rs){if(g.b2bH)m-=rs;if(g.b2bA)m+=rs}}
+  let mix=null;const mk=MKT[g.id];if(mk){let pm=null;if(mk.mlH!=null&&mk.mlA!=null){const ia=impl(mk.mlA),ih=impl(mk.mlH);if(ia&&ih)pm=ih/(ia+ih)}let mm=null;if(pm!=null)mm=L.sd*invPhi(Math.min(.985,Math.max(.015,pm)));else if(mk.sp!=null)mm=-mk.sp;
+    if(mm!=null){const w=mktW(g.lg);mix={w,prov:mk.prov,pModel:Phi(m/L.sd),pMkt:pm!=null?pm:Phi(mm/L.sd),mModel:m,mMkt:mm};m=w*mm+(1-w)*m}}
+  let pH=Phi(m/L.sd);
   const sc=g.score||{};const sh=sc[g.home]??sc[norm(g.home)],sa=sc[g.away]??sc[norm(g.away)];
   if(isLive(g)&&sh!=null&&sa!=null){const r=remaining(g),lead=sh-sa;pH=r<=0.001?(lead>0?1:lead<0?0:.5):Phi((lead+m*r)/(L.sd*Math.sqrt(r)))}
-  return{m,pH,pA:1-pH};
+  return{m,pH,pA:1-pH,mix};
 }
+function mktW(lg){return lg==="cfb"||lg==="ncaab"||lg==="ncaaw"?0.75:0.65}
+function invPhi(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771628,-13.28068155288572],c=[-.007784894002430293,-.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[.007784695709041462,.3224671290700398,2.445134137142996,3.754408661907416],pl=.02425;let q,r;
+  if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+  if(p>1-pl){q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+  q=p-.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
+function mixNote(g,md){if(!md||!md.mix)return"";const x=md.mix,f=(p)=>p>=0.5?`${short(g,g.home)} ${pct(p,0)}`:`${short(g,g.away)} ${pct(1-p,0)}`;
+  return`<div class="note mixn">Blend of ${esc(x.prov)} odds <b>${esc(f(x.pMkt))}</b> (${Math.round(x.w*100)}%) and Linecheck's model <b>${esc(f(x.pModel))}</b> (${Math.round((1-x.w)*100)}%)${Math.abs(x.pMkt-x.pModel)>=0.15?' · <span class="mixd">model disagrees a lot</span>':""}</div>`}
 const tname=(g,c)=>(g.teams&&g.teams[c]&&g.teams[c].name)||(teamInfo(g.lg,c)||{}).name||c;
 const short=(g,c)=>{const n=tname(g,c);if(g.lg==="cfb"){const w=n.split(" ");return w.length>2?w.slice(0,-1).join(" "):w[0]}return n.split(" ").slice(-1)[0]};
 const DKB="https://sportsbook.draftkings.com";
@@ -1029,7 +1042,7 @@ function renderGames(){try{if(typeof anFill==="function")setTimeout(anFill,0)}ca
     const favH=md&&md.pH>=md.pA;const sp=md?Math.round(Math.abs(md.m)*2)/2:0;
     return`${head}<div class="gm" data-ck="${esc(g.lg+":"+g.id)}"><div class="meta"><span>${live?`<span class="live">Live</span> ${esc(fmtClock(g)||g.detail||"")}${downTxt(g)?` <span class="dsep">|</span> <span class="down${g.sit&&g.sit.rz?" rz":""}">${esc(downTxt(g))}</span>`:""}`:fin?"Final":esc(whenTxt(g))}</span><span class="lgtag">${icon(g.lg)}${esc(LEAGUES[g.lg].label)}${g.title?" · "+esc(g.title):""}</span></div>
       ${side(g.away,md&&md.pA,md&&!favH)}${side(g.home,md&&md.pH,md&&favH)}${md&&md.pD!=null?`<div class="tm"><div class="nm drw">Draw</div><div class="sc"></div><div class="pc">${pct(md.pD,0)}</div></div>`:""}
-      ${md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}
+      ${md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}${mixNote(g,md)}
       ${!fin?(g.lg==="soc"?soccerHtml(g):g.lg==="ten"?tennisHtml(g):g.lg==="mma"?mmaHtml(g):totalsHtml(g)+periodsHtml(g)+nbaPlHtml(g)):(g.lg==="ten"&&g.sets?`<div class="note">Sets: ${g.sets.h.map((v,i)=>`${v}-${g.sets.a[i]??0}`).join(", ")}</div>`:"")}${liveTdLine(g)}
       <div class="row" style="justify-content:space-between"><span class="note">${md?(g.lg==="ten"?(live?"Live match chance":"Match winner chance"):g.lg==="mma"?"Fight winner chance":g.lg==="soc"?(live?"Live win and draw chances":"Win and draw chances"):live?"Live win chance":(g.lg==="mlb"||g.lg==="nhl")?altLine(g,md):`Model line: ${esc(short(g,md.m>0?g.home:g.away))} ${sp?"-"+sp:"pick'em"}`):(fin?"Final score":"No stats for one of these teams yet")}</span>
       <span class="row" style="gap:6px">${g.lg!=="nfl"&&g.lg!=="cfb"?"":`<button class="btn sm ghost dig" data-id="${esc(g.id)}" data-dk="${esc(g.lg+":"+g.id)}">Dig in</button>`}<button class="btn sm ghost" data-log="${esc(JSON.stringify({key:g.lg+":"+g.id}))}">Log bet</button>${fin?"":`${quickTk(g)}`+dkA(g,null,"btnlike")}</span></div></div>`}).join("");
@@ -1138,6 +1151,16 @@ function parseEvents(j,recs){
       detail:st.type.shortDetail||st.type.detail||"",quarter:st.period,clock:st.displayClock};
     {const vn=c.venue;if(vn){const ad=vn.address||{};g.venue={name:vn.fullName||"",city:ad.city||"",state:ad.state||"",country:ad.country||"",indoor:!!vn.indoor}}}
     if(state!=="pre")g.score={[h.team.id]:+h.score||0,[a.team.id]:+a.score||0};
+    try{const os=c.odds||[],o=os.find(x=>/draft/i.test((x.provider&&x.provider.name)||""))||os[0];if(o&&state==="pre"){
+      const n=v=>{if(v==null||v==="")return null;if(typeof v==="object")v=v.american??v.alternateDisplayValue??v.value;const s=String(v).trim();if(/^(even|ev)$/i.test(s))return 100;const x=parseFloat(s.replace(/[^\d.+-]/g,""));return isFinite(x)?x:null};
+      const ml=t=>t?(n(t.moneyLine)??(t.current&&n(t.current.moneyLine))??(t.close&&n(t.close.moneyLine))):null;
+      let sp=null;const dm=String(o.details||"").match(/^([A-Za-z0-9.&'\- ]+?)\s+([+-]?\d+(?:\.\d+)?)$/);
+      if(dm){const ab=dm[1].trim().toUpperCase(),v=Math.abs(+dm[2]),hA=String(h.team.abbreviation||"").toUpperCase(),aA=String(a.team.abbreviation||"").toUpperCase();if(ab===hA)sp=-v;else if(ab===aA)sp=v}
+      else if(/^(even|pk|pick)/i.test(String(o.details||"")))sp=0;
+      if(sp==null&&n(o.spread)!=null){const v=Math.abs(n(o.spread));if(o.homeTeamOdds&&o.homeTeamOdds.favorite)sp=-v;else if(o.awayTeamOdds&&o.awayTeamOdds.favorite)sp=v}
+      let mlH=ml(o.homeTeamOdds),mlA=ml(o.awayTeamOdds);if(mlH!=null&&Math.abs(mlH)<100)mlH=null;if(mlA!=null&&Math.abs(mlA)<100)mlA=null;
+      const mk={prov:String((o.provider&&o.provider.name)||"Sportsbook").replace(/ - .*$/,""),mlH,mlA,draw:o.drawOdds?n(o.drawOdds.moneyLine):null,sp,tot:n(o.overUnder),at:Date.now()};
+      if(mk.mlH!=null&&mk.mlA!=null||mk.sp!=null){MKT[g.id]=mk;clearTimeout(MKTT);MKTT=setTimeout(()=>{try{localStorage.setItem("ge-mkt",JSON.stringify(MKT))}catch(e){}},1500)}}}catch(e){}
     const lsv=x=>(x.linescores||[]).slice().sort((p,q)=>(p.period||0)-(q.period||0)).map(v=>+v.value||0);if(h.linescores||a.linescores)g.ls={h:lsv(h),a:lsv(a)};
     [h,a].forEach(x=>{const pr=(x.probables||[]).find(q=>/pitch|start/i.test(q.name||""));if(pr&&pr.athlete&&pr.athlete.id){g.prob=g.prob||{};g.prob[String(x.team.id)]={id:String(pr.athlete.id),name:pr.athlete.displayName||pr.athlete.fullName||""}}});
     const si=c.situation;if(state==="in"&&si&&si.possession){const poss=String(si.possession),pa=poss===String(h.team.id)?h.team.abbreviation:a.team.abbreviation;
@@ -1439,6 +1462,7 @@ function teamOD(lg,id){const t=teamInfo(lg,id);if(!t)return null;if(t.off!=null&
 function gameProj(g){const H=teamOD(g.lg,g.home),A=teamOD(g.lg,g.away),md=model(g);if(!H||!A||!md)return null;
   const FT=D[g.lg].teams&&D[g.lg].teams.fit,fh=teamInfo(g.lg,g.home),fa=teamInfo(g.lg,g.away);
   let tot=FT&&fh&&fa&&fh.fit&&fa.fit?H.off+A.def+A.off+H.def-2*FT.mu:(H.off+A.def+A.off+H.def)/2;{const aj=adjOf(g);if(aj){if(aj.wx&&aj.wx.pts)tot-=aj.wx.pts;if(aj.qb)tot-=(aj.qb.h||0)+(aj.qb.a||0);if(aj.pl)tot+=aj.pl.tot||0}}if(g.lg==="nba")tot-=(g.b2bH?1:0)+(g.b2bA?1:0);
+  {const mk=MKT[g.id];if(mk&&mk.tot!=null&&mk.tot>0){const w=mktW(g.lg);tot=w*mk.tot+(1-w)*tot}}
   const m=md.m,preH=tot/2+m/2,preA=tot/2-m/2;
   if(isLive(g)&&g.score){const r=remaining(g),sh=+g.score[g.home]||0,sa=+g.score[g.away]||0;
     return{live:true,r,m,preH,preA,preTot:tot,h:sh+preH*r,a:sa+preA*r,tot:sh+sa+tot*r,curH:sh,curA:sa,sdF:Math.sqrt(Math.max(r,1e-4))}}
