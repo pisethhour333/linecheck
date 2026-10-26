@@ -340,6 +340,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 .bl-b{font-size:.7rem}.bl-b.won{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}.bl-b.lost{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}.bl-b.pending{background:color-mix(in srgb,var(--flag) 22%,transparent);color:var(--flag)}
 .bl-d{padding:4px 12px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}.blegs{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.blegs li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--muted) 10%,transparent)}.blegs li .note{grid-column:1/-1;font-size:.75rem}.blegs li.up b{color:var(--good)}.blegs li.dn b{color:var(--bad)}.bl-g{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:.85rem;color:var(--muted)}.bl-g b{color:var(--ink)}
 .mixn{font-size:.8rem}.mixd{color:var(--warn)}
+.pmore{margin-top:6px}.pmore>summary{cursor:pointer;color:var(--turf);font-weight:700;padding:6px 0}
 </style>
 
 </head>
@@ -629,7 +630,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 74. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 75. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -648,6 +649,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <details><summary>Analyze tab</summary><p>Pick a game from the <b>Game</b> list at the top (it follows the sport and day picked at the top, like the other tabs). Both teams fill in by themselves: points (or goals or runs) for and against per game, and games played. Then change the boxes if you know something the numbers don't: a starting quarterback out (football only), other key players out, or rest. The model shows its win chance, its own spread and a fair price, and you can compare it with DraftKings' odds below. It uses each sport's own home edge and scoring spread. You can also type your own numbers for any matchup. The <b>Dig in</b> button on a game card opens the same thing.</p></details>
     <details><summary>Search games</summary><p>Type part of a team or player name in the search box above the Games list (for example "lak" or "sinner") to show only matching games. It works together with the sport and day picked at the top and shows how many games match. Tap ✕ or <b>Clear search</b> to see everything again.</p></details>
     <details><summary>Team players</summary><p>At the top of the Props tab, pick any team with a game coming up, live or just finished (it follows the sport and day picked at the top). You'll see every player with season numbers from ESPN: TDs and passing, rushing and receiving yards for football; points, rebounds, assists and threes per game for basketball; average, home runs, RBIs, ERA and strikeouts for baseball; goals, assists and points for hockey; goals and assists for soccer leaders. NFL players also show their chance to score a TD in the next game, and NBA players their projected points. When the team is playing, a <b>Today</b> column shows live stats that refresh every 30 seconds. College teams show the roster and live stats; season stats appear when ESPN has them.</p></details>
+    <details><summary>NFL player props: more players</summary><p>Each NFL team on the Props tab shows its main passer, rusher and receiver first. Tap <b>More players</b> under a team to see the backups and other receivers: up to 2 passers, 3 rushers and 6 receivers per team, all with yard lines, chances and a <b>+ Ticket</b> button. Players listed as out are left off, so if a starter is hurt the next player steps in. Picking Passing, Rushing or Receiving at the top opens the list for every team.</p></details>
     <details><summary>Customize the live tiles</summary><p>On the Live tab, open <b>Customize tiles</b> to choose what each tile shows (win chances, quarter scores, down and distance, tags, your ticket bets) and what appears when you tap a tile (win bar, ticket, quarter table, situation, next TD, scorers and box score, injuries, latest plays, top performers). <b>Scores only</b> shows just the teams, the score and the quarter-by-quarter line. <b>Show everything</b> turns it all back on. Your choice is saved on this phone.</p></details>
     <details><summary>NBA player points</summary><p>On the Games tab, open <b>Player points projection</b> on any NBA game to see each team's main players with projected points, the chance of 20 or more, rebounds and assists. Projections blend this season with last season (early on), adjust for the opponent's defense and back-to-backs, and leave off players listed Out, sharing their points among teammates. During the game, the Live tile shows the real box score with a projected final for each player. For any other line, use the Props tab.</p></details>
     <details><summary>Who is home and who is away</summary><p>Games are always listed away team first, home team second, the same as "Cowboys @ Packers" on DraftKings. Each team also has an <b>Away</b> or <b>Home</b> tag, and live tiles put an <b>@</b> in front of the home team. A tag with a * means the game is at a neutral site, so neither team really has home advantage and the app doesn't give one.</p></details>
@@ -1856,7 +1858,7 @@ function oppFactor(oppId){const T=D.nfl.teams&&D.nfl.teams.teams;if(!T||!T[oppId
   return Math.min(1.2,Math.max(0.8,(T[oppId].pa/T[oppId].gp)/avg))}
 function teamGp(id){const t=teamInfo("nfl",id);return t&&t.gp?t.gp:null}
 async function loadProps(g){
-  const key="props-"+g.id,c=cache.get(key);if(c&&Date.now()-c.at<3600e3){PROPS[g.id]=c.v;return}
+  const key="props2-"+g.id,c=cache.get(key);if(c&&Date.now()-c.at<3600e3){PROPS[g.id]=c.v;return}
   const j=await getJSON(`${ESPN}/site/v2/sports/${PATH.nfl}/summary?event=${g.id}`);
   const out={};
   (j.leaders||[]).forEach(tb=>{const tid=tb.team&&String(tb.team.id);if(!tid)return;const list=[];
@@ -1864,10 +1866,16 @@ async function loadProps(g){
       const L=(cat.leaders||[])[0];if(!L||!L.athlete)return;const pl=parseLine(L.displayValue);
       list.push({kind,name:L.athlete.displayName||L.athlete.shortName,pos:(L.athlete.position&&L.athlete.position.abbreviation)||"",line:L.displayValue||"",yds:pl.yds!=null?pl.yds:+L.value||0,td:pl.td})});
     out[tid]=list});
+  try{const st=await tpStats({lg:"nfl"});const nv=(v,k)=>+(v&&v[k])||0;
+    [g.home,g.away].map(String).forEach(tid=>{const list=out[tid]||(out[tid]=[]);const has=(k,n)=>list.some(x=>x.kind===k&&qbNorm(x.name)===qbNorm(n));
+      const mine=Object.values(st||{}).filter(p=>String(p.team)===tid&&p.name);
+      [["pass","passing.passingYards","passing.passingTouchdowns",2],["rush","rushing.rushingYards","rushing.rushingTouchdowns",3],["rec","receiving.receivingYards","receiving.receivingTouchdowns",6]].forEach(([k,yk,tk,n])=>{
+        mine.filter(p=>{const y=nv(p.v,yk),gp=nv(p.v,"general.gamesPlayed")||1;return y>0&&y/gp>=(k==="pass"?60:15)}).sort((a,b)=>nv(b.v,yk)-nv(a.v,yk)).slice(0,n).forEach(p=>{if(has(k,p.name))return;const yds=nv(p.v,yk),td=nv(p.v,tk),gp=nv(p.v,"general.gamesPlayed")||nv(p.v,"gamesPlayed")||null;
+          list.push({kind:k,name:p.name,pos:p.pos||"",line:`${yds.toLocaleString()} YDS, ${td} TD`,yds,td,gp,extra:1})})})})}catch(e){}
   PROPS[g.id]=out;cache.set(key,{at:Date.now(),v:out});
 }
 function projFor(g,tid,p){
-  const gp=teamGp(tid);if(!gp||!p.yds)return null;const opp=tid===g.home?g.away:g.home,f=oppFactor(opp);
+  const tg=teamGp(tid),gp=p.gp&&tg?Math.min(tg,Math.max(1,p.gp)):tg;if(!gp||!p.yds)return null;const opp=tid===g.home?g.away:g.home,f=oppFactor(opp);
   const proj=p.yds/gp*f,sd=PROPCFG[p.kind].sd(proj);
   const lam=p.td/gp*f;
   return{proj,sd,f,anyTD:p.kind==="pass"?null:1-Math.exp(-lam),twoPass:p.kind==="pass"?1-Math.exp(-lam)*(1+lam):null};
@@ -1880,7 +1888,7 @@ let NFLF="all";try{NFLF=localStorage.getItem("ge-pfnfl")||"all"}catch(e){}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-pfall]");if(!b)return;NFLF="all";try{localStorage.setItem("ge-pfnfl","all")}catch(x){}nflFilterBar();applyNflFilter()});
 function nflFilterBar(){const box=$("pf-nfl");if(!box)return;box.innerHTML=NFLPF.map(([k,t])=>`<button type="button" class="btn sm ghost" data-pf="${k}" aria-pressed="${NFLF===k}">${t}</button>`).join("");
   box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{NFLF=b.dataset.pf;try{localStorage.setItem("ge-pfnfl",NFLF)}catch(e){}nflFilterBar();applyNflFilter()}))}
-function applyNflFilter(){const lab={pass:"passing",rush:"rushing",rec:"receiving",td:"touchdown"}[NFLF];const nm=(NFLPF.find(x=>x[0]===NFLF)||[])[1]||"";
+function applyNflFilter(){document.querySelectorAll("#propList-nfl .pmore").forEach(d=>{if(NFLF!=="all")d.open=true});const lab={pass:"passing",rush:"rushing",rec:"receiving",td:"touchdown"}[NFLF];const nm=(NFLPF.find(x=>x[0]===NFLF)||[])[1]||"";
   document.querySelectorAll("#propList-nfl > *").forEach(card=>{if(card.classList.contains("empty"))return;let n=card.querySelector(":scope > .pfon");if(NFLF==="all"){if(n)n.remove();return}
     if(!n){n=document.createElement("div");n.className="pfon";const f=card.firstElementChild;f&&f.nextSibling?card.insertBefore(n,f.nextSibling):card.appendChild(n)}n.innerHTML=`Filter on: <b>${esc(nm)} only</b> <button type="button" class="btn sm ghost" data-pfall="1">Show all</button>`});
   document.querySelectorAll("#propList-nfl .prop").forEach(el=>{el.hidden=NFLF==="all"?false:NFLF==="td"?el.dataset.td!=="1":el.dataset.kind!==NFLF;
@@ -1900,15 +1908,15 @@ async function renderNflProps(){
   const tds=[];let ninj=null;try{ninj=await lwInjuries("nfl")}catch(e){}
   $("propList-nfl").innerHTML=gs.map(g=>{const pg=PROPS[g.id]||{};
     const teams=[g.away,g.home].map(tid=>{const ps=(pg[tid]||[]);const outN=[];
-      const rows=ps.map((p,i)=>{const it=ninj&&(ninj[String(tid)]||[]).find(x=>qbNorm(x.n)===qbNorm(p.name));if(it&&stSev(it.st)===0){outN.push(p.name);return""}
+      const seenK=new Set(),more=[];const rows=ps.map((p,i)=>{const it=ninj&&(ninj[String(tid)]||[]).find(x=>qbNorm(x.n)===qbNorm(p.name));if(it&&stSev(it.st)===0){outN.push(p.name);return""}
         const pr=projFor(g,tid,p);if(!pr)return"";const cfg=PROPCFG[p.kind];
         if(pr.anyTD!=null&&p.td>0)tds.push({p,g,tid,ch:pr.anyTD});
         return`<div class="prop" data-kind="${esc(p.kind)}" data-td="${pr.anyTD!=null?1:0}"><div class="ph"><span><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)} · ${esc(p.line)}</span>${it&&stSev(it.st)<=3?` <span class="qtag">${esc(it.st)}</span>`:""}</span>${dkA(g,tid,"",p.name)}</div>
           <div class="pr"><span class="lab">${cfg.label}</span><span class="pv">Proj ${Math.round(pr.proj)}</span></div>
           <div class="chips">${cfg.lines.map(L=>`<button type="button" class="chip tap" data-tkq="${tkQ(g,tid,`${p.name} ${L}+ ${cfg.label.toLowerCase()}`,overP(pr,L),"Prop",p.name)}">${L}+ <b>${pct(overP(pr,L),0)}</b><i>+</i></button>`).join("")}
           ${pr.anyTD!=null?`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" anytime TD",pr.anyTD,"Prop",p.name)}">Anytime TD <b>${pct(pr.anyTD,0)}</b><i>+</i></button>`:""}${pr.anyTD!=null?(()=>{const nt=nextTD(g),gp=teamGp(tid);if(!nt||!gp)return"";const f=(String(tid)===String(g.home)?nt.h:nt.a)*tdShare(tid,p.td,p.yds,gp);return`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" first TD",f,"Prop",p.name)}">First TD <b>${pct(f,0)}</b><i>+</i></button>`})():""}${pr.twoPass!=null?`<button type="button" class="chip td tap" data-tkq="${tkQ(g,tid,p.name+" 2+ passing TDs",pr.twoPass,"Prop",p.name)}">2+ pass TD <b>${pct(pr.twoPass,0)}</b><i>+</i></button>`:""}</div>
-          <div class="row chk"><input type="number" inputmode="decimal" step="0.5" placeholder="Your line, e.g. ${cfg.lines[1]-0.5}" id="ln-${esc(g.id)}-${esc(tid)}-${i}" data-proj="${pr.proj.toFixed(2)}" data-sd="${pr.sd.toFixed(2)}" class="lineIn" aria-label="Check a ${cfg.label} line for ${esc(p.name)}"><span class="note lineOut"></span><button type="button" class="btn sm ghost logprop" data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}">Log bet</button><button type="button" class="btn sm tkb" data-tkprop data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}" data-team="${esc(tid)}">+ Ticket</button></div></div>`}).join("");
-      return`<div class="pteam"><h3>${esc(tname(g,tid))}</h3>${outN.length?`<p class="note"><b>Out (not shown):</b> ${esc(outN.join(", "))}</p>`:""}${rows||(outN.length?"":`<p class="note">Player stats not available yet.</p>`)}<p class="note pfnone" hidden></p></div>`}).join("");
+          <div class="row chk"><input type="number" inputmode="decimal" step="0.5" placeholder="Your line, e.g. ${cfg.lines[1]-0.5}" id="ln-${esc(g.id)}-${esc(tid)}-${i}" data-proj="${pr.proj.toFixed(2)}" data-sd="${pr.sd.toFixed(2)}" class="lineIn" aria-label="Check a ${cfg.label} line for ${esc(p.name)}"><span class="note lineOut"></span><button type="button" class="btn sm ghost logprop" data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}">Log bet</button><button type="button" class="btn sm tkb" data-tkprop data-key="${esc("nfl:"+g.id)}" data-name="${esc(p.name)}" data-lab="${esc(cfg.label.toLowerCase())}" data-team="${esc(tid)}">+ Ticket</button></div></div>`}).filter((r,i)=>{if(!r)return false;const kd=ps[i].kind;if(!seenK.has(kd)){seenK.add(kd);return true}more.push(r);return false}).join("");const moreH=more.length?`<details class="pmore"><summary>More players (${more.length})</summary>${more.join("")}</details>`:"";
+      return`<div class="pteam"><h3>${esc(tname(g,tid))}</h3>${outN.length?`<p class="note"><b>Out (not shown):</b> ${esc(outN.join(", "))}</p>`:""}${rows||(outN.length&&!moreH?"":moreH?"":`<p class="note">Player stats not available yet.</p>`)}${moreH}<p class="note pfnone" hidden></p></div>`}).join("");
     return`<div class="gm"><div class="meta"><span>${esc(whenTxt(g))}</span><span>${esc(short(g,g.away))} @ ${esc(short(g,g.home))}</span></div>${teams}</div>`}).join("");
   document.querySelectorAll(".lineIn").forEach(inp=>inp.addEventListener("input",()=>{const L=parseFloat(inp.value),o=inp.closest(".chk,.row").querySelector(".lineOut");if(!isFinite(L)){o.textContent="";return}
     const p=Phi((+inp.dataset.proj-L)/+inp.dataset.sd);o.innerHTML=`Over <b>${pct(p,0)}</b> · Under <b>${pct(1-p,0)}</b>`}));
