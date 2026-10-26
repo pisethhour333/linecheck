@@ -454,7 +454,8 @@ header{margin-bottom:0}
 <section class="panel" id="p-analyze" hidden>
   <div class="card">
     <div class="row" style="justify-content:space-between"><h2>Game research</h2><span class="tag ex" id="exTag">Example numbers</span></div>
-    <p class="note">Enter each team's season points for and against per game (from NFL.com or ESPN team stats), then the injury and rest notes. The model builds its own line from these, without looking at DraftKings' odds.</p>
+    <label class="tpl"><span class="lab">Game</span><select id="anSel" aria-label="Pick a game to analyze"></select></label>
+    <p class="note" id="anNote">Pick a game and both teams fill in by themselves: season points for and against, games played. Then adjust the injury and rest boxes if you know something the numbers don't. The model builds its own line without looking at DraftKings' odds. You can also type any numbers yourself.</p>
     <div class="grid2">
       <div class="team">
         <span class="lab">Away team</span>
@@ -616,7 +617,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 67. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 68. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -629,6 +630,7 @@ header{margin-bottom:0}
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>DK line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
+    <details><summary>Analyze tab</summary><p>Pick a game from the <b>Game</b> list at the top (it follows the sport and day picked at the top, like the other tabs). Both teams fill in by themselves: points (or goals or runs) for and against per game, and games played. Then change the boxes if you know something the numbers don't: a starting quarterback out (football only), other key players out, or rest. The model shows its win chance, its own spread and a fair price, and you can compare it with DraftKings' odds below. It uses each sport's own home edge and scoring spread. You can also type your own numbers for any matchup. The <b>Dig in</b> button on a game card opens the same thing.</p></details>
     <details><summary>Search games</summary><p>Type part of a team or player name in the search box above the Games list (for example "lak" or "sinner") to show only matching games. It works together with the sport and day picked at the top and shows how many games match. Tap ✕ or <b>Clear search</b> to see everything again.</p></details>
     <details><summary>Team players</summary><p>At the top of the Props tab, pick any team with a game coming up, live or just finished (it follows the sport and day picked at the top). You'll see every player with season numbers from ESPN: TDs and passing, rushing and receiving yards for football; points, rebounds, assists and threes per game for basketball; average, home runs, RBIs, ERA and strikeouts for baseball; goals, assists and points for hockey; goals and assists for soccer leaders. NFL players also show their chance to score a TD in the next game, and NBA players their projected points. When the team is playing, a <b>Today</b> column shows live stats that refresh every 30 seconds. College teams show the roster and live stats; season stats appear when ESPN has them.</p></details>
     <details><summary>Customize the live tiles</summary><p>On the Live tab, open <b>Customize tiles</b> to choose what each tile shows (win chances, quarter scores, down and distance, tags, your ticket bets) and what appears when you tap a tile (win bar, ticket, quarter table, situation, next TD, scorers and box score, injuries, latest plays, top performers). <b>Scores only</b> shows just the teams, the score and the quarter-by-quarter line. <b>Show everything</b> turns it all back on. Your choice is saved on this phone.</p></details>
@@ -722,19 +724,22 @@ const money=n=>(n<0?"-$":"$")+Math.abs(n).toFixed(2);
 
 /* --- analyzer --- */
 const AFIELDS=["a-name","a-pf","a-pa","a-gp","a-qb","a-inj","a-rest","h-name","h-pf","h-pa","h-gp","h-qb","h-inj","h-rest","neutral","notes","a-ml","h-ml","h-sp"];
+setTimeout(()=>{try{analyze()}catch(e){}},0);
+function anL(){let lg="nfl";try{lg=AN_LG||"nfl"}catch(e){}try{const L=LEAGUES[lg]||LEAGUES.nfl;return{sd:L.sd,hfa:L.hfa,fb:lg==="nfl"||lg==="cfb"}}catch(e){return{sd:13.5,hfa:1.5,fb:true}}}
 function teamRating(p){
   const pf=num(p+"-pf"),pa=num(p+"-pa"),gp=Math.max(0,num(p+"-gp"));
   const raw=pf-pa, w=gp/(gp+4);
-  const adj=(num(p+"-qb")?-5.5:0)-num(p+"-inj")+num(p+"-rest");
+  const LLg=anL(),fb=LLg.fb,sc=fb?1:(LLg.sd||13.5)/13.5;
+  const adj=(fb&&num(p+"-qb")?-5.5:0)+(-num(p+"-inj")+num(p+"-rest"))*sc;
   return {raw,reg:raw*w,adj,gp};
 }
 function analyze(){
   const an=$("a-name").value.trim()||"Away", hn=$("h-name").value.trim()||"Home";
   $("ez-a").textContent=an.toUpperCase().slice(0,10); $("ez-h").textContent=hn.toUpperCase().slice(0,10);
   $("lab-aml").textContent=an+" moneyline"; $("lab-hml").textContent=hn+" moneyline"; $("lab-hsp").textContent=hn+" spread";
-  const A=teamRating("a"),H=teamRating("h"),hfa=$("neutral").checked?0:HFA;
+  const LL=anL();const A=teamRating("a"),H=teamRating("h"),hfa=$("neutral").checked?0:LL.hfa;
   const margin=(H.reg+H.adj)-(A.reg+A.adj)+hfa; // home expected margin
-  const pH=Phi(margin/SD), pA=1-pH;
+  const pH=Phi(margin/LL.sd), pA=1-pH;
   const fav=pH>=0.5?hn:an, pf=Math.max(pH,pA);
   $("v-main").textContent=`${fav} ${pct(pf,0)}`;
   $("v-sub").textContent=`${an} ${pct(pA,0)} · ${hn} ${pct(pH,0)}`;
@@ -745,7 +750,7 @@ function analyze(){
   const g=Math.min(A.gp,H.gp); const conf=g<3?"Low":g<8?"Medium":"Higher";
   $("s-conf").textContent=conf;
   const parts=[`Season form: ${hn} ${sgn((H.raw).toFixed(1))}/gm, ${an} ${sgn((A.raw).toFixed(1))}/gm`];
-  if(hfa)parts.push(`home field +${HFA}`);
+  if(hfa)parts.push(`home field +${hfa}`);
   if(H.adj)parts.push(`${hn} news ${sgn(H.adj)}`);
   if(A.adj)parts.push(`${an} news ${sgn(A.adj)}`);
   $("s-why").textContent=parts.join(" · ")+(g<3?". Few games played, so treat this as a rough guess.":".");
@@ -814,7 +819,7 @@ odds:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1
 tracker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l2 2 3-3M4 15l2 2 3-3M12 8h8M12 16h8"/></svg>',
 guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>'};
 document.querySelectorAll("nav button").forEach(b=>{const t=b.textContent.trim();if(TABICO[b.dataset.tab])b.innerHTML=TABICO[b.dataset.tab]+`<span>${t}</span>`});
-function show(t){document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);try{localStorage.setItem("ge-tab",t)}catch(e){}}
+function show(t){if(t==="analyze")setTimeout(()=>{try{anFill();const fb=AN_LG==="nfl"||AN_LG==="cfb";document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!fb})}catch(e){}},0);document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);try{localStorage.setItem("ge-tab",t)}catch(e){}}
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
 try{const t=localStorage.getItem("ge-tab");if(t&&$("p-"+t))show(t)}catch(e){}
 if(TABS.includes(location.hash.slice(1)))show(location.hash.slice(1));
@@ -970,7 +975,7 @@ function gqText(g){const parts=[g.name,g.title,LEAGUES[g.lg]&&LEAGUES[g.lg].labe
 let gqT=null;document.addEventListener("input",e=>{if(e.target&&e.target.id==="gSearch"){GQ=e.target.value;try{sessionStorage.setItem("ge-gq",GQ)}catch(x){}clearTimeout(gqT);gqT=setTimeout(renderGames,150)}});
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-gqclear]")){GQ="";try{sessionStorage.removeItem("ge-gq")}catch(x){}const i=$("gSearch");if(i)i.value="";renderGames()}});
 setTimeout(()=>{const i=$("gSearch");if(i&&GQ)i.value=GQ},0);
-function renderGames(){
+function renderGames(){try{if(typeof anFill==="function")setTimeout(anFill,0)}catch(e){}
   const ae=document.activeElement;if(ae&&ae.classList&&(ae.classList.contains("ouIn")||ae.classList.contains("pIn")||ae.classList.contains("socIn")||ae.classList.contains("spIn")||ae.classList.contains("fOdds"))){pendingRender=true;return}
   renderLg();
   const notes=[];const n=D.nfl.teams,c=D.cfb.teams,b=D.nba.teams,sh=k=>LG==="all"||LG===k;
@@ -1014,12 +1019,21 @@ function renderGames(){
       <span class="row" style="gap:6px">${g.lg!=="nfl"&&g.lg!=="cfb"?"":`<button class="btn sm ghost dig" data-id="${esc(g.id)}" data-dk="${esc(g.lg+":"+g.id)}">Dig in</button>`}<button class="btn sm ghost" data-log="${esc(JSON.stringify({key:g.lg+":"+g.id}))}">Log bet</button>${fin?"":`${quickTk(g)}`+dkA(g,null,"btnlike")}</span></div></div>`}).join("");
   renderParlays(gs);
 }
-function digIn(g){
-  if(!g)return;
+var AN_LG=(()=>{try{return localStorage.getItem("ge-anlg")||"nfl"}catch(e){return"nfl"}})();
+function anFill(){const sel=$("anSel");if(!sel||document.activeElement===sel)return;const gs=dateFilter(slate()).filter(g=>!g.field&&g.home!=null&&g.away!=null&&LEAGUES[g.lg]&&!["ten","mma"].includes(g.lg)&&(DF!=="live"||isLive(g)));
+  const html=`<option value="">${gs.length?"Choose a game…":"No games for "+esc(filterText())}</option>`+gs.map(g=>`<option value="${esc(g.lg+":"+g.id)}">${esc(LEAGUES[g.lg].label)} · ${esc(short(g,g.away))} @ ${esc(short(g,g.home))} · ${isLive(g)?"LIVE":DONE.includes(g.status)?"Final":esc(whenTxt(g))}</option>`).join("");
+  if(sel.dataset.h!==html){const cur=sel.value;sel.innerHTML=html;sel.dataset.h=html;if(cur&&gs.some(g=>g.lg+":"+g.id===cur))sel.value=cur}}
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="anSel"&&e.target.value){const g=findGame(e.target.value);if(g)digIn(g,true)}});
+function digIn(g,keep){
+  if(!g)return;AN_LG=LEAGUES[g.lg]?g.lg:"nfl";try{localStorage.setItem("ge-anlg",AN_LG)}catch(e){}try{const s=$("anSel");anFill();if(s)s.value=g.lg+":"+g.id}catch(e){}
+  document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!(g.lg==="nfl"||g.lg==="cfb")});
+  const unit=g.lg==="soc"||g.lg==="nhl"?"Goals":g.lg==="mlb"?"Runs":"Pts";document.querySelectorAll("#a-pf,#h-pf").forEach(x=>{const s=x.closest("label").querySelector(".lab");if(s)s.textContent=unit+" for / gm"});document.querySelectorAll("#a-pa,#h-pa").forEach(x=>{const s=x.closest("label").querySelector(".lab");if(s)s.textContent=unit+" allowed / gm"});
   [["a",g.away],["h",g.home]].forEach(([p,c])=>{const t=teamInfo(g.lg,c);$(p+"-name").value=short(g,c);
-    if(t&&t.pf!=null){$(p+"-pf").value=(t.pf/t.gp).toFixed(1);$(p+"-pa").value=(t.pa/t.gp).toFixed(1)}else{$(p+"-pf").value="";$(p+"-pa").value=""}
+    const dp=g.lg==="soc"||g.lg==="nhl"||g.lg==="mlb"?2:1;let f=null,a2=null;
+    if(t&&t.off!=null&&t.def!=null){f=t.off;a2=t.def}else if(t&&t.gf!=null&&t.gp){f=t.gf/t.gp;a2=t.ga/t.gp}else if(t&&t.pf!=null&&t.gp){f=t.pf/t.gp;a2=t.pa/t.gp}
+    $(p+"-pf").value=f!=null&&isFinite(f)?f.toFixed(dp):"";$(p+"-pa").value=a2!=null&&isFinite(a2)?a2.toFixed(dp):"";
     if(t)$(p+"-gp").value=t.gp;$(p+"-qb").value="0";$(p+"-inj").value="0";$(p+"-rest").value="0"});
-  $("neutral").checked=false;$("notes").value=g.lg==="cfb"?"College game: enter each team's points per game from ESPN to use the Analyze model.":"";$("exTag").hidden=true;analyze();show("analyze");window.scrollTo(0,0);
+  $("neutral").checked=!!g.neutral;$("notes").value=(!teamInfo(g.lg,g.away)||!teamInfo(g.lg,g.home))?"Season stats aren't available for one of these teams yet; type points per game if you know them.":"";$("exTag").hidden=true;analyze();if(!keep){show("analyze");window.scrollTo(0,0)}
 }
 const upcoming=g=>!isLive(g)&&Date.parse(g.start_time)>Date.now();
 function legs(gs){return gs.filter(upcoming).map(g=>{const md=model(g);if(!md)return null;const h=md.pH>=md.pA;return{g,team:h?g.home:g.away,p:h?md.pH:md.pA}}).filter(Boolean)}
@@ -1137,7 +1151,7 @@ async function loadScores(lg){
   D[lg].recs=recs;D[lg].live={games};D[lg].liveAt=Date.now();cache.set(lg+"-live",{live:D[lg].live,recs,at:D[lg].liveAt});
 }
 let feedErr=false,fcTimer=null;
-function filterChanged(){renderGames();
+function filterChanged(){renderGames();try{anFill()}catch(e){}
   try{if(!$("p-props").hidden)renderProps();if(!$("p-live").hidden){LW.sel=null;renderLive()}}catch(e){}
   clearTimeout(fcTimer);fcTimer=setTimeout(()=>{$("liveTag").textContent="Refreshing…";refresh(true)},350)}
 async function refresh(force){
