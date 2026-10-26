@@ -331,7 +331,7 @@ header{margin-bottom:0}
 .tpl{display:flex;align-items:center;gap:8px;margin:8px 0}.tpl select{flex:1;min-width:0}.tpw{max-height:70vh;overflow:auto}.tpt{border-collapse:collapse;font-size:.8rem;width:100%}.tpt th{position:sticky;top:0;background:var(--surface);text-align:right;padding:4px 6px;font-size:.68rem;color:var(--muted);white-space:nowrap;z-index:1}.tpt th:first-child,.tpt td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;min-width:9.5em;max-width:12em}.tpt td{padding:5px 6px;border-top:1px solid color-mix(in srgb,var(--muted) 18%,transparent);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.tpt td:first-child{white-space:normal}.tpt td.tdy{text-align:left;white-space:normal;min-width:11em;color:var(--good)}.tpmore summary{cursor:pointer;margin:8px 0;color:var(--turf);font-weight:600}
 .tvbox{margin:6px 0 4px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.tvbox summary{cursor:pointer;font-weight:700;color:var(--turf)}.tvq{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}.tvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px;margin:10px 0}.tvg b{grid-column:1/-1;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.tvg label{display:flex;align-items:center;gap:8px;font-size:.92rem}.tvg input{width:18px;height:18px;accent-color:var(--turf)}
 .gsearch{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted)}.gsearch input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-size:16px;outline:none}.gsearch:focus-within{border-color:var(--turf)}
-.acctbtn{display:inline-flex;align-items:center;gap:4px}.acctbtn span:empty{display:none}.acctabs{gap:6px;flex-wrap:wrap}.acform{display:flex;flex-direction:column;gap:10px;margin-top:8px}.acform input{font-size:16px}.reccode{display:flex;flex-direction:column;gap:4px;padding:12px;border:2px dashed var(--flag);border-radius:10px}.reccode b{font-family:var(--mono,monospace);font-size:1.4rem;letter-spacing:.08em}
+.acctbtn{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}.acctbtn span{display:none}.acctbtn.on{padding:0;width:36px;height:36px;border-radius:50%}@media (max-width:380px){.hdrow .ltw{display:none}}@media (max-width:400px){.hdrow #liveTag{font-size:.68rem;padding-left:7px;padding-right:7px;letter-spacing:.02em}.hdrow .btn.sm{padding-left:8px;padding-right:8px}.acctbtn.on{width:32px;height:32px}.hdrow>span.row{gap:4px!important}}.acctbtn.on svg{display:none}.acctbtn.on span{display:inline;font-weight:800;font-size:1.05rem;line-height:1}.hdrow>span.row{flex-wrap:nowrap;min-width:0}.hdrow #liveTag{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.acctabs{gap:6px;flex-wrap:wrap}.acform{display:flex;flex-direction:column;gap:10px;margin-top:8px}.acform input{font-size:16px}.reccode{display:flex;flex-direction:column;gap:4px;padding:12px;border:2px dashed var(--flag);border-radius:10px}.reccode b{font-family:var(--mono,monospace);font-size:1.4rem;letter-spacing:.08em}
 .btk{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--turf) 10%,transparent)}
 </style>
 
@@ -622,7 +622,7 @@ header{margin-bottom:0}
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 71. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 72. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -1181,7 +1181,7 @@ function initData(){
 function setTag(){
   const at=Math.max(...Object.values(D).map(x=>x.liveAt||0));
   const t=at?new Date(at).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"";
-  $("liveTag").textContent=feedErr?(at?"Offline · "+t:"Can't reach scores"):(at?"Live · "+t:"Loading…");
+  $("liveTag").innerHTML=feedErr?(at?`<span class="ltw">Offline · </span>${t}`:"Can't reach scores"):(at?`<span class="ltw">Live · </span>${t}`:"Loading…");
   if(feedErr&&!at)PH($("gameList")).html=`<div class="empty">Couldn't reach the live sports feed. Check your connection, then tap Refresh.</div>`;
 }
 /* --- more team sports: MLB, NHL, WNBA, college basketball --- */
@@ -2338,7 +2338,7 @@ function accApply(keys){const g=k=>{try{return localStorage.getItem(k)}catch(e){
   lcToast("Updated from your account: "+keys.map(k=>({"ge-ticket":"current ticket","ge-tickets":"saved tickets","ge-bets":"bet tracker","ge-skin":"theme","ge-lwview":"tile layout","ge-alon":"alerts","ge-pfnfl":"prop filter"})[k]).join(", "))}
 function accAgo(t){if(!t)return"not yet";const s=(Date.now()-t)/1000;return s<60?"just now":s<3600?Math.round(s/60)+" min ago":new Date(t).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}
 var ACCV="in";
-function accUI(){try{$("storeTag").textContent=ACC.tok?"Synced to your account":"Saved on this phone"}catch(e){}const b=$("acctBody");if(!b)return;const L=$("acctBtnL");if(L)L.textContent=ACC.tok&&ACC.u?ACC.u.slice(0,10):"";const tag=$("acctTag");
+function accUI(){try{$("storeTag").textContent=ACC.tok?"Synced to your account":"Saved on this phone"}catch(e){}const b=$("acctBody");if(!b)return;const L=$("acctBtnL"),B=$("acctBtn");if(L)L.textContent=ACC.tok&&ACC.u?ACC.u[0].toUpperCase():"";if(B){B.classList.toggle("on",!!(ACC.tok&&ACC.u));B.title=ACC.tok&&ACC.u?"Signed in as "+ACC.u:"Account";B.setAttribute("aria-label",B.title)}const tag=$("acctTag");
   if(ACC.tok){if(tag){tag.hidden=false;tag.textContent="Synced"}
     b.innerHTML=`<p>Signed in as <b>${esc(ACC.u)}</b>. Your current ticket, saved tickets, bet tracker, color theme, tile layout and alert setting sync to every phone or computer where you sign in.</p><p class="note">Last synced ${esc(accAgo(ACC.last))}.${ACC.msg?" "+esc(ACC.msg):""}</p><div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-acc="sync">Sync now</button><button type="button" class="btn sm ghost" data-acc="out">Sign out</button></div>`;return}
   if(tag)tag.hidden=true;
