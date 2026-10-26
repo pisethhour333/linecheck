@@ -328,6 +328,8 @@ header{margin-bottom:0}
 .bx{width:100%;border-collapse:collapse;font-size:12.5px}.bx th{font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.bx th:first-child,.bx td:first-child{text-align:left}.bx td{padding:3px 4px;text-align:right;border-top:1px solid rgba(127,127,127,.15);white-space:nowrap}.bx td:first-child{white-space:normal}.bxh{margin:8px 0 2px}
 #lcToast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,20px);width:max-content;max-width:min(92vw,420px);background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.35;box-shadow:0 6px 24px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;text-align:center}#lcToast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}#lcToast{white-space:pre-line}#lcToast.win{background:#0f2a1a;border-color:#2ecc71;font-weight:600}#lcToast.win{top:calc(env(safe-area-inset-top) + 12px);bottom:auto;width:min(92vw,420px);box-sizing:border-box;transform:translate(-50%,-20px);text-align:left}#lcToast.win.on{transform:translate(-50%,0)}.alrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}.alsw{display:flex;align-items:center;gap:6px;font-weight:600}.alsw input{width:20px;height:20px;accent-color:#f5a623}
 .pfon{margin:6px 0 2px;padding:6px 10px;border-radius:10px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.35);font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pfon .btn{margin-left:auto}
+.tpl{display:flex;align-items:center;gap:8px;margin:8px 0}.tpl select{flex:1;min-width:0}.tpw{max-height:70vh;overflow:auto}.tpt{border-collapse:collapse;font-size:.8rem;width:100%}.tpt th{position:sticky;top:0;background:var(--surface);text-align:right;padding:4px 6px;font-size:.68rem;color:var(--muted);white-space:nowrap;z-index:1}.tpt th:first-child,.tpt td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;min-width:9.5em;max-width:12em}.tpt td{padding:5px 6px;border-top:1px solid color-mix(in srgb,var(--muted) 18%,transparent);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.tpt td:first-child{white-space:normal}.tpt td.tdy{text-align:left;white-space:normal;min-width:11em;color:var(--good)}.tpmore summary{cursor:pointer;margin:8px 0;color:var(--turf);font-weight:600}
+.tvbox{margin:6px 0 4px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.tvbox summary{cursor:pointer;font-weight:700;color:var(--turf)}.tvq{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}.tvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 14px;margin:10px 0}.tvg b{grid-column:1/-1;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.tvg label{display:flex;align-items:center;gap:8px;font-size:.92rem}.tvg input{width:18px;height:18px;accent-color:var(--turf)}
 </style>
 
 </head>
@@ -374,6 +376,13 @@ header{margin-bottom:0}
   <div id="lwScores">
     <div class="lwmine" role="group" aria-label="Which games"><button type="button" data-mine="0">All games</button><button type="button" data-mine="1">My ticket <span id="lwMineN"></span></button></div>
     <label class="lwtk"><span class="lab">Highlight bets from</span><select id="lwTkSel" aria-label="Ticket to highlight"></select></label>
+    <details class="tvbox" id="tvBox"><summary>Customize tiles</summary>
+      <div class="tvq"><button type="button" class="btn sm ghost" data-tvp="min">Scores only</button><button type="button" class="btn sm ghost" data-tvp="all">Show everything</button></div>
+      <div class="tvg"><b>On each tile</b>
+        <label><input type="checkbox" data-tv="tWin"> Win chances</label><label><input type="checkbox" data-tv="tQtr"> Quarter / period scores</label><label><input type="checkbox" data-tv="tDown"> Down and distance</label><label><input type="checkbox" data-tv="tFlags"> Upset, close-finish and swing tags</label><label><input type="checkbox" data-tv="tBets"> My ticket bets</label></div>
+      <div class="tvg"><b>When you tap a tile</b>
+        <label><input type="checkbox" data-tv="dWin"> Win chances and bar</label><label><input type="checkbox" data-tv="dBets"> My ticket bets</label><label><input type="checkbox" data-tv="dQtr"> Quarter / period table</label><label><input type="checkbox" data-tv="dSit"> Situation and momentum</label><label><input type="checkbox" data-tv="dNext"> Next touchdown chances</label><label><input type="checkbox" data-tv="dScore"> Scorers and box score</label><label><input type="checkbox" data-tv="dHurt"> Injuries during the game</label><label><input type="checkbox" data-tv="dPlays"> Latest plays</label><label><input type="checkbox" data-tv="dLead"> Top performers</label></div>
+      <p class="note">Saved on this phone. Team names and scores always show.</p></details>
     <div class="alrow"><label class="alsw"><input type="checkbox" id="alOn"> <span>Ticket won alerts</span></label><button type="button" class="btn sm ghost" id="alNotif" hidden>Notify me when closed</button><span class="note" id="alNote"></span></div>
     <div id="lwList"><div class="empty">Loading…</div></div>
     <details class="lwhelp"><summary>What the tiles show</summary><p class="note">Each tile shows the clock, both teams, the score and the app's live win chance. Scores update every 30 seconds while this tab is open. A red edge means <b>Close finish</b> (late and near 50/50). An orange edge means <b>Upset watch</b> (the pregame favorite is losing). A green arrow shows a big swing in the last few minutes. Tap a tile for the situation, who scored (touchdown scorers, goal scorers or home runs, with a count for anyone who scored more than once), every scoring play with the running score, latest plays, top performers and in-game injuries. Finished games show their scoring too. Basketball tiles show a box score instead: each player's points, rebounds, assists, 3-pointers and minutes, and for live NBA games a projected final points for each player.</p></details>
@@ -411,6 +420,9 @@ header{margin-bottom:0}
     <p class="fnote" id="propFilterNote"></p>
     <p class="note" id="propMsg"></p>
   </div>
+  <div class="card" id="tpCard"><div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="margin:0">Team players</h2><span class="tag" id="tpTag" hidden></span></div>
+    <label class="tpl"><span class="lab">Team</span><select id="tpSel" aria-label="Pick a team"></select></label>
+    <div id="tpBody"><p class="note">Pick a team to see every player's numbers.</p></div></div>
   <div id="propsNba" style="display:flex;flex-direction:column;gap:10px">
     <div class="card"><h2>NBA props</h2><p class="note" id="propIntro-nba"></p><h3 id="boardH-nba">Top projected scorers</h3><p class="note" id="boardNote-nba"></p><div id="tdBoard-nba"></div></div>
     <div id="propList-nba" style="display:flex;flex-direction:column;gap:10px"></div>
@@ -602,7 +614,7 @@ header{margin-bottom:0}
 <!-- GUIDE -->
 <section class="panel" id="p-guide" hidden>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 63. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 64. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -615,6 +627,8 @@ header{margin-bottom:0}
     <details><summary>How college football picks work</summary><p>College schedules are very uneven, so raw points scored and allowed can mislead. Linecheck rates every FBS team's offense and defense against the teams it actually played, using every FBS score this season. Early in the season, last season's ratings fill in. A team's projected points are its offense rating plus the opponent's defense rating, plus about a field goal for the home side. Win chances, spreads, totals, team totals, halves and quarters all come from these ratings. Games against FCS teams count, with FCS teams rated as one group. Blowouts are capped, so a 63–7 rout counts a bit less than its full margin and doesn't inflate a rating.</p></details>
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>DK line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
+    <details><summary>Team players</summary><p>At the top of the Props tab, pick any team with a game coming up, live or just finished (it follows the sport and day picked at the top). You'll see every player with season numbers from ESPN: TDs and passing, rushing and receiving yards for football; points, rebounds, assists and threes per game for basketball; average, home runs, RBIs, ERA and strikeouts for baseball; goals, assists and points for hockey; goals and assists for soccer leaders. NFL players also show their chance to score a TD in the next game, and NBA players their projected points. When the team is playing, a <b>Today</b> column shows live stats that refresh every 30 seconds. College teams show the roster and live stats; season stats appear when ESPN has them.</p></details>
+    <details><summary>Customize the live tiles</summary><p>On the Live tab, open <b>Customize tiles</b> to choose what each tile shows (win chances, quarter scores, down and distance, tags, your ticket bets) and what appears when you tap a tile (win bar, ticket, quarter table, situation, next TD, scorers and box score, injuries, latest plays, top performers). <b>Scores only</b> shows just the teams, the score and the quarter-by-quarter line. <b>Show everything</b> turns it all back on. Your choice is saved on this phone.</p></details>
     <details><summary>NBA player points</summary><p>On the Games tab, open <b>Player points projection</b> on any NBA game to see each team's main players with projected points, the chance of 20 or more, rebounds and assists. Projections blend this season with last season (early on), adjust for the opponent's defense and back-to-backs, and leave off players listed Out, sharing their points among teammates. During the game, the Live tile shows the real box score with a projected final for each player. For any other line, use the Props tab.</p></details>
     <details><summary>Who is home and who is away</summary><p>Games are always listed away team first, home team second, the same as "Cowboys @ Packers" on DraftKings. Each team also has an <b>Away</b> or <b>Home</b> tag, and live tiles put an <b>@</b> in front of the home team. A tag with a * means the game is at a neutral site, so neither team really has home advantage and the app doesn't give one.</p></details>
     <details><summary>Live tab and player status</summary><p>The Live tab follows the sport picked at the top. It has two sub-tabs. <b>Scores</b> shows every game as a small tile: live games with their win chances, games starting in the next 3 hours and today's finals. Tap a tile for details, including touchdown and goal scorers and each scoring play. Player props on your tickets get a live progress bar under the player's name (for example 187/250 passing yards, with how many more are needed and the pace); it turns green when the prop hits and red when an under goes over. This works for NFL yards, catches and TDs and for NBA points, rebounds, assists and threes. Basketball tiles show every player's points, rebounds and assists, and live NBA tiles add a projected final points column (points so far plus the pregame projection for the time left; players ruled out for the game stop there). <b>Player status</b> shows the injury report. <b>Upset watch</b> flags a pregame favorite that is losing. <b>Close finish</b> flags a late game that is still near 50/50. Player status lists each team's injury report: Out and Suspended players won't play, Doubtful players probably won't, Questionable is close to a coin flip, and Day-to-day is minor. <b>Left early</b> means a news note says the player exited a game in the last day. Check status before betting a player prop. Books usually void a prop if the player doesn't play at all, but not if he leaves early.</p></details>
@@ -687,7 +701,7 @@ header{margin-bottom:0}
 </div>
 
 <script>
-(function(){var BBL=/^(nba|wnba|ncaab|ncaaw)$/,NBPP={},nbplBusy=new Set();
+(function(){var TVD={tWin:1,tQtr:1,tDown:1,tFlags:1,tBets:1,dWin:1,dBets:1,dQtr:1,dSit:1,dNext:1,dScore:1,dHurt:1,dPlays:1,dLead:1},TV=(()=>{try{return Object.assign({},TVD,JSON.parse(localStorage.getItem("ge-lwview")||"{}"))}catch(e){return Object.assign({},TVD)}})();var BBL=/^(nba|wnba|ncaab|ncaaw)$/,NBPP={},nbplBusy=new Set();
 const $=id=>document.getElementById(id);
 const num=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:0};
 const SD=13.5, HFA=1.5;
@@ -1819,12 +1833,80 @@ async function renderNflProps(){
 }
 document.querySelector('nav button[data-tab="props"]').addEventListener("click",()=>renderProps());
 if(!$("p-props").hidden)setTimeout(renderProps,500);
-async function renderProps(){
+async function renderProps(){try{tpRender()}catch(e){}
   const PLGS=["nba","nfl","mlb","nhl","soc"];const want=LG==="all"?PLGS:PLGS.includes(LG)?[LG]:[];
   $("propsNba").hidden=!want.includes("nba");$("propsNfl").hidden=!want.includes("nfl");$("propsSoc").hidden=!want.includes("soc");$("propsMlb").hidden=!want.includes("mlb");$("propsNhl").hidden=!want.includes("nhl");$("propsNone").hidden=!!want.length;
   $("propFilterNote").textContent=`Showing: ${filterText()}. Change the sport and day at the top.`+(DF==="live"?" Live shows the NFL touchdown tracker and soccer next-goal chances. Pregame props show when you pick a day or All.":"");
   for(const l of want){try{await (l==="nba"?renderNbaProps():l==="soc"?renderSocProps():l==="mlb"?renderMlbProps():l==="nhl"?renderNhlProps():renderNflProps())}catch(e){}}
 }
+/* --- team players browser (all team sports) --- */
+var TP={sel:null,stats:{},ros:{},load:{},t:null};try{TP.sel=localStorage.getItem("ge-tpsel")||null}catch(e){}
+const TPLG=["nfl","cfb","nba","wnba","ncaab","ncaaw","mlb","nhl","soc"];
+function tpPath(g){return g.lg==="soc"?(g.sl?"soccer/"+g.sl:null):SPORTPATH[g.lg]}
+function tpGames(){const out=[],now=Date.now();TPLG.filter(lg=>LG==="all"||LG===lg).forEach(lg=>{((D[lg]&&D[lg].live&&D[lg].live.games)||[]).forEach(g0=>{const g={...g0,lg};if(g.field||!g.home||!g.away)return;
+  if(DONE.includes(g.status)&&now-Date.parse(g.start_time)>10*3600e3)return;out.push(g)})});
+  let gs=out;try{gs=dateFilter(out)}catch(e){}if(!gs.length&&DF!=="all")gs=out;return gs.sort((a,b)=>(isLive(b)-isLive(a))||Date.parse(a.start_time)-Date.parse(b.start_time))}
+const sv=(v,...ns)=>{if(!v)return null;for(const n of ns){if(v[n]!=null)return v[n];const k=Object.keys(v).find(x=>x.endsWith("."+n));if(k&&v[k]!=null)return v[k]}return null};
+async function tpStats(g){const lg=g.lg;if(TP.stats[lg]&&Date.now()-TP.stats[lg].at<3*3600e3)return TP.stats[lg].v;let v={};const y=seasonYear(true),yw=seasonYear(false);
+  const merge=(...ds)=>{const o={};ds.forEach(d=>Object.entries(d||{}).forEach(([id,p])=>{if(!o[id])o[id]={...p,v:{...(p.v||{})}};else Object.assign(o[id].v,p.v||{})}));return o};
+  const tryBy=async(key,url)=>{try{return await cachedBy(key,url,3*3600e3)}catch(e){return{}}};
+  if(lg==="nfl"||lg==="cfb"){const sp=lg==="nfl"?"football/nfl":"football/college-football";const yr=lg==="nfl"?NFL_SEASON:y;
+    v=merge(await tryBy("tp-"+lg+"-pa",BY(sp,"&sort=passing.passingYards:desc",yr,lg==="nfl"?100:300)),await tryBy("tp-"+lg+"-ru",BY(sp,"&sort=rushing.rushingYards:desc",yr,lg==="nfl"?200:500)),await tryBy("tp-"+lg+"-re",BY(sp,"&sort=receiving.receivingYards:desc",yr,lg==="nfl"?350:700)))}
+  else if(lg==="nba"||lg==="wnba"||lg==="ncaab"||lg==="ncaaw"){const sp={nba:"basketball/nba",wnba:"basketball/wnba",ncaab:"basketball/mens-college-basketball",ncaaw:"basketball/womens-college-basketball"}[lg];const yr=lg==="wnba"?y:lg==="nba"?NBA_SEASON:yw;
+    v=await tryBy("tp-"+lg,BY(sp,"&sort=offensive.avgPoints:desc",yr,lg==="nba"||lg==="wnba"?450:900));if(Object.keys(v).length<20&&lg!=="wnba")v=merge(await tryBy("tp-"+lg+"-last",BY(sp,"&sort=offensive.avgPoints:desc",yr-1,450)),v)}
+  else if(lg==="mlb"){try{await loadMlbStats()}catch(e){}v=merge(XP.mlb.bat,XP.mlb.pit)}
+  else if(lg==="nhl"){try{await loadNhlStats()}catch(e){}v=merge(XP.nhl.last,XP.nhl.cur)}
+  else if(lg==="soc"){try{await loadSocLeaders()}catch(e){}const k=g.sl;Object.entries(SOCP[k]||{}).forEach(([id,p])=>{v[id]={name:p.name,team:p.team,pos:"",v:{appearances:p.apps,totalGoals:p.goals,goalAssists:p.ast}}})}
+  TP.stats[lg]={at:Date.now(),v};return v}
+async function tpRoster(g,tid){const path=tpPath(g);if(!path)return[];const k="tpr-"+path+"-"+tid;if(TP.ros[k])return TP.ros[k];const c=cache.get(k);if(c&&Date.now()-c.at<6*3600e3)return TP.ros[k]=c.v;
+  try{const j=await getJSON(`${ESPN}/site/v2/sports/${path}/teams/${tid}/roster`);const out=[];const add=a=>{if(!a||!a.id)return;out.push({id:String(a.id),name:a.displayName||a.fullName||"",pos:(a.position&&(a.position.abbreviation||a.position.name))||"",num:a.jersey||"",st:(a.injuries&&a.injuries[0]&&a.injuries[0].status)||(a.status&&a.status.type==="injured"?"Injured":"")})};
+    (j.athletes||[]).forEach(a=>{if(a&&a.items)a.items.forEach(add);else add(a)});if(out.length)cache.set(k,{at:Date.now(),v:out});return TP.ros[k]=out}catch(e){return TP.ros[k]=[]}}
+const TPC={
+  nfl:{sort:v=>(+sv(v,"passing.passingYards")||0)+(+sv(v,"rushing.rushingYards")||0)+(+sv(v,"receiving.receivingYards")||0),cols:[["GP","general.gamesPlayed","gamesPlayed"],["Pass yds","passing.passingYards"],["Pass TD","passing.passingTouchdowns"],["INT","passing.interceptions"],["Rush yds","rushing.rushingYards"],["Rush TD","rushing.rushingTouchdowns"],["Rec","receiving.receptions"],["Rec yds","receiving.receivingYards"],["Rec TD","receiving.receivingTouchdowns"]]},
+  bb:{sort:v=>+sv(v,"avgPoints")||0,cols:[["GP","gamesPlayed"],["MIN","avgMinutes"],["PTS","avgPoints"],["REB","avgRebounds"],["AST","avgAssists"],["3PM","avgThreePointFieldGoalsMade"]]},
+  mlb:{sort:v=>(+sv(v,"batting.hits")||0)+(+sv(v,"pitching.strikeouts")||0),cols:[["G","gamesPlayed"],["AVG","batting.avg"],["HR","batting.homeRuns"],["RBI","batting.RBIs"],["H","batting.hits"],["ERA","pitching.ERA"],["K","pitching.strikeouts"],["W","pitching.wins"]]},
+  nhl:{sort:v=>+sv(v,"points","totalPoints")||((+sv(v,"goals")||0)+(+sv(v,"assists")||0)),cols:[["GP","gamesPlayed","games"],["G","goals"],["A","assists"],["PTS","points","totalPoints"],["SOG","shotsTotal","shots"],["SV%","savePct"]]},
+  soc:{sort:v=>+sv(v,"totalGoals")||0,cols:[["Apps","appearances"],["Goals","totalGoals"],["Assists","goalAssists"]]}};
+const tpKind=lg=>lg==="nfl"||lg==="cfb"?"nfl":BBL.test(lg)?"bb":lg;
+const fmtN=(x,lab)=>{if(x==null||x==="")return"–";const n=+x;if(!isFinite(n))return esc(String(x));if(/AVG/.test(lab))return n.toFixed(3).replace(/^0/,"");if(/ERA|SV%/.test(lab))return n<1&&lab==="SV%"?n.toFixed(3).replace(/^0/,""):n.toFixed(2);if(/MIN|PTS|REB|AST|3PM/.test(lab)&&!Number.isInteger(n))return n.toFixed(1);return String(Math.round(n*10)/10)};
+function tpToday(lg,r){if(!r)return"";const g=k=>r[k]!=null&&r[k]!==""&&r[k]!=="0"&&r[k]!=="--"&&r[k]!=="0-0"&&r[k]!=="0/0"?r[k]:null;const parts=[];
+  if(lg==="nfl"||lg==="cfb"){if(g("passing.YDS"))parts.push(`${r["passing.C/ATT"]||""} ${r["passing.YDS"]} pass yds${+r["passing.TD"]?", "+r["passing.TD"]+" TD":""}${+r["passing.INT"]?", "+r["passing.INT"]+" INT":""}`.trim());
+    if(g("rushing.CAR"))parts.push(`${r["rushing.CAR"]} car, ${r["rushing.YDS"]} rush yds${+r["rushing.TD"]?", "+r["rushing.TD"]+" TD":""}`);if(g("receiving.REC"))parts.push(`${r["receiving.REC"]} rec, ${r["receiving.YDS"]} yds${+r["receiving.TD"]?", "+r["receiving.TD"]+" TD":""}`)}
+  else if(BBL.test(lg)){parts.push(`${r["bb.PTS"]||0} pts · ${r["bb.REB"]||0} reb · ${r["bb.AST"]||0} ast${g("bb.MIN")?" · "+r["bb.MIN"]+" min":""}`)}
+  else{Object.keys(r).filter(k=>k!=="_n"&&g(k)).slice(0,5).forEach(k=>parts.push(`${k.split(".").pop()} ${r[k]}`))}
+  return parts.join(" · ")}
+let tpBusy=false;
+async function tpRender(){const card=$("tpCard");if(!card)return;const gs=tpGames();card.hidden=!gs.length&&!(LG==="all"||TPLG.includes(LG));
+  const sel=$("tpSel");const opts=[];const byLg={};gs.forEach(g=>(byLg[g.lg]=byLg[g.lg]||[]).push(g));
+  Object.keys(byLg).forEach(lg=>{opts.push(`<optgroup label="${esc(LEAGUES[lg].label)}">`);byLg[lg].forEach(g=>[g.away,g.home].forEach(tid=>{const v=`${lg}:${tid}:${g.id}`,opp=String(tid)===String(g.home)?g.away:g.home;
+    opts.push(`<option value="${esc(v)}">${esc(tname(g,tid))} ${String(tid)===String(g.home)?"vs":"@"} ${esc(short(g,opp))} · ${isLive(g)?"LIVE":DONE.includes(g.status)?"Final":esc(whenTxt(g))}</option>`)}));opts.push("</optgroup>")});
+  if(!gs.length){sel.innerHTML=`<option value="">No games for this sport and day</option>`;PH($("tpBody")).html=`<p class="note">No team games for ${esc(filterText())}. Change the sport or day at the top.</p>`;$("tpTag").hidden=true;return}
+  const html=`<option value="">Choose a team…</option>`+opts.join("");if(sel.dataset.h!==html){sel.innerHTML=html;sel.dataset.h=html}
+  const valid=TP.sel&&gs.some(g=>TP.sel.startsWith(g.lg+":")&&TP.sel.endsWith(":"+g.id));sel.value=valid?TP.sel:"";
+  if(!valid){PH($("tpBody")).html=`<p class="note">Pick a team to see every player's numbers: season stats, next-game chances, and live stats while they play.</p>`;$("tpTag").hidden=true;return}
+  const [lg,tid,gid]=TP.sel.split(":");const g=gs.find(x=>x.lg===lg&&String(x.id)===gid);if(!g)return;
+  if(tpBusy)return;tpBusy=true;try{
+    if(!$("tpBody").querySelector("table"))PH($("tpBody")).html=`<p class="note">Loading players…</p>`;
+    const live=isLive(g),fin=DONE.includes(g.status);
+    const [st,ros]=await Promise.all([tpStats(g),tpRoster(g,tid),(live||fin)&&lg!=="soc"?lwSummary(g,live?25e3:600e3):null,lg==="nba"?nbaPlayerProj(g).catch(()=>{}):null,lg==="nfl"?loadNflPlayers().catch(()=>{}):null]);
+    const sm=LW.sum[g.lg+":"+g.id],pl=sm&&sm.v&&sm.v.pl;
+    const K=tpKind(lg),C=TPC[K]||TPC.soc;const mine=Object.entries(st||{}).filter(([id,p])=>String(p.team)===String(tid));
+    const rows=new Map();ros.forEach(r=>rows.set(r.id,{...r,v:null}));mine.forEach(([id,p])=>{const r=rows.get(id)||{id,name:p.name,pos:p.pos,st:""};r.v=p.v;if(!r.pos)r.pos=p.pos;rows.set(id,r)});
+    if(pl){Object.values(pl).forEach(x=>{const nm=x._n;if(x._t&&x._t!==String(tid))return;if(![...rows.values()].some(r=>pnorm(r.name)===pnorm(nm)))rows.set("live-"+nm,{id:"live-"+nm,name:nm,pos:"",v:null})})}
+    const proj=id=>{if(lg==="nba"&&NBPP[g.id]&&NBPP[g.id].v){const a=(NBPP[g.id].v[String(tid)]||{}).act||[];const q=a.find(x=>x.id===id);return q?`${one(q.pts)} pts`:""}
+      if(lg==="nfl"&&NFLP&&NFLP[id]&&NFLP[id].gp){const P=NFLP[id];const lam=tdShare(tid,P.td,P.yds,P.gp)*teamTdpg(tid);return pct(1-Math.exp(-lam),0)+" TD"}return""};
+    const hasProj=lg==="nba"||lg==="nfl";
+    const list=[...rows.values()].map(r=>({...r,score:r.v?C.sort(r.v):-1,today:pl?tpToday(lg,(()=>{const x=propRow(pl,r.name);return x&&(!x._t||x._t===String(tid))?x:null})()):""}));
+    list.sort((a,b)=>(b.today?1:0)-(a.today?1:0)||b.score-a.score||a.name.localeCompare(b.name));
+    const withStats=list.filter(r=>r.v||r.today),rest=list.filter(r=>!r.v&&!r.today);
+    const head=`<tr><th>Player</th>${(live||fin)&&pl?"<th>"+(live?"Today (live)":"Today")+"</th>":""}${hasProj&&!fin?`<th>${lg==="nba"?"Proj":"Anytime TD"}</th>`:""}${C.cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr>`;
+    const tr=r=>`<tr><td><b>${esc(r.name)}</b> <span class="note">${esc(r.pos||"")}${r.num?" #"+esc(r.num):""}</span>${r.st?` <span class="qtag">${esc(r.st)}</span>`:""}</td>${(live||fin)&&pl?`<td class="tdy">${esc(r.today||"–")}</td>`:""}${hasProj&&!fin?`<td class="n">${esc(proj(r.id))}</td>`:""}${C.cols.map(c=>`<td class="n">${r.v?fmtN(sv(r.v,...c.slice(1)),c[0]):"–"}</td>`).join("")}</tr>`;
+    const note=`${live?"Live stats refresh every 30 seconds. ":""}Season numbers from ESPN${K==="bb"?" are per game":""}${lg==="nfl"?"; Anytime TD is the chance for the next game":lg==="nba"?"; Proj is projected points for this game":""}.${!mine.length?" Season stats aren't available for this league, so only the roster"+(pl?" and today's stats":"")+" are shown.":""}`;
+    $("tpTag").hidden=!live;$("tpTag").textContent=live?"Live":"";
+    PH($("tpBody")).html=`<div class="tablewrap tpw"><table class="tpt">${head}${withStats.map(tr).join("")}</table></div>${rest.length?`<details class="tpmore"><summary>${rest.length} more on the roster (no stats yet)</summary><div class="tablewrap tpw"><table class="tpt">${head}${rest.map(tr).join("")}</table></div></details>`:""}<p class="note">${note}</p>`}
+  catch(e){PH($("tpBody")).html=`<p class="note">Couldn't load this team's players. Check your connection and pick the team again.</p>`}finally{tpBusy=false}}
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="tpSel"){TP.sel=e.target.value||null;try{TP.sel?localStorage.setItem("ge-tpsel",TP.sel):localStorage.removeItem("ge-tpsel")}catch(x){}const b=$("tpBody");if(b)b.innerHTML="";tpRender()}});
+setInterval(()=>{try{if(document.hidden||$("p-props").hidden||!TP.sel)return;const [lg,tid,gid]=TP.sel.split(":");const s=D[lg]&&D[lg].live&&(D[lg].live.games||[]).find(x=>String(x.id)===gid);if(s&&isLive({...s,lg})){(async()=>{try{await loadScores(lg)}catch(e){}tpRender()})()}}catch(e){}},30000);
 /* --- NBA player props --- */
 function dayLabel(k){const t=localDate(Date.now()),m=localDate(Date.now()+864e5);return k===t?"Today":k===m?"Tomorrow":new Date(k+"T12:00:00").toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"})}
 function propDayFilter(gs,lgName){const dk=g=>localDate(g.start_time),days=[...new Set(gs.map(dk))];let df=DF,note="";
@@ -2018,8 +2100,8 @@ async function lwSummary(g,maxAge){const k=g.lg+":"+g.id,c=LW.sum[k];if(c&&Date.
       const lab=(st.labels||st.names||[]).map(x=>String(x).toUpperCase()),ix=n=>lab.indexOf(n),iP=ix("PTS"),iR=ix("REB"),iA=ix("AST"),iM=ix("MIN"),i3=ix("3PT");
       box[tid]=(st.athletes||[]).filter(a=>a&&a.athlete&&!a.didNotPlay&&a.stats&&a.stats.length).map(a=>({id:String(a.athlete.id||""),n:a.athlete.shortName||a.athlete.displayName||"",full:a.athlete.displayName||"",pts:+a.stats[iP]||0,reb:+a.stats[iR]||0,ast:+a.stats[iA]||0,min:iM>=0?String(a.stats[iM]||""):"",tp:i3>=0?String(a.stats[i3]||"").split("-")[0]:"",s5:!!a.starter})).filter(a=>a.min!=="0"&&a.min!=="--"||a.pts>0).sort((x,y)=>y.pts-x.pts||(+y.min||0)-(+x.min||0))})}
     if(g.lg==="nba"&&box&&isLive(g)){try{await Promise.all([nbaPlayerProj(g),lwInjuries("nba")])}catch(e){}}
-    const pl={};try{((j.boxscore&&j.boxscore.players)||[]).forEach(t=>(t.statistics||[]).forEach(st=>{const cat=String(st.name||"bb").toLowerCase(),lab=(st.labels||st.names||[]).map(x=>String(x).toUpperCase());
-      (st.athletes||[]).forEach(a=>{if(!a||!a.athlete||!a.stats||!a.stats.length)return;const nm=pnorm(a.athlete.displayName||"");if(!nm)return;const r=pl[nm]||(pl[nm]={_n:a.athlete.displayName});lab.forEach((L,i)=>{r[cat+"."+L]=a.stats[i]})})}))}catch(e){}
+    const pl={};try{((j.boxscore&&j.boxscore.players)||[]).forEach(t=>{const ptid=String((t.team&&t.team.id)||"");(t.statistics||[]).forEach(st=>{const cat=String(st.name||"bb").toLowerCase(),lab=(st.labels||st.names||[]).map(x=>String(x).toUpperCase());
+      (st.athletes||[]).forEach(a=>{if(!a||!a.athlete||!a.stats||!a.stats.length)return;const nm=pnorm(a.athlete.displayName||"");if(!nm)return;const r=pl[nm]||(pl[nm]={_n:a.athlete.displayName,_t:ptid});lab.forEach((L,i)=>{r[cat+"."+L]=a.stats[i]})})})})}catch(e){}
     const v={recent,hurt,leaders,scoring,box,pl};LW.sum[k]={at:Date.now(),v};return v}catch(e){return c?c.v:null}}
 async function lwInjuries(lg){const c=LW.inj[lg];if(c&&Date.now()-c.at<10*60e3)return c.v;
   try{const j=await getJSON(`${ESPN}/site/v2/sports/${INJLG[lg]}/injuries`);const v={};
@@ -2067,12 +2149,17 @@ async function nbplLoad(id){if(nbplBusy.has(id))return;const g=((D.nba.live&&D.n
   document.querySelectorAll(`details[data-nbpl="${id}"] .nbplB`).forEach(el=>el.innerHTML=nbaPlBody(g))}
 document.addEventListener("toggle",e=>{const d=e.target;if(d.dataset&&d.dataset.nbpl&&d.open){const id=d.dataset.nbpl;const c=NBPP[id];if(!c||c.err||Date.now()-c.at>=15*60e3){if(c&&c.err)delete NBPP[id];nbplLoad(id)}}},true);
 function lwBody(g){const v=LW.sum[g.lg+":"+g.id];if(!v)return`<p class="note">Loading…</p>`;const s=v.v;if(!s)return`<p class="note">No play-by-play for this game yet.</p>`;let h="";
-  if((g.lg==="nfl"||g.lg==="cfb")&&isLive(g)){try{const n=nextTD(g);if(n)h+=`<h4>Next touchdown</h4><p class="note">${esc(short(g,g.away))} <b>${pct(n.a,0)}</b> · ${esc(short(g,g.home))} <b>${pct(n.h,0)}</b> · No more TDs <b>${pct(n.none,0)}</b></p>`}catch(e){}}
-  if(BBL.test(g.lg))h+=boxHtml(g,s);else h+=scoringHtml(g,s);
-  if(s.hurt.length)h+=`<h4>Injuries during this game</h4><ul class="plays">${s.hurt.slice(-4).reverse().map(x=>`<li><span class="badge st-out">Hurt</span> ${esc(x.w?x.w+" · ":"")}${esc(x.t)}</li>`).join("")}</ul>`;
-  if(s.recent.length)h+=`<h4>${g.lg==="soc"?"Key moments":"Latest plays"}</h4><ul class="plays">${s.recent.map(x=>`<li>${x.s?"<b>":""}${esc(x.w?x.w+" · ":"")}${esc(x.t.slice(0,200))}${x.s?"</b>":""}</li>`).join("")}</ul>`;
-  if(s.leaders.length){const by={};s.leaders.forEach(l=>(by[l.tid]=by[l.tid]||[]).push(l));h+=`<h4>Top performers</h4>`+[g.away,g.home].map(c=>by[String(c)]?`<p class="note"><b>${esc(short(g,c))}:</b> ${by[String(c)].map(l=>`${esc(l.cat)} ${esc(l.who)} ${esc(l.v)}`).join(" · ")}</p>`:"").join("")}
-  return h||`<p class="note">No play-by-play for this game yet.</p>`}
+  if(TV.dNext&&(g.lg==="nfl"||g.lg==="cfb")&&isLive(g)){try{const n=nextTD(g);if(n)h+=`<h4>Next touchdown</h4><p class="note">${esc(short(g,g.away))} <b>${pct(n.a,0)}</b> · ${esc(short(g,g.home))} <b>${pct(n.h,0)}</b> · No more TDs <b>${pct(n.none,0)}</b></p>`}catch(e){}}
+  if(TV.dScore){if(BBL.test(g.lg))h+=boxHtml(g,s);else h+=scoringHtml(g,s)}
+  if(TV.dHurt&&s.hurt.length)h+=`<h4>Injuries during this game</h4><ul class="plays">${s.hurt.slice(-4).reverse().map(x=>`<li><span class="badge st-out">Hurt</span> ${esc(x.w?x.w+" · ":"")}${esc(x.t)}</li>`).join("")}</ul>`;
+  if(TV.dPlays&&s.recent.length)h+=`<h4>${g.lg==="soc"?"Key moments":"Latest plays"}</h4><ul class="plays">${s.recent.map(x=>`<li>${x.s?"<b>":""}${esc(x.w?x.w+" · ":"")}${esc(x.t.slice(0,200))}${x.s?"</b>":""}</li>`).join("")}</ul>`;
+  if(TV.dLead&&s.leaders.length){const by={};s.leaders.forEach(l=>(by[l.tid]=by[l.tid]||[]).push(l));h+=`<h4>Top performers</h4>`+[g.away,g.home].map(c=>by[String(c)]?`<p class="note"><b>${esc(short(g,c))}:</b> ${by[String(c)].map(l=>`${esc(l.cat)} ${esc(l.who)} ${esc(l.v)}`).join(" · ")}</p>`:"").join("")}
+  return h||`<p class="note">${Object.keys(TVD).some(k=>k[0]==="d"&&!TV[k])?"Nothing else to show with your tile settings. Change them under Customize tiles.":"No play-by-play for this game yet."}</p>`}
+function tvUI(){document.querySelectorAll("[data-tv]").forEach(c=>c.checked=!!TV[c.dataset.tv])}
+function tvSave(){try{localStorage.setItem("ge-lwview",JSON.stringify(TV))}catch(e){}tvUI();try{renderLive()}catch(e){}}
+document.addEventListener("change",e=>{const c=e.target;if(c&&c.dataset&&c.dataset.tv){TV[c.dataset.tv]=c.checked?1:0;tvSave()}});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tvp]");if(!b)return;Object.keys(TVD).forEach(k=>TV[k]=b.dataset.tvp==="all"?1:(k==="tQtr"||k==="dQtr")?1:0);tvSave()});
+setTimeout(tvUI,0);
 function lwFlags(g,md){const L=LEAGUES[g.lg],sc=g.score||{};const f={close:false,upset:false};if(!isLive(g)||!md||g.lg==="ten"||g.lg==="mma"||g.field)return f;
   const pre=g.lg==="soc"?null:Phi(md.m/L.sd),sh=sc[g.home],sa=sc[g.away];
   if(pre!=null&&sh!=null&&sa!=null&&((pre>=0.6&&sa>sh)||(pre<=0.4&&sh>sa)))f.upset=true;
@@ -2085,8 +2172,8 @@ function fmtClock(g){const d=String(g.detail||"");if(!isLive(g))return d;const L
   return d}
 function lsInfo(g){if(!g.ls||!(g.ls.h.length||g.ls.a.length))return null;const np=(CLOCK[g.lg]&&CLOCK[g.lg][0])||(g.lg==="soc"?2:g.lg==="mlb"?9:0);if(!np)return null;
   const n=Math.max(g.ls.h.length,g.ls.a.length);const labs=[];for(let i=0;i<Math.max(np,n);i++)labs.push(i<np?String(i+1):(n-np>1?"OT"+(i-np+1):"OT"));return{np,n,labs}}
-function tileRows(g,md,live,fin){const sc=g.score||{},sh=sc[g.home],sa=sc[g.away],has=(live||fin)&&sh!=null&&sa!=null;
-  const lead=c=>has&&(c===g.home?sh>sa:sa>sh);const LI=g.lg==="mlb"?null:lsInfo(g);
+function tileRows(g,md,live,fin){if(!TV.tWin)md=null;const sc=g.score||{},sh=sc[g.home],sa=sc[g.away],has=(live||fin)&&sh!=null&&sa!=null;
+  const lead=c=>has&&(c===g.home?sh>sa:sa>sh);const LI=g.lg==="mlb"||!TV.tQtr?null:lsInfo(g);
   if(LI&&has){const cols=LI.labs.length,showP=!!md&&cols<=4;const cur=live?LI.n-1:-1;
     const tpl=`minmax(2.3em,1fr) repeat(${cols},minmax(11px,auto)) 1.8em${showP?" 2.3em":""}`;
     const row=(c,arr,p)=>`<span class="ab${lead(c)?" lead":""}">${c===g.home&&hasHA(g)?'<i class="at">@</i>':""}${esc(tAbbr(g,c))}</span>${LI.labs.map((_,i)=>`<span class="q${i===cur?" cur":""}">${arr[i]!=null?arr[i]:""}</span>`).join("")}<span class="t">${sc[c]}</span>${showP?`<span class="p${lead(c)?" lead":""}">${p!=null?pct(p,0):""}</span>`:""}`;
@@ -2216,17 +2303,17 @@ function lwTile(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||
     let fl=[];if(F.close)fl.push(`<span class="cl">Close finish</span>`);if(F.upset)fl.push(`<span class="us">Upset watch</span>`);
   if(live&&md){const s=lwSwing(g,md.pH);if(s)fl.push(`<span class="up">▲ ${esc(tAbbr(g,s.d>0?g.home:g.away))} +${Math.round(Math.abs(s.d)*100)}</span>`)}
   if(md&&md.pD!=null)fl.push(`Draw ${pct(md.pD,0)}`);{const LI=g.lg==="mlb"?null:lsInfo(g);if(md&&LI&&LI.labs.length>4&&(live||fin)){const fav=md.pH>=md.pA?g.home:g.away;fl.push(`${esc(tAbbr(g,fav))} ${pct(Math.max(md.pH,md.pA),0)} to win`)}}if(!live&&!fin&&g.sit==null&&!fl.length&&g.title)fl.push(esc(g.title));
-  const tb=tileBets(g);return`<button type="button" class="tile${sel?" sel":""}${F.close?" close":F.upset?" upset":""}${tb?" mine":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${dn?`<div class="tdown${g.sit&&g.sit.rz?" rz":""}">${esc(dn)}</div>`:""}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div>${tb}</button>`}
+  if(!TV.tFlags)fl=fl.filter(x=>!/Close finish|Upset watch|▲/.test(x));const tb0=tileBets(g),tb=TV.tBets?tb0:"";return`<button type="button" class="tile${sel?" sel":""}${TV.tFlags&&F.close?" close":TV.tFlags&&F.upset?" upset":""}${tb0?" mine":""}" data-k="${esc(k)}" aria-expanded="${sel}">${meta}${dn&&TV.tDown?`<div class="tdown${g.sit&&g.sit.rz?" rz":""}">${esc(dn)}</div>`:""}${tileRows(g,md,live,fin)}<div class="tflag">${fl.join(" · ")}</div>${tb}</button>`}
 function lwDetail(g){const fin=DONE.includes(g.status),live=isLive(g),sc=g.score||{},md=fin?null:model(g);
-  const side=(c,p)=>`<div class="tm"><div class="nm">${esc(tname(g,c))}${haTag(g,c)}<small>${esc(rec(g,c))}</small></div><div class="sc">${(live||fin)&&sc[c]!=null?sc[c]:""}</div><div class="pc">${md&&p!=null?pct(p,0):""}</div></div>`;
+  const side=(c,p)=>`<div class="tm"><div class="nm">${esc(tname(g,c))}${haTag(g,c)}<small>${esc(rec(g,c))}</small></div><div class="sc">${(live||fin)&&sc[c]!=null?sc[c]:""}</div><div class="pc">${TV.dWin&&md&&p!=null?pct(p,0):""}</div></div>`;
   if(g.field)return`<div class="tdet"><b>${esc(g.name||g.title||"")}</b><p class="note">${live?"In progress. ":""}The leaderboard and finishing chances are on the Games tab.</p></div>`;
   let sit="";if(live){if(g.sit&&g.sit.dd){const pa=g.teams&&g.teams[g.sit.poss];sit=`${pa?esc(short(g,g.sit.poss))+" ball · ":""}${esc(g.sit.dd)}${g.sit.rz?" · Red zone":""}`}else if(g.lg==="ten"&&g.sets)sit="Sets: "+g.sets.h.map((v,i)=>`${v}-${g.sets.a[i]??0}`).join(", ")}
   let sw="";if(live&&md){const s=lwSwing(g,md.pH);if(s)sw=`<span class="swing">▲ ${esc(short(g,s.d>0?g.home:g.away))} +${Math.round(Math.abs(s.d)*100)} pts in ${s.mins} min</span>`}
   const canX=(live||fin)&&g.lg!=="ten"&&g.lg!=="mma";
   return`<div class="tdet" data-ck="det:${esc(g.lg+":"+g.id)}"><div class="meta" style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:600"><span>${live?`<span class="live">Live</span> ${esc(fmtClock(g))}`:fin?"Final":esc(whenTxt(g))}</span><span class="lgtag">${icon(g.lg)}${esc(LEAGUES[g.lg].label)}${g.title?" · "+esc(g.title):""}</span></div>
     ${side(g.away,md&&md.pA)}${side(g.home,md&&md.pH)}${md&&md.pD!=null?`<div class="tm"><div class="nm drw">Draw</div><div class="sc"></div><div class="pc">${pct(md.pD,0)}</div></div>`:""}
-    ${md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}
-    ${tileBets(g)?`<div><div class="note"><b>Your ticket</b></div>${tileBets(g)}</div>`:""}${(live||fin)?lsTable(g):""}${sit?`<div class="note">${sit}</div>`:""}${sw?`<div>${sw}</div>`:""}
+    ${TV.dWin&&md&&g.lg!=="soc"?`<div class="bar" aria-hidden="true"><i style="width:${(md.pA*100).toFixed(1)}%;opacity:.45"></i></div>`:""}
+    ${TV.dBets&&tileBets(g)?`<div><div class="note"><b>Your ticket</b></div>${tileBets(g)}</div>`:""}${(live||fin)&&TV.dQtr?lsTable(g):""}${sit&&TV.dSit?`<div class="note">${sit}</div>`:""}${sw&&TV.dSit?`<div>${sw}</div>`:""}
     ${canX?`<div class="lwbody">${lwBody(g)}</div>`:!live&&!fin?`<p class="note">Starts ${esc(whenTxt(g))}. Full pregame markets are on the Games tab.</p>`:""}
     <div class="row" style="justify-content:flex-end;gap:6px"><button type="button" class="btn sm ghost" data-log="${esc(JSON.stringify({key:g.lg+":"+g.id}))}">Log bet</button>${fin?"":`${quickTk(g)}`+dkA(g,null,"btnlike")}</div></div>`}
 function lwInjRow(i){return`<div class="injrow"><span class="badge ${stCls(i.st)}">${esc(lwLeftEarly(i)?"Left early":i.st)}</span><span><b>${esc(i.n)}</b> ${esc(i.pos)}${i.why?" · "+esc(i.why):""}${i.ret&&stSev(i.st)<=1?` · back ${esc(new Date(i.ret+"T12:00:00").toLocaleDateString([], {month:"short",day:"numeric"}))}?`:""}</span>${i.c?`<span class="why">${esc(i.c.slice(0,220))}</span>`:""}</div>`}
