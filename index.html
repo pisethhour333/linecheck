@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Linecheck</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: one column, sticky tab bar; a football field doubles as the win-probability scale */
 :root{
@@ -19,7 +19,7 @@
   --good:#1E7A3E; --bad:#B23A2E; --warn:#9A6B00;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --mono:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1512; --surface:#16211C; --ink:#E6EEEA; --muted:#93A69D; --line:#2A3A33;
@@ -219,7 +219,7 @@ details p{margin:.5rem 0 0;max-width:62ch}
 .sportbar .lgsel{display:flex;flex-wrap:nowrap!important;overflow-x:auto;gap:6px;scroll-snap-type:x proximity;}
 .sportbar .lgsel button{flex:0 0 auto!important;flex-direction:column;justify-content:center;gap:3px;min-width:62px;padding:7px 8px!important;font-size:.66rem!important;letter-spacing:.03em;scroll-snap-align:start}
 .sportbar .lgsel button svg{width:18px;height:18px}
-nav{position:fixed!important;left:0;right:0;bottom:0;top:auto!important;margin:0 auto!important;max-width:760px;z-index:20;background:var(--surface)!important;border-top:1px solid var(--line);display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr));gap:0!important;overflow:visible!important;padding:6px max(4px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px))!important;box-shadow:0 -8px 18px -12px rgba(0,0,0,.6)}
+nav{position:fixed!important;left:0;right:0;bottom:0;top:auto!important;margin:0 auto!important;max-width:760px;z-index:20;background:var(--surface)!important;border-top:1px solid var(--line);display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:0!important;overflow:visible!important;padding:6px max(4px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px))!important;box-shadow:0 -8px 18px -12px rgba(0,0,0,.6)}
 nav button{display:flex!important;flex-direction:column;align-items:center;gap:3px;border:0!important;background:transparent!important;color:var(--muted)!important;font-family:var(--body)!important;font-size:.6rem!important;font-weight:600!important;letter-spacing:.01em!important;text-transform:none!important;padding:5px 0!important;border-radius:8px!important;min-width:0}
 nav button svg{width:22px;height:22px}
 nav button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
@@ -335,6 +335,9 @@ header{margin-bottom:0}
 .btk{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--turf) 10%,transparent)}
 html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) - 44px);width:40px;height:40px;border-radius:50%;background:var(--surface);color:var(--muted);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:9998;opacity:0;transform:translate(-50%,0);transition:opacity .15s}#ptr.show{opacity:1}#ptr.ready{color:var(--flag)}#ptr.spin svg{animation:ptrspin .8s linear infinite}#ptr.spin{transition:transform .2s}@keyframes ptrspin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){#ptr.spin svg{animation:none}}
 @media (hover:none) and (pointer:coarse){#refreshBtn{display:none}}
+.fnote:empty{display:none}.sportbar[hidden]{display:none!important}body{font-variant-numeric:tabular-nums}
+.mlist{display:flex;flex-direction:column;gap:0;padding-bottom:6px}.mlist h2{margin-bottom:6px}.mrow{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:14px 2px;color:var(--ink);font:inherit;cursor:pointer}.mrow:first-of-type{border-top:0}.mrow svg{color:var(--turf);flex:0 0 auto}.mrow span{display:flex;flex-direction:column;flex:1;min-width:0}.mrow b{font-size:1rem}.mrow small{color:var(--muted);font-size:.8rem}.mchev{flex:0 0 auto!important;color:var(--muted);font-size:1.4rem}
+.backm{display:block;text-align:left;margin:0 0 2px;background:none;border:0;color:var(--turf);font:600 .9rem var(--body);padding:4px 0 10px;cursor:pointer}.pagesw{margin:0 0 12px}
 .legal{max-width:760px;margin:18px auto 90px;padding:12px 16px;border-top:1px solid var(--line);font-size:.72rem;color:var(--muted);text-align:center;line-height:1.5}.legal p{margin:4px 0}.legal a,.legal .linkb{color:var(--muted);text-decoration:underline}.agegate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}.agegate[hidden]{display:none}.agebox{max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;gap:10px}.agebox h2{font-size:2.2rem;margin:0;letter-spacing:.02em}.agebox h2 span{color:var(--turf)}.agl{margin:0;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:.75rem}.agebox .btn{width:100%;padding:.8rem 1rem}.agebox a,#legalCard a{color:var(--turf)}.linkb{background:none;border:0;padding:0;color:var(--turf);text-decoration:underline;font:inherit;cursor:pointer}.tdg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.tdc{border:1px solid var(--line);border-radius:8px;padding:6px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;font-size:.8rem}.tdc b{font-size:1rem}.blf{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.bl-bar{display:flex;gap:8px;margin-bottom:8px}.bl-dl{flex:1;min-width:0;margin:0}.bl-dl select{width:100%!important;max-width:none!important;min-height:40px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.bl-cal{position:relative;flex:0 0 44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:6px;color:var(--turf);cursor:pointer;min-height:40px;background:var(--bg)}.bl-cal.on{background:var(--turf);color:var(--bg);border-color:var(--turf)}.bl-cal input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}.bl-seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:10px}.bl-seg button{flex:1;min-width:0;background:transparent;border:0;border-left:1px solid var(--line);color:var(--muted);padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;font:inherit}.bl-seg button:first-child{border-left:0}.bl-seg b{font-size:1rem;color:var(--ink);line-height:1.1}.bl-seg span{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em}.bl-seg button.on{background:var(--turf);color:var(--bg)}.bl-seg button.on b{color:var(--bg)}.bl-sum{margin:0 0 10px}.blist{display:flex;flex-direction:column;gap:8px}.bl{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}.bl.won{border-left:4px solid var(--good)}.bl.lost{border-left:4px solid var(--bad)}.bl.push{border-left:4px solid var(--muted)}.bl.pending{border-left:4px solid var(--flag)}
 .bl-h{all:unset;box-sizing:border-box;width:100%;display:flex;justify-content:space-between;gap:10px;padding:10px 12px;cursor:pointer}.bl-h:focus-visible{outline:2px solid var(--turf)}.bl-n{display:flex;flex-direction:column;min-width:0}.bl-n b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bl-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:0 0 auto;font-variant-numeric:tabular-nums}.bl-s{font-weight:700}.bl-pl{font-size:.8rem;color:var(--muted)}.bl-pl.pos{color:var(--good)}.bl-pl.neg{color:var(--bad)}
 .bl-b{font-size:.7rem}.bl-b.won{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}.bl-b.lost{background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)}.bl-b.pending{background:color-mix(in srgb,var(--flag) 22%,transparent);color:var(--flag)}
@@ -359,12 +362,9 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <nav role="tablist">
   <button role="tab" id="t-games" aria-selected="true" data-tab="games">Games</button>
   <button role="tab" id="t-live" aria-selected="false" data-tab="live">Live</button>
-  <button role="tab" id="t-parlay" aria-selected="false" data-tab="parlay">Parlays</button>
   <button role="tab" id="t-props" aria-selected="false" data-tab="props">Props</button>
-  <button role="tab" id="t-analyze" aria-selected="false" data-tab="analyze">Analyze</button>
-  <button role="tab" id="t-odds" aria-selected="false" data-tab="odds">Odds</button>
-  <button role="tab" id="t-tracker" aria-selected="false" data-tab="tracker">Tracker</button>
-  <button role="tab" id="t-guide" aria-selected="false" data-tab="guide">Guide</button>
+  <button role="tab" id="t-bets" aria-selected="false" data-tab="bets">Bets</button>
+  <button role="tab" id="t-more" aria-selected="false" data-tab="more">More</button>
 </nav>
 
 <!-- GAMES -->
@@ -401,7 +401,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
   </div>
   <div id="lwStatus" hidden>
     <div class="card">
-      <p class="note">Who's out, doubtful, questionable or day-to-day for the games in your sport and day filter, plus anyone who left a game early (the red number on the button). Covers NFL, NBA, WNBA, MLB and NHL. Updates every 10 minutes. Source: ESPN.</p>
+      <details class="lwhelp"><summary>What this shows</summary><p class="note">Who's out, doubtful, questionable or day-to-day for the games in your sport and day filter, plus anyone who left a game early (the red number on the button). Covers NFL, NBA, WNBA, MLB and NHL. Updates every 10 minutes. Source: ESPN.</p></details>
       <div id="lwLeft"></div>
       <div id="lwInj" style="display:flex;flex-direction:column;gap:8px"><div class="empty">Loading…</div></div>
     </div>
@@ -410,10 +410,11 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 
 <!-- PARLAYS -->
 <section class="panel" id="p-parlay" hidden>
+  <div class="subtabs pagesw" role="tablist" aria-label="Bets"><button type="button" class="subtab" data-tab="tracker">My bets</button><button type="button" class="subtab" data-tab="parlay">Parlays</button></div>
   <div class="card">
     <h2>Best parlays by win chance</h2>
     <p class="fnote" id="parlayFilterNote"></p>
-    <p class="note">Each parlay takes the model's biggest favorites from games that haven't started, one team per game. Every added leg lowers the chance of winning, so the 2-team parlay always has the best odds of hitting.</p>
+    <details class="lwhelp"><summary>How this works</summary><p class="note">Each parlay takes the model's biggest favorites from games that haven't started, one team per game. Every added leg lowers the chance of winning, so the 2-team parlay always has the best odds of hitting.</p></details>
     <div id="bestParlays" style="display:flex;flex-direction:column;gap:12px"></div>
   </div>
   <div class="card">
@@ -436,7 +437,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <label class="tpl"><span class="lab">Team</span><select id="tpSel" aria-label="Pick a team"></select></label>
     <div id="tpBody"><p class="note">Pick a team to see every player's numbers.</p></div></div>
   <div id="propsNba" style="display:flex;flex-direction:column;gap:10px">
-    <div class="card"><h2>NBA props</h2><p class="note" id="propIntro-nba"></p><h3 id="boardH-nba">Top projected scorers</h3><p class="note" id="boardNote-nba"></p><div id="tdBoard-nba"></div></div>
+    <div class="card"><h2>NBA props</h2><details class="lwhelp"><summary>How this works</summary><p class="note" id="propIntro-nba"></p></details><h3 id="boardH-nba">Top projected scorers</h3><p class="note" id="boardNote-nba"></p><div id="tdBoard-nba"></div></div>
     <div id="propList-nba" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsNfl" style="display:flex;flex-direction:column;gap:10px">
@@ -446,15 +447,15 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <div id="propList-nfl" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsSoc" style="display:flex;flex-direction:column;gap:10px">
-    <div class="card"><h2>Soccer props</h2><p class="note" id="propIntro-soc"></p><h3 id="boardH-soc">Most likely goalscorers</h3><p class="note" id="boardNote-soc">Anytime goalscorer chance, with first-goal chance.</p><div id="tdBoard-soc"></div></div>
+    <div class="card"><h2>Soccer props</h2><details class="lwhelp"><summary>How this works</summary><p class="note" id="propIntro-soc"></p></details><h3 id="boardH-soc">Most likely goalscorers</h3><p class="note" id="boardNote-soc">Anytime goalscorer chance, with first-goal chance.</p><div id="tdBoard-soc"></div></div>
     <div id="propList-soc" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsMlb" style="display:flex;flex-direction:column;gap:10px">
-    <div class="card"><h2>MLB props</h2><p class="note">Batter chances use each hitter's per-game hits, total bases, home runs, RBIs and runs this season, adjusted for the opposing team and its probable starting pitcher. Starter strikeouts use his strikeouts per start. Lineups and scratches aren't known until about 3 hours before first pitch, so check that a player is starting. No DraftKings odds are used.</p><h3>Home run chances</h3><p class="note">Chance to hit 1+ home run, with 1+ hit chance.</p><div id="tdBoard-mlb"></div></div>
+    <div class="card"><h2>MLB props</h2><details class="lwhelp"><summary>How this works</summary><p class="note">Batter chances use each hitter's per-game hits, total bases, home runs, RBIs and runs this season, adjusted for the opposing team and its probable starting pitcher. Starter strikeouts use his strikeouts per start. Lineups and scratches aren't known until about 3 hours before first pitch, so check that a player is starting. No DraftKings odds are used.</p></details><h3>Home run chances</h3><p class="note">Chance to hit 1+ home run, with 1+ hit chance.</p><div id="tdBoard-mlb"></div></div>
     <div id="propList-mlb" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsNhl" style="display:flex;flex-direction:column;gap:10px">
-    <div class="card"><h2>NHL props</h2><p class="note">Skater chances use goals, assists, points and shots per game, blending this season with last season while it's early, adjusted for how many goals the opponent allows. Players listed out are removed. Power-play roles and line changes aren't included. No DraftKings odds are used.</p><h3>Anytime goal scorers</h3><p class="note">Chance to score 1+ goal, with 1+ point chance.</p><div id="tdBoard-nhl"></div></div>
+    <div class="card"><h2>NHL props</h2><details class="lwhelp"><summary>How this works</summary><p class="note">Skater chances use goals, assists, points and shots per game, blending this season with last season while it's early, adjusted for how many goals the opponent allows. Players listed out are removed. Power-play roles and line changes aren't included. No DraftKings odds are used.</p></details><h3>Anytime goal scorers</h3><p class="note">Chance to score 1+ goal, with 1+ point chance.</p><div id="tdBoard-nhl"></div></div>
     <div id="propList-nhl" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div class="empty" id="propsNone" hidden>Player props cover the NFL, NBA, MLB, NHL and soccer for now. Choose one of those, or All, at the top.</div>
@@ -462,10 +463,11 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 
 <!-- ANALYZE -->
 <section class="panel" id="p-analyze" hidden>
+  <button type="button" class="backm" data-tab="more">‹ More</button>
   <div class="card">
     <div class="row" style="justify-content:space-between"><h2>Game research</h2><span class="tag ex" id="exTag">Example numbers</span></div>
     <label class="tpl"><span class="lab">Game</span><select id="anSel" aria-label="Pick a game to analyze"></select></label>
-    <p class="note" id="anNote">Pick a game and both teams fill in by themselves: season points for and against, games played. Then adjust the injury and rest boxes if you know something the numbers don't. The model builds its own line without looking at DraftKings' odds. You can also type any numbers yourself.</p>
+    <details class="lwhelp"><summary>How to use it</summary><p class="note" id="anNote">Pick a game and both teams fill in by themselves: season points for and against, games played. Then adjust the injury and rest boxes if you know something the numbers don't. The model builds its own line without looking at DraftKings' odds. You can also type any numbers yourself.</p></details>
     <div class="grid2">
       <div class="team">
         <span class="lab">Away team</span>
@@ -537,6 +539,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 
 <!-- ODDS -->
 <section class="panel" id="p-odds" hidden>
+  <button type="button" class="backm" data-tab="more">‹ More</button>
   <div class="card">
     <h2>Odds &amp; EV calculator</h2>
     <div class="grid3">
@@ -582,6 +585,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 
 <!-- TRACKER -->
 <section class="panel" id="p-tracker" hidden>
+  <div class="subtabs pagesw" role="tablist" aria-label="Bets"><button type="button" class="subtab" data-tab="tracker">My bets</button><button type="button" class="subtab" data-tab="parlay">Parlays</button></div>
   <div class="card">
     <div class="row" style="justify-content:space-between"><h2>Bet tracker</h2><span class="tag" id="storeTag">Loading…</span></div>
     <div class="stats">
@@ -626,11 +630,16 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
   </div>
 </section>
 
-<!-- GUIDE -->
-<section class="panel" id="p-guide" hidden>
+<!-- MORE -->
+<section class="panel" id="p-more" hidden>
+  <div class="card mlist"><h2>More</h2>
+    <button type="button" class="mrow" data-tab="analyze"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg><span><b>Game research</b><small>Build your own line for any game</small></span><span class="mchev" aria-hidden="true">›</span></button>
+    <button type="button" class="mrow" data-tab="odds"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg><span><b>Odds calculator</b><small>Payout, fair odds, value and removing the vig</small></span><span class="mchev" aria-hidden="true">›</span></button>
+    <button type="button" class="mrow" data-tab="guide"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg><span><b>Guide</b><small>How to use Linecheck and bet types explained</small></span><span class="mchev" aria-hidden="true">›</span></button>
+  </div>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 84. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 85. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -641,8 +650,14 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <details id="rgInfo"><summary>Responsible play</summary><p>Set a budget before you bet and stick to it. Never chase losses or bet money you need for bills. Take breaks, and don't bet when you're upset or after drinking. If betting stops being fun, get help: call or text <b>1-800-GAMBLER</b> (U.S., free, 24/7), visit <b>ncpgambling.org</b>, or use your sportsbook's limits and self-exclusion tools.</p></details>
     <p class="note"><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · <a href="terms.html" target="_blank" rel="noopener">Terms of use</a></p>
   </div>
+</section>
+
+<!-- GUIDE -->
+<section class="panel" id="p-guide" hidden>
+  <button type="button" class="backm" data-tab="more">‹ More</button>
   <div class="card">
     <h2>Bet types, plainly</h2>
+    <details open><summary>Finding your way around</summary><p>The bar at the bottom has five tabs. <b>Games</b>: every game with win chances, totals, TD and game props. <b>Live</b>: live scores tiles and player status. <b>Props</b>: player props and team players. <b>Bets</b>: <b>My bets</b> (your bet tracker) and <b>Parlays</b> (suggested parlays and a builder). <b>More</b>: Game research, the Odds calculator, this Guide, your account, app colors and responsible play. The sport and day chips at the top filter Games, Live, Props and Parlays. Tap <b>How this works</b> on any section for the details.</p></details>
     <details><summary>Ticket: copying picks into DraftKings</summary><p><b>Adding picks:</b> tap <b>+ Ticket</b> on a game, set your lines, tap the picks you want (they turn gold with a check) and tap <b>Add to ticket</b>. Or tap a team's win percentage on a game card to add that team in one tap, a gold <b>+</b> on a leaderboard row, or any chance with a + on it: Over/Under and Covers results under the line boxes, every market in the soccer, tennis, UFC and halves/quarters tables, golf and racing finishing chances, and prop chips. <b>Saving:</b> open the ticket, give it a name (it starts as the sport plus a number, like NCAAF 001), pick when it expires (when its games end, 24 hours, 7 days or never) and tap <b>Save ticket</b>. Save as many as you like and switch between them with the dropdown at the top of the ticket, where you can also rename, change the expiration, add a saved ticket's picks back to your current one, or delete it. On the Live tab, <b>Highlight bets from</b> picks which ticket the tiles follow. Tap <b>+ Ticket</b> on a game, a parlay or a player prop to collect picks. In leaderboards and player cards, the gold <b>+</b> adds that exact pick, and you can tap any chance chip (like <b>Anytime TD 18%</b> or <b>75+ 36%</b>) to add it. <b>Bet ›</b> on any row opens DraftKings at that team's or game's page. The gold <b>Ticket</b> button at the bottom right opens your list with each pick's chance, the combined chance and the fair parlay odds. <b>Find in DraftKings</b> opens that team's odds page in DraftKings, and the gray line under each pick shows where to tap there. Tick each pick off as you add it. On the Live tab, games on your ticket get a gold outline and a strip for each pick showing its live chance and whether it's going your way (green) or not (red). Tap <b>My ticket</b> there to see only those games. DraftKings doesn't let outside apps fill in your betslip, so you still tap the picks in DraftKings yourself. When you've placed the bet, tap <b>Log to Tracker</b> and enter the odds and stake from your DraftKings slip.</p><p><b>College teams:</b> DraftKings opens a search for the team name, and college teams with the same name in football and basketball both show up. Tap the helmet or the <b>Football</b> tab (or the jersey or <b>Basketball</b> tab). Linecheck shows this reminder when you tap a college Bet button.</p></details>
     <details><summary>Weather and quarterback news</summary><p>For outdoor NFL and college games, Linecheck checks the forecast at the stadium for kickoff (free data from Open-Meteo). Wind over 10 mph lowers the projected total by about a third of a point per mph, up to 8 points. Steady rain takes off about 1.5 points, snow 2.5, and temperatures below 25°F 1 more. Domes are skipped. For NFL games, if a team's starting quarterback (its season passing leader) is listed Out on ESPN's injury report, that team's projection drops 4.5 points; Doubtful counts three-quarters as much. College injury reports aren't published reliably, so college QB news isn't included. A yellow note on the game shows any change.</p></details>
     <details><summary>How injuries change the picks</summary><p><b>NFL:</b> a starting quarterback listed Out lowers his team 4.5 points (Doubtful, three-quarters of that). Players listed Out are left off NFL props. <b>NBA:</b> each player listed Out lowers his team by up to 7 points depending on how much he scores and plays (Doubtful three-quarters, Questionable about a third). Teammates' prop projections go up a little to pick up the missing scoring. <b>WNBA:</b> same as NBA, scaled for the WNBA. <b>NHL:</b> if a team's main goalie (most starts) is listed Out, the backup is expected to start and the team gives up about 0.3 more goals. <b>MLB:</b> each team's probable starting pitcher shifts the runs it's expected to allow, based on his ERA (blended toward league average when he hasn't pitched much, up to 1.2 runs either way). A regular hitter listed Out lowers his team's runs by up to 0.3, depending on how much he produces. A player who has missed most of the season counts less, because the team's results already reflect playing without him. Notes on each game show what changed. College football, college basketball and soccer injuries aren't included, because ESPN doesn't publish usable injury reports for them.</p></details>
@@ -650,9 +665,9 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>Book line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
     <details><summary>Refreshing</summary><p>Scores and chances refresh by themselves every minute (every 30 seconds on the Live tab). To refresh right away on a phone, pull down from the top of the screen and let go when the circle turns gold. On a computer, use the refresh button at the top.</p></details>
-    <details><summary>Bet tracker</summary><p>The Tracker tab keeps a record of the bets you actually placed. The easiest way: after you place a bet on DraftKings, open Tracker, pick the ticket in <b>From a ticket</b>, enter the odds and stake from your DraftKings slip, and tap <b>Save bet</b>. There's no result box to set for these: a bet from a ticket or a game says <b>Settles automatically</b> and updates itself; if a result ever looks wrong, tap <b>Wrong result?</b> to set it by hand. Bets typed in by hand keep the Result box. Ticket bets settle by themselves: <b>Won</b> when every pick hits, <b>Lost</b> as soon as any pick misses, <b>Push</b> if every pick pushes, including player props. You can also pick a single game from the <b>Game</b> list, or type any bet by hand (those, and anything Linecheck can't check like tennis or UFC parlays, you mark Won, Lost or Push yourself). Under <b>Your bets</b>, every bet is a card with its ticket name, stake and result (Open, Won, Lost or Push, with profit or what it pays). Filter with All, Open, Won, Lost and Push. Tap a bet to see each pick with its score and live status, the odds, stake and payout, and to change the result or delete it. The top card shows your record, win rate, profit and ROI. When you're signed in, the tracker syncs to your account.</p><p><b>Find bets by date:</b> at the top of <b>Your bets</b>, use the date menu (Any date, Today, Yesterday, Last 7 days, Last 30 days) or tap the <b>calendar</b> button beside it to choose any day. Below it, tap All, Open, Won, Lost or Push; each shows how many bets it has. The list, those counts and a short line with the stake and profit all follow the date you pick. Pick <b>Any date</b> to see everything again.</p></details>
+    <details><summary>Bet tracker</summary><p>The Bets tab (My bets) keeps a record of the bets you actually placed. The easiest way: after you place a bet on DraftKings, open <b>Bets › My bets</b>, pick the ticket in <b>From a ticket</b>, enter the odds and stake from your DraftKings slip, and tap <b>Save bet</b>. There's no result box to set for these: a bet from a ticket or a game says <b>Settles automatically</b> and updates itself; if a result ever looks wrong, tap <b>Wrong result?</b> to set it by hand. Bets typed in by hand keep the Result box. Ticket bets settle by themselves: <b>Won</b> when every pick hits, <b>Lost</b> as soon as any pick misses, <b>Push</b> if every pick pushes, including player props. You can also pick a single game from the <b>Game</b> list, or type any bet by hand (those, and anything Linecheck can't check like tennis or UFC parlays, you mark Won, Lost or Push yourself). Under <b>Your bets</b>, every bet is a card with its ticket name, stake and result (Open, Won, Lost or Push, with profit or what it pays). Filter with All, Open, Won, Lost and Push. Tap a bet to see each pick with its score and live status, the odds, stake and payout, and to change the result or delete it. The top card shows your record, win rate, profit and ROI. When you're signed in, the tracker syncs to your account.</p><p><b>Find bets by date:</b> at the top of <b>Your bets</b>, use the date menu (Any date, Today, Yesterday, Last 7 days, Last 30 days) or tap the <b>calendar</b> button beside it to choose any day. Below it, tap All, Open, Won, Lost or Push; each shows how many bets it has. The list, those counts and a short line with the stake and profit all follow the date you pick. Pick <b>Any date</b> to see everything again.</p></details>
     <details><summary>Your account (sync across devices)</summary><p>Tap the person button at the top, or scroll to <b>Your account</b> at the top of this Guide. <b>Create account</b> with a username and password; whatever is on this phone (current ticket, saved tickets, bet tracker, color theme, tile layout, alerts on/off, NFL prop filter) becomes your account's data. On any other phone or computer, <b>Sign in</b> with the same username and password and it all appears there; changes on one device reach the others within about a minute. Sport and day filters stay separate on each device.</p><p>When you create the account you get a <b>recovery code</b>. Save it: it's the only way to reset a forgotten password (<b>Forgot password</b>). Your password never leaves your phone in readable form; the server stores only a scrambled version. After 8 wrong passwords the account locks for 15 minutes. To delete your account and everything synced to it, sign in and tap <b>Delete my account</b> under the account card.</p></details>
-    <details><summary>Analyze tab</summary><p>Pick a game from the <b>Game</b> list at the top (it follows the sport and day picked at the top, like the other tabs). Both teams fill in by themselves: points (or goals or runs) for and against per game, and games played. Then change the boxes if you know something the numbers don't: a starting quarterback out (football only), other key players out, or rest. The model shows its win chance, its own spread and a fair price, and you can compare it with DraftKings' odds below. It uses each sport's own home edge and scoring spread. You can also type your own numbers for any matchup. The <b>Dig in</b> button on a game card opens the same thing.</p></details>
+    <details><summary>Game research page (in More)</summary><p>Pick a game from the <b>Game</b> list at the top (it follows the sport and day picked at the top, like the other tabs). Both teams fill in by themselves: points (or goals or runs) for and against per game, and games played. Then change the boxes if you know something the numbers don't: a starting quarterback out (football only), other key players out, or rest. The model shows its win chance, its own spread and a fair price, and you can compare it with DraftKings' odds below. It uses each sport's own home edge and scoring spread. You can also type your own numbers for any matchup. The <b>Dig in</b> button on a game card opens the same thing.</p></details>
     <details><summary>Search games</summary><p>Type part of a team or player name in the search box above the Games list (for example "lak" or "sinner") to show only matching games. It works together with the sport and day picked at the top and shows how many games match. Tap ✕ or <b>Clear search</b> to see everything again.</p></details>
     <details><summary>Team players</summary><p>At the top of the Props tab, pick any team with a game coming up, live or just finished (it follows the sport and day picked at the top). You'll see every player with season numbers from ESPN: TDs and passing, rushing and receiving yards for football; points, rebounds, assists and threes per game for basketball; average, home runs, RBIs, ERA and strikeouts for baseball; goals, assists and points for hockey; goals and assists for soccer leaders. NFL players also show their chance to score a TD in the next game, and NBA players their projected points. When the team is playing, a <b>Today</b> column shows live stats that refresh every 30 seconds. College football teams add up each player's passing, rushing and receiving yards and TDs from this season's box scores, with an Anytime TD chance based on TDs per game. Football teams (NFL and college) also list <b>Defense</b> (tackles, sacks, tackles for loss, interceptions, passes defended) and <b>Special teams</b> (field goals, extra points, return yards, punts) under the main table; <b>Rest of the roster</b> is linemen and players who haven't recorded a stat this season. Other college sports show the roster and live stats; season stats appear when ESPN has them.</p></details>
     <details><summary>NFL player props: more players</summary><p>Each NFL team on the Props tab shows its main passer, rusher and receiver first. Tap <b>More players</b> under a team to see the backups and other receivers: up to 2 passers, 3 rushers and 6 receivers per team, all with yard lines, chances and a <b>+ Ticket</b> button. Players listed as out are left off, so if a starter is hurt the next player steps in. Picking Passing, Rushing or Receiving at the top opens the list for every team.</p></details>
@@ -665,7 +680,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
     <details><summary>Total (over/under)</summary><p>Bet on the combined score of both teams going over or under a number. Weather, pace and injuries to offensive stars move totals most.</p><div class="ex-line">O/U 44.5: a 24-21 final (45) goes over</div></details>
     <details><summary>Parlay</summary><p>Several bets tied into one. Every leg must win. Payouts grow fast, but so does the book's edge, because the margin compounds on each leg.</p><div class="ex-line">Three -110 legs pay about +596, but hit only ~13% if each is a true coin flip</div></details>
     <details><summary>Teaser</summary><p>A parlay where you move the spreads in your favor (usually 6 points in football) in exchange for a smaller payout. The classic version crosses the key numbers 3 and 7.</p><div class="ex-line">Two-team 6-pt teaser: +7.5 becomes +1.5 underdog → +13.5</div></details>
-    <details><summary>Game props (team yards, first score, FGs, margin)</summary><p>Every NFL and college game that hasn't started has a <b>Game props</b> section, matching DraftKings' game props: each team's <b>passing, rushing and total yards</b> (season yards per game against what the other defense allows), <b>first team to score</b> and <b>first scoring play</b> (TD, field goal or safety), <b>total and team field goals</b>, <b>winning margin</b> (1–6, 7–12, 13–18, 19+ for each team), <b>overtime</b> and <b>safety</b>. Team TDs are in <b>TD props</b>. Type DraftKings' line in any box and only bet when DraftKings pays more than the fair odds. These are for checking value; to track one, add it in Tracker by hand.</p></details>
+    <details><summary>Game props (team yards, first score, FGs, margin)</summary><p>Every NFL and college game that hasn't started has a <b>Game props</b> section, matching DraftKings' game props: each team's <b>passing, rushing and total yards</b> (season yards per game against what the other defense allows), <b>first team to score</b> and <b>first scoring play</b> (TD, field goal or safety), <b>total and team field goals</b>, <b>winning margin</b> (1–6, 7–12, 13–18, 19+ for each team), <b>overtime</b> and <b>safety</b>. Team TDs are in <b>TD props</b>. Type DraftKings' line in any box and only bet when DraftKings pays more than the fair odds. These are for checking value; to track one, add it in Bets › My bets by hand.</p></details>
     <details><summary>TD props (longest TD, total TDs)</summary><p><b>Longest touchdown</b>: which team scores the longest TD of the game, by yards. "Neither" wins only if nobody scores a TD. <b>Total touchdowns</b>: all TDs by both teams, including return and defensive TDs; Over 7.5 means 8 or more. Every NFL and college game that hasn't started has a <b>TD props</b> section with the chance and fair odds for each, built from the projected score. Type DraftKings' line in a total TDs box (or use − / +) and only bet when DraftKings pays more than the fair odds.</p></details>
     <details><summary>Team total</summary><p>An over/under on one team's points only, not both teams. Open “Totals and team totals” on any game to compare DraftKings' line with the app's projection.</p><div class="ex-line">Chiefs team total 26.5: Chiefs score 27+ = over</div></details>
     <details><summary>Props</summary><p>Bets on events inside a game, like a player's passing yards or who scores first. Books often have bigger margins on props.</p></details>
@@ -838,7 +853,7 @@ document.querySelectorAll("#p-odds input").forEach(el=>el.addEventListener("inpu
 odds();
 
 /* --- tabs --- */
-const TABS=["games","live","parlay","props","analyze","odds","tracker","guide"];
+const TABS=["games","live","parlay","props","analyze","odds","tracker","guide","more"];var NAVG={parlay:"bets",tracker:"bets",analyze:"more",odds:"more",guide:"more"},LASTBETS="tracker";
 const TABICO={games:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
 live:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M8 8.5a5 5 0 0 0 0 7M16 8.5a5 5 0 0 1 0 7M5 5.5a9 9 0 0 0 0 13M19 5.5a9 9 0 0 1 0 13"/></svg>',
 parlay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1"/><path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/></svg>',
@@ -846,11 +861,13 @@ props:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="
 analyze:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>',
 odds:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg>',
 tracker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l2 2 3-3M4 15l2 2 3-3M12 8h8M12 16h8"/></svg>',
+bets:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M9 6v12" stroke-dasharray="2 2"/></svg>',
+more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
 guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>'};
 document.querySelectorAll("nav button").forEach(b=>{const t=b.textContent.trim();if(TABICO[b.dataset.tab])b.innerHTML=TABICO[b.dataset.tab]+`<span>${t}</span>`});
-function show(t){if(t==="tracker")setTimeout(()=>{try{fillTicketSelect();settleLegs()}catch(e){}},0);if(t==="analyze")setTimeout(()=>{try{anFill();const fb=AN_LG==="nfl"||AN_LG==="cfb";document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!fb})}catch(e){}},0);document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);try{localStorage.setItem("ge-tab",t)}catch(e){}}
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.tab)));
-try{const t=localStorage.getItem("ge-tab");if(t&&$("p-"+t))show(t)}catch(e){}
+function show(t){if(t==="tracker")setTimeout(()=>{try{fillTicketSelect();settleLegs()}catch(e){}},0);if(t==="analyze")setTimeout(()=>{try{anFill();if(!$("exTag").hidden){const s=$("anSel"),os=s?[...s.options].filter(x=>x.value):[];const gs=os.map(x=>findGame(x.value)).filter(Boolean);const g=gs.find(x=>!isLive(x)&&!DONE.includes(x.status))||gs[0];if(g)digIn(g,true)}const fb=AN_LG==="nfl"||AN_LG==="cfb";document.querySelectorAll("#a-qb,#h-qb").forEach(x=>{const l=x.closest("label");if(l)l.hidden=!fb})}catch(e){}},0);if(t==="bets")t=LASTBETS;if(!TABS.includes(t))t="games";if(t==="tracker"||t==="parlay")LASTBETS=t;document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",(NAVG[t]||t)===b.dataset.tab));document.querySelectorAll(".pagesw .subtab").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tab===t));TABS.forEach(x=>$("p-"+x).hidden=x!==t);if(t==="props"||t==="live")setTimeout(()=>{try{t==="props"?renderProps():lwStart()}catch(e){}},0);try{document.querySelector(".sportbar").hidden=!["games","live","props","parlay"].includes(t)}catch(e){}try{localStorage.setItem("ge-tab",t)}catch(e){}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tab]");if(!b||b.closest(".panel[hidden]"))return;const cur=TABS.find(x=>!$("p-"+x).hidden);show(b.dataset.tab);if(TABS.find(x=>!$("p-"+x).hidden)!==cur)window.scrollTo(0,0)});window.lcShow=show;
+try{const t=localStorage.getItem("ge-tab");if(t&&$("p-"+t))show(t);else show("games")}catch(e){}
 if(TABS.includes(location.hash.slice(1)))show(location.hash.slice(1));
 
 /* --- games & parlays --- */
@@ -1085,7 +1102,7 @@ function filterText(){return `${LGN[LG]||"All sports"} · ${DF==="all"?"All days
 function dateFilter(gs){return DF==="all"||DF==="live"?gs:gs.filter(g=>localDate(effT(g))===DF)}
 function renderParlays(gs){
   gs=dateFilter(slate());
-  $("parlayFilterNote").textContent=`Showing: ${filterText()}. Change the sport and day at the top.`+(DF==="live"?" Parlays use games that haven't started, so every upcoming day is included.":"");
+  $("parlayFilterNote").textContent=DF==="live"?"Parlays use games that haven't started, so every upcoming day is included.":"";
   const L=legs(gs).sort((a,b)=>b.p-a.p);const out=[];
   [2,3,4].forEach(n=>{if(L.length<n)return;const set=L.slice(0,n);const p=set.reduce((s,l)=>s*l.p,1);
     out.push(`<div class="pl"><div class="hd"><h3>${n}-team parlay</h3><span class="chance">${pct(p,0)} to hit</span></div>
@@ -1983,12 +2000,12 @@ async function renderNflProps(){
   tds.sort((a,b)=>b.ch-a.ch);
   $("tdBoard-nfl").innerHTML=tds.length?`<ol class="tdl">${tds.slice(0,10).map(t=>`<li><span><b>${esc(t.p.name)}</b> <span class="note">${esc(t.p.pos)}, ${esc(short(t.g,t.tid))} · ${esc(whenTxt(t.g))}</span></span><span class="pv">${pct(t.ch,0)}${rowAct(t.g,t.tid,t.p.name+" anytime TD",t.ch,"Prop",t.p.name)}</span></li>`).join("")}</ol>`:`<p class="note">No touchdown data yet.</p>`;
 }
-document.querySelector('nav button[data-tab="props"]').addEventListener("click",()=>renderProps());
+
 if(!$("p-props").hidden)setTimeout(renderProps,500);
 async function renderProps(){try{tpRender()}catch(e){}
   const PLGS=["nba","nfl","mlb","nhl","soc"];const want=LG==="all"?PLGS:PLGS.includes(LG)?[LG]:[];
   $("propsNba").hidden=!want.includes("nba");$("propsNfl").hidden=!want.includes("nfl");$("propsSoc").hidden=!want.includes("soc");$("propsMlb").hidden=!want.includes("mlb");$("propsNhl").hidden=!want.includes("nhl");$("propsNone").hidden=!!want.length;
-  $("propFilterNote").textContent=`Showing: ${filterText()}. Change the sport and day at the top.`+(DF==="live"?" Live shows the NFL touchdown tracker and soccer next-goal chances. Pregame props show when you pick a day or All.":"");
+  $("propFilterNote").textContent=DF==="live"?"Live shows the NFL touchdown tracker and soccer next-goal chances. Pregame props show when you pick a day or All.":"";
   for(const l of want){try{await (l==="nba"?renderNbaProps():l==="soc"?renderSocProps():l==="mlb"?renderMlbProps():l==="nhl"?renderNhlProps():renderNflProps())}catch(e){}}
 }
 /* --- team players browser (all team sports) --- */
@@ -2453,7 +2470,7 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 (function(){let ok=null;try{ok=localStorage.getItem("ge-age")}catch(e){ok="1"}const G=$("ageGate");if(!G||ok==="1")return;G.hidden=false;document.documentElement.style.overflow="hidden";
   $("ageYes").onclick=()=>{try{localStorage.setItem("ge-age","1")}catch(e){}G.hidden=true;document.documentElement.style.overflow=""};
   $("ageNo").onclick=()=>{$("ageMsg").textContent="Sorry, Linecheck is only for adults 21 and older. Please close the app."}})();
-document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-legal]");if(!t)return;show("guide");const d=$("rgInfo");if(d){d.open=true;setTimeout(()=>d.scrollIntoView({block:"center"}),50)}});
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-legal]");if(!t)return;show("more");const d=$("rgInfo");if(d){d.open=true;setTimeout(()=>d.scrollIntoView({block:"center"}),50)}});
 /* --- account + sync across devices --- */
 const AENC=new TextEncoder();
 async function accKey(u,secret,salt){const k=await crypto.subtle.importKey("raw",AENC.encode(secret),"PBKDF2",false,["deriveBits"]);const b=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:AENC.encode(salt+u),iterations:150000},k,256);return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
@@ -2515,7 +2532,7 @@ document.addEventListener("submit",async e=>{if(!e.target||e.target.id!=="acDel"
   b.disabled=true;m.textContent="Deleting…";try{const k=await accKey(ACC.u,P,"linecheck:");await accApi("delete",{u:ACC.u,k});const u=ACC.u;ACC.del=false;accSet("",null);try{localStorage.removeItem("ge-acct-u");localStorage.removeItem("ge-syncmeta")}catch(x){}ACC.meta={};ACC.msg="";ACCV="in";accUI();lcToast("Account "+u+" deleted.")}
   catch(x){m.textContent=x.message||"Couldn't delete. Try again.";b.disabled=false}});
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-accv],[data-acc],#acctBtn");if(!t)return;
-  if(t.id==="acctBtn"){show("guide");setTimeout(()=>{const c=$("acctCard");if(c)c.scrollIntoView({behavior:"smooth",block:"start"})},50);return}
+  if(t.id==="acctBtn"){show("more");setTimeout(()=>{const c=$("acctCard");if(c)c.scrollIntoView({behavior:"smooth",block:"start"})},50);return}
   if(t.dataset.accv){ACCV=t.dataset.accv;ACC.msg="";accUI();return}
   const a=t.dataset.acc;if(a==="del"||a==="nodel"){ACC.del=a==="del";accUI();return}if(a==="sync")accSync();else if(a==="done")accUI();else if(a==="out"){(async()=>{try{await accApi("logout",{})}catch(e){}accSet(ACC.u,null);ACC.msg="Signed out. Your data stays on this device.";ACCV="in";accUI()})()}});
 setTimeout(()=>{accUI();if(ACC.tok)accSync();setInterval(()=>{if(ACC.tok&&!document.hidden)accSync()},60000)},2500);
@@ -2615,7 +2632,7 @@ function lwSub(s){LW.sub=s;try{localStorage.setItem("ge-lwsub",s)}catch(e){}docu
 document.querySelectorAll(".subtab").forEach(b=>b.addEventListener("click",()=>lwSub(b.dataset.sub)));
 try{lwSub(localStorage.getItem("ge-lwsub")||"scores")}catch(e){lwSub("scores")}
 async function renderLive(){if($("p-live").hidden)return;
-  lwTkOpts();$("lwFilterNote").textContent=LW.mine?"Showing: games on the selected ticket, all sports.":`Showing: ${filterText()}. Change the sport and day at the top.`;try{const n=$("lwMineN");if(n)n.textContent=TK.length?`(${TK.length})`:""}catch(e){}
+  lwTkOpts();$("lwFilterNote").textContent=LW.mine?"Showing games on the selected ticket, all sports.":"";try{const n=$("lwMineN");if(n)n.textContent=TK.length?`(${TK.length})`:""}catch(e){}
   const all=lwGames(),now=Date.now();
   const live=all.filter(g=>isLive(g)&&g.status!=="postponed");
   const soon=all.filter(g=>!isLive(g)&&!DONE.includes(g.status)&&!g.field&&Date.parse(g.start_time)>now-30*60e3&&Date.parse(g.start_time)<now+(LW.mine?8*864e5:3*3600e3)).sort((a,b)=>Date.parse(a.start_time)-Date.parse(b.start_time));
@@ -2634,7 +2651,7 @@ async function lwTick(){if($("p-live").hidden||document.hidden)return;const now=
   if(lgs.length){await Promise.all(lgs.map(lg=>loadScores(lg).catch(()=>{})));setTag();renderGames()}
   renderLive();try{alCheck()}catch(e){}}
 function lwStart(){clearInterval(LW.timer);LW.timer=setInterval(lwTick,30000);renderLive()}
-document.querySelector('nav button[data-tab="live"]').addEventListener("click",lwStart);
+
 if(!$("p-live").hidden)setTimeout(lwStart,600);
 
 /* --- arrows on sideways-scrolling strips --- */
