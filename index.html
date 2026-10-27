@@ -630,7 +630,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 78. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 79. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -886,7 +886,7 @@ function invPhi(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469
   if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
   if(p>1-pl){q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
   q=p-.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
-function mixNote(g,md){if(!md||!md.mix)return"";const x=md.mix,f=(p)=>p>=0.5?`${short(g,g.home)} ${pct(p,0)}`:`${short(g,g.away)} ${pct(1-p,0)}`;
+function mixNote(g,md){if(!md||!md.mix)return"";const x=md.mix,f=g.lg==="soc"?(p=>`${short(g,g.home)} win ${pct(p,0)}`):(p=>p>=0.5?`${short(g,g.home)} ${pct(p,0)}`:`${short(g,g.away)} ${pct(1-p,0)}`);
   return`<div class="note mixn">Blend of ${esc(x.prov)} odds <b>${esc(f(x.pMkt))}</b> (${Math.round(x.w*100)}%) and Linecheck's model <b>${esc(f(x.pModel))}</b> (${Math.round((1-x.w)*100)}%)${Math.abs(x.pMkt-x.pModel)>=0.15?' · <span class="mixd">model disagrees a lot</span>':""}</div>`}
 const tname=(g,c)=>(g.teams&&g.teams[c]&&g.teams[c].name)||(teamInfo(g.lg,c)||{}).name||c;
 const short=(g,c)=>{const n=tname(g,c);if(g.lg==="cfb"){const w=n.split(" ");return w.length>2?w.slice(0,-1).join(" "):w[0]}return n.split(" ").slice(-1)[0]};
@@ -1163,7 +1163,7 @@ function parseEvents(j,recs){
       if(sp==null&&o.pointSpread&&o.pointSpread.home){const x=o.pointSpread.home,v=n(x.close&&x.close.line)??n(x.current&&x.current.line)??n(x.open&&x.open.line);if(v!=null)sp=v}
       if(sp==null&&n(o.spread)!=null){const v=Math.abs(n(o.spread));if(o.homeTeamOdds&&o.homeTeamOdds.favorite)sp=-v;else if(o.awayTeamOdds&&o.awayTeamOdds.favorite)sp=v}
       const ml2=s=>{const x=o.moneyline&&o.moneyline[s];return x?(n(x.close&&x.close.odds)??n(x.current&&x.current.odds)??n(x.open&&x.open.odds)):null};let mlH=ml(o.homeTeamOdds)??ml2("home"),mlA=ml(o.awayTeamOdds)??ml2("away");if(mlH!=null&&Math.abs(mlH)<100)mlH=null;if(mlA!=null&&Math.abs(mlA)<100)mlA=null;
-      const mk={prov:String((o.provider&&o.provider.name)||"Sportsbook").replace(/ - .*$/,""),mlH,mlA,draw:o.drawOdds?n(o.drawOdds.moneyLine):null,sp:sp!=null&&Math.abs(sp)<=SPCAP(g.lg)?sp:null,tot:n(o.overUnder),at:Date.now()};
+      const mk={prov:String((o.provider&&o.provider.name)||"Sportsbook").replace(/ - .*$/,""),mlH,mlA,draw:(o.drawOdds?n(o.drawOdds.moneyLine):null)??ml2("draw"),sp:sp!=null&&Math.abs(sp)<=SPCAP(g.lg)?sp:null,tot:n(o.overUnder),at:Date.now()};
       if(mk.mlH!=null&&mk.mlA!=null||mk.sp!=null){MKT[g.id]=mk;clearTimeout(MKTT);MKTT=setTimeout(()=>{try{localStorage.setItem("ge-mkt",JSON.stringify(MKT))}catch(e){}},1500)}}}catch(e){}
     const lsv=x=>(x.linescores||[]).slice().sort((p,q)=>(p.period||0)-(q.period||0)).map(v=>+v.value||0);if(h.linescores||a.linescores)g.ls={h:lsv(h),a:lsv(a)};
     [h,a].forEach(x=>{const pr=(x.probables||[]).find(q=>/pitch|start/i.test(q.name||""));if(pr&&pr.athlete&&pr.athlete.id){g.prob=g.prob||{};g.prob[String(x.team.id)]={id:String(pr.athlete.id),name:pr.athlete.displayName||pr.athlete.fullName||""}}});
