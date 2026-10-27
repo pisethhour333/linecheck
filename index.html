@@ -129,7 +129,7 @@ table.ptab td:first-child{white-space:nowrap}
 .dkc{color:var(--flag-ink)}
 h3.evt{margin:2px 0 4px;font-size:1.15rem}
 .fchk .chk select{max-width:46%}
-.pk{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pk{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pklive{grid-column:1/-1;justify-self:start;font-size:.65rem}
 .pk button{font:inherit;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:8px 10px;cursor:pointer;display:flex;justify-content:space-between;gap:6px}
 .pk button[aria-pressed="true"],.qs[aria-pressed="true"],.qo[aria-pressed="true"]{border-color:var(--turf);background:var(--turf-soft);color:var(--turf);font-weight:600}
 .pk button span:last-child{font-family:var(--mono)}
@@ -418,7 +418,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
   <div class="card">
     <h2>Best parlays by win chance</h2>
     <p class="fnote" id="parlayFilterNote"></p>
-    <details class="lwhelp"><summary>How this works</summary><p class="note">Each parlay takes the model's biggest favorites from games that haven't started, one team per game. Every added leg lowers the chance of winning, so the 2-team parlay always has the best odds of hitting.</p></details>
+    <details class="lwhelp"><summary>How this works</summary><p class="note">Each parlay takes the model's biggest favorites from the sport and day picked at the top, one team per game. With Live (or a day with games in progress) it uses live games too, with their live win chance, so the picks change as the score and clock change. Every added leg lowers the chance of winning, so the 2-team parlay always has the best odds of hitting.</p></details>
     <div id="bestParlays" style="display:flex;flex-direction:column;gap:12px"></div>
   </div>
   <div class="card">
@@ -644,7 +644,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
   </div>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 87. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 89. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -1107,23 +1107,23 @@ function digIn(g,keep){
   $("neutral").checked=!!g.neutral;$("notes").value=(!teamInfo(g.lg,g.away)||!teamInfo(g.lg,g.home))?"Season stats aren't available for one of these teams yet; type points per game if you know them.":"";$("exTag").hidden=true;analyze();if(!keep){show("analyze");window.scrollTo(0,0)}
 }
 const upcoming=g=>!isLive(g)&&Date.parse(g.start_time)>Date.now();
-function legs(gs){return gs.filter(upcoming).map(g=>{const md=model(g);if(!md)return null;const h=md.pH>=md.pA;const p=h?md.pH:md.pA;if(!(p>0&&p<0.97))return null;return{g,team:h?g.home:g.away,p}}).filter(Boolean)}
+function legs(gs){return gs.filter(g=>upcoming(g)||isLive(g)).map(g=>{const md=model(g);if(!md)return null;const h=md.pH>=md.pA;const p=h?md.pH:md.pA;if(!(p>0&&p<0.97))return null;return{g,team:h?g.home:g.away,p}}).filter(Boolean)}
 function fairOdds(p){const a=toAm(1/p);return a==null?"—":sgn(a)}
 const LGN={all:"All sports",nfl:"NFL",cfb:"College football",nba:"NBA",soc:"Soccer",mlb:"MLB",nhl:"NHL",wnba:"WNBA",ncaab:"Men's college basketball",ncaaw:"Women's college basketball",ten:"Tennis",mma:"UFC",golf:"Golf",f1:"F1",nas:"NASCAR"};
 function filterText(){return `${LGN[LG]||"All sports"} · ${DF==="all"?"All days":DF==="live"?"Live":dayLabel(DF)}`}
 function dateFilter(gs){return DF==="all"||DF==="live"?gs:gs.filter(g=>localDate(effT(g))===DF)}
 function renderParlays(gs){
-  gs=dateFilter(slate());
-  $("parlayFilterNote").textContent=DF==="live"?"Parlays use games that haven't started, so every upcoming day is included.":"";
+  gs=DF==="live"?slate().filter(isLive):dateFilter(slate());
+  $("parlayFilterNote").textContent=gs.some(isLive)?"Live games use their live win chance, which changes with the score and clock.":"";
   const L=legs(gs).sort((a,b)=>b.p-a.p);const out=[];
   [2,3,4].forEach(n=>{if(L.length<n)return;const set=L.slice(0,n);const p=set.reduce((s,l)=>s*l.p,1);
     out.push(`<div class="pl"><div class="hd"><h3>${n}-team parlay</h3><span class="chance">${pct(p,0)} to hit</span></div>
-    <ul>${set.map(l=>`<li><b>${esc(tname(l.g,l.team))}</b> to win <span class="note">(${pct(l.p,0)}, ${esc(LEAGUES[l.g.lg].label)}, ${esc(whenTxt(l.g))})</span></li>`).join("")}</ul>
+    <ul>${set.map(l=>`<li><b>${esc(tname(l.g,l.team))}</b> to win <span class="note">(${pct(l.p,0)}, ${esc(LEAGUES[l.g.lg].label)}, ${isLive(l.g)?`<span class="live">Live</span> ${esc(fmtClock(l.g)||l.g.detail||"")}`:esc(whenTxt(l.g))})</span></li>`).join("")}</ul>
     <div class="row" style="justify-content:space-between"><span class="note">Fair odds ${fairOdds(p)}. Only bet it if DraftKings pays more.</span><button class="btn sm ghost" data-log="${esc(JSON.stringify({type:"Parlay",game:n+"-team parlay",pick:set.map(l=>short(l.g,l.team)).join(" + "),date:localDate(set[0].g.start_time)}))}">Log bet</button><button type="button" class="btn sm tkb" data-tkparlay="${esc(JSON.stringify(set.map(l=>({key:l.g.lg+":"+l.g.id,team:l.team}))))}">+ Ticket</button></div></div>`)});
-  PH($("bestParlays")).html=out.join("")||`<div class="empty">Need at least two upcoming games with stats.</div>`;
-  const up=gs.filter(g=>upcoming(g)&&model(g));
+  PH($("bestParlays")).html=out.join("")||`<div class="empty">${DF==="live"?"Need at least two live games with a clear favorite. Pick Today, a day or All to see more.":"Need at least two games with stats for this sport and day. Pick another day or All above."}</div>`;
+  const up=gs.filter(g=>(upcoming(g)||isLive(g))&&model(g));
   Object.keys(picks).forEach(id=>{if(!up.some(g=>g.id===id))delete picks[id]});
-  PH($("pickList")).html=up.map(g=>{const md=model(g);return`<div class="pk">${[[g.away,md.pA],[g.home,md.pH]].map(([c,p])=>`<button aria-pressed="${picks[g.id]===c}" data-g="${esc(g.id)}" data-t="${esc(c)}"><span>${esc(short(g,c))}</span><span>${pct(p,0)}</span></button>`).join("")}</div>`}).join("")||`<div class="empty">No upcoming games to pick from.</div>`;
+  PH($("pickList")).html=up.map(g=>{const md=model(g);return`<div class="pk">${isLive(g)?`<span class="pklive live">Live</span>`:""}${[[g.away,md.pA],[g.home,md.pH]].map(([c,p])=>`<button aria-pressed="${picks[g.id]===c}" data-g="${esc(g.id)}" data-t="${esc(c)}"><span>${esc(short(g,c))}</span><span>${pct(p,0)}</span></button>`).join("")}</div>`}).join("")||`<div class="empty">No games to pick from for this sport and day.</div>`;
   const chosen=up.filter(g=>picks[g.id]).map(g=>{const md=model(g);return{g,team:picks[g.id],p:picks[g.id]===g.home?md.pH:md.pA}});
   if(chosen.length<2){PH($("myParlay")).html=`<p class="note">${chosen.length?"Add at least one more team.":"No legs picked yet."}</p>`;return}
   const p=chosen.reduce((s,l)=>s*l.p,1);
