@@ -371,7 +371,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-games">
   <div class="card">
     <h2>This week's games</h2>
-    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances blend two sources. The betting market: DraftKings' moneyline (or spread) from the ESPN feed, with the bookmaker's margin removed. That counts 65% (75% for college, where team stats are rougher). Linecheck's own model: each team's season results plus home field. That counts the rest. Each card shows both numbers under the bar, and flags when the model disagrees a lot with the market. Projected totals blend the market total the same way. Games without odds in the feed use the model alone. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
+    <details class="lwhelp"><summary>How these chances work</summary><p class="note">Win chances blend two sources. The betting market: DraftKings' moneyline (or spread) from the ESPN feed, with the bookmaker's margin removed. Hockey and baseball use the moneyline only, since their ±1.5 puck and run lines say little about who wins. That counts 65% (75% for college, where team stats are rougher). Linecheck's own model: each team's season results plus home field. That counts the rest. Suggested parlays skip any pick above 97%, since no pregame pick is that certain. Each card shows both numbers under the bar, and flags when the model disagrees a lot with the market. Projected totals blend the market total the same way. Games without odds in the feed use the model alone. Projections include ESPN's injury reports (NFL starting QBs, NBA and WNBA players, NHL starting goalies, MLB hitters), MLB probable starting pitchers, and the forecast weather for football. Tap <b>Dig in</b> for anything else. NBA picks include back-to-back rest. While the app is open, scores and chances refresh every minute.</p>
     <p class="note" id="statsAsOf"></p></details>
   </div>
   <div class="gsearch" role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="gSearch" placeholder="Search team or player" aria-label="Search games by team or player" autocomplete="off" enterkeyhint="search"><span class="note" id="gSearchN"></span></div>
@@ -630,7 +630,7 @@ html{overscroll-behavior-y:contain}#ptr{position:fixed;left:50%;top:calc(env(saf
 <section class="panel" id="p-guide" hidden>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 77. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 78. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -873,13 +873,14 @@ function model(g){
     return{m:P.lh-P.la,pH,pA,pD,mix}}
   const L=LEAGUES[g.lg],rh=rating(g.lg,g.home),ra=rating(g.lg,g.away);if(rh==null||ra==null)return null;
   let m=rh-ra+(g.neutral?0:L.hfa);{const aj=adjOf(g);if(aj&&aj.qb)m+=(aj.qb.a||0)-(aj.qb.h||0);if(aj&&aj.pl)m+=(aj.pl.a||0)-(aj.pl.h||0)}{const rs=g.lg==="nba"?NBA_REST:(TEAMLG[g.lg]&&TEAMLG[g.lg].b2b)||0;if(rs){if(g.b2bH)m-=rs;if(g.b2bA)m+=rs}}
-  let mix=null;const mk=MKT[g.id];if(mk){let pm=null;if(mk.mlH!=null&&mk.mlA!=null){const ia=impl(mk.mlA),ih=impl(mk.mlH);if(ia&&ih)pm=ih/(ia+ih)}let mm=null;if(pm!=null)mm=L.sd*invPhi(Math.min(.985,Math.max(.015,pm)));else if(mk.sp!=null)mm=-mk.sp;
+  let mix=null;const mk=MKT[g.id];if(mk){let pm=null;if(mk.mlH!=null&&mk.mlA!=null){const ia=impl(mk.mlA),ih=impl(mk.mlH);if(ia&&ih)pm=ih/(ia+ih)}let mm=null;if(pm!=null)mm=L.sd*invPhi(Math.min(.985,Math.max(.015,pm)));else if(mk.sp!=null&&g.lg!=="nhl"&&g.lg!=="mlb"&&Math.abs(mk.sp)<=SPCAP(g.lg))mm=-mk.sp;
     if(mm!=null){const w=mktW(g.lg);mix={w,prov:mk.prov,pModel:Phi(m/L.sd),pMkt:pm!=null?pm:Phi(mm/L.sd),mModel:m,mMkt:mm};m=w*mm+(1-w)*m}}
   let pH=Phi(m/L.sd);
   const sc=g.score||{};const sh=sc[g.home]??sc[norm(g.home)],sa=sc[g.away]??sc[norm(g.away)];
   if(isLive(g)&&sh!=null&&sa!=null){const r=remaining(g),lead=sh-sa;pH=r<=0.001?(lead>0?1:lead<0?0:.5):Phi((lead+m*r)/(L.sd*Math.sqrt(r)))}
   return{m,pH,pA:1-pH,mix};
 }
+function SPCAP(lg){return lg==="nhl"||lg==="mlb"||lg==="soc"?3.5:lg==="nba"||lg==="wnba"?30:60}
 function mktW(lg){return lg==="cfb"||lg==="ncaab"||lg==="ncaaw"?0.75:0.65}
 function invPhi(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771628,-13.28068155288572],c=[-.007784894002430293,-.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[.007784695709041462,.3224671290700398,2.445134137142996,3.754408661907416],pl=.02425;let q,r;
   if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
@@ -1067,7 +1068,7 @@ function digIn(g,keep){
   $("neutral").checked=!!g.neutral;$("notes").value=(!teamInfo(g.lg,g.away)||!teamInfo(g.lg,g.home))?"Season stats aren't available for one of these teams yet; type points per game if you know them.":"";$("exTag").hidden=true;analyze();if(!keep){show("analyze");window.scrollTo(0,0)}
 }
 const upcoming=g=>!isLive(g)&&Date.parse(g.start_time)>Date.now();
-function legs(gs){return gs.filter(upcoming).map(g=>{const md=model(g);if(!md)return null;const h=md.pH>=md.pA;return{g,team:h?g.home:g.away,p:h?md.pH:md.pA}}).filter(Boolean)}
+function legs(gs){return gs.filter(upcoming).map(g=>{const md=model(g);if(!md)return null;const h=md.pH>=md.pA;const p=h?md.pH:md.pA;if(!(p>0&&p<0.97))return null;return{g,team:h?g.home:g.away,p}}).filter(Boolean)}
 function fairOdds(p){const a=toAm(1/p);return a==null?"—":sgn(a)}
 const LGN={all:"All sports",nfl:"NFL",cfb:"College football",nba:"NBA",soc:"Soccer",mlb:"MLB",nhl:"NHL",wnba:"WNBA",ncaab:"Men's college basketball",ncaaw:"Women's college basketball",ten:"Tennis",mma:"UFC",golf:"Golf",f1:"F1",nas:"NASCAR"};
 function filterText(){return `${LGN[LG]||"All sports"} · ${DF==="all"?"All days":DF==="live"?"Live":dayLabel(DF)}`}
@@ -1156,12 +1157,13 @@ function parseEvents(j,recs){
     try{const os=c.odds||[],o=os.find(x=>/draft/i.test((x.provider&&x.provider.name)||""))||os[0];if(o&&state==="pre"){
       const n=v=>{if(v==null||v==="")return null;if(typeof v==="object")v=v.american??v.alternateDisplayValue??v.value;const s=String(v).trim();if(/^(even|ev)$/i.test(s))return 100;const x=parseFloat(s.replace(/[^\d.+-]/g,""));return isFinite(x)?x:null};
       const ml=t=>t?(n(t.moneyLine)??(t.current&&n(t.current.moneyLine))??(t.close&&n(t.close.moneyLine))):null;
-      let sp=null;const dm=String(o.details||"").match(/^([A-Za-z0-9.&'\- ]+?)\s+([+-]?\d+(?:\.\d+)?)$/);
-      if(dm){const ab=dm[1].trim().toUpperCase(),v=Math.abs(+dm[2]),hA=String(h.team.abbreviation||"").toUpperCase(),aA=String(a.team.abbreviation||"").toUpperCase();if(ab===hA)sp=-v;else if(ab===aA)sp=v}
+      let sp=null;let dm=String(o.details||"").match(/^([A-Za-z0-9.&'\- ]+?)\s+([+-]?\d+(?:\.\d+)?)$/);
+      if(dm&&Math.abs(+dm[2])>=100)dm=null;if(dm){const ab=dm[1].trim().toUpperCase(),v=Math.abs(+dm[2]),hA=String(h.team.abbreviation||"").toUpperCase(),aA=String(a.team.abbreviation||"").toUpperCase();if(ab===hA)sp=-v;else if(ab===aA)sp=v}
       else if(/^(even|pk|pick)/i.test(String(o.details||"")))sp=0;
+      if(sp==null&&o.pointSpread&&o.pointSpread.home){const x=o.pointSpread.home,v=n(x.close&&x.close.line)??n(x.current&&x.current.line)??n(x.open&&x.open.line);if(v!=null)sp=v}
       if(sp==null&&n(o.spread)!=null){const v=Math.abs(n(o.spread));if(o.homeTeamOdds&&o.homeTeamOdds.favorite)sp=-v;else if(o.awayTeamOdds&&o.awayTeamOdds.favorite)sp=v}
-      let mlH=ml(o.homeTeamOdds),mlA=ml(o.awayTeamOdds);if(mlH!=null&&Math.abs(mlH)<100)mlH=null;if(mlA!=null&&Math.abs(mlA)<100)mlA=null;
-      const mk={prov:String((o.provider&&o.provider.name)||"Sportsbook").replace(/ - .*$/,""),mlH,mlA,draw:o.drawOdds?n(o.drawOdds.moneyLine):null,sp,tot:n(o.overUnder),at:Date.now()};
+      const ml2=s=>{const x=o.moneyline&&o.moneyline[s];return x?(n(x.close&&x.close.odds)??n(x.current&&x.current.odds)??n(x.open&&x.open.odds)):null};let mlH=ml(o.homeTeamOdds)??ml2("home"),mlA=ml(o.awayTeamOdds)??ml2("away");if(mlH!=null&&Math.abs(mlH)<100)mlH=null;if(mlA!=null&&Math.abs(mlA)<100)mlA=null;
+      const mk={prov:String((o.provider&&o.provider.name)||"Sportsbook").replace(/ - .*$/,""),mlH,mlA,draw:o.drawOdds?n(o.drawOdds.moneyLine):null,sp:sp!=null&&Math.abs(sp)<=SPCAP(g.lg)?sp:null,tot:n(o.overUnder),at:Date.now()};
       if(mk.mlH!=null&&mk.mlA!=null||mk.sp!=null){MKT[g.id]=mk;clearTimeout(MKTT);MKTT=setTimeout(()=>{try{localStorage.setItem("ge-mkt",JSON.stringify(MKT))}catch(e){}},1500)}}}catch(e){}
     const lsv=x=>(x.linescores||[]).slice().sort((p,q)=>(p.period||0)-(q.period||0)).map(v=>+v.value||0);if(h.linescores||a.linescores)g.ls={h:lsv(h),a:lsv(a)};
     [h,a].forEach(x=>{const pr=(x.probables||[]).find(q=>/pitch|start/i.test(q.name||""));if(pr&&pr.athlete&&pr.athlete.id){g.prob=g.prob||{};g.prob[String(x.team.id)]={id:String(pr.athlete.id),name:pr.athlete.displayName||pr.athlete.fullName||""}}});
