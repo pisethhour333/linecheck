@@ -649,7 +649,7 @@ html.store a[href*="draftkings"],html.store .dkonly{display:none!important}html[
   </div>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 93. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 94. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -1068,9 +1068,9 @@ function renderGames(){try{if(typeof anFill==="function")setTimeout(anFill,0)}ca
   if(!gs.length){$("dayFilter").innerHTML="";PH($("gameList")).html=`<div class="empty">${loaded?(LG==="all"?"No games coming up right now.":`No ${esc(LEAGUES[LG].label)} games coming up in the schedule Linecheck can see right now. Try All or another sport.`):"Loading this week's games…"}</div>`;renderParlays([]);return}
   const dayKey=g=>localDate(effT(g)),todayK=localDate(Date.now()),tomK=localDate(Date.now()+864e5);
   const liveN=gs.filter(isLive).length,days=[...new Set(gs.map(dayKey))];
-  if(DF!=="all"&&DF!=="live"&&DF<todayK){DF="all";try{localStorage.setItem("ge-df",DF)}catch(e){}}
+  if(DF!=="all"&&DF!=="live"&&DF<todayK&&!days.includes(DF)){DF="all";try{localStorage.setItem("ge-df",DF)}catch(e){}}
   const df=DF;if(df!=="all"&&df!=="live"&&!days.includes(df)){days.push(df);days.sort()}
-  const dLab=k=>k===todayK?"Today":k===tomK?"Tomorrow":new Date(k+"T12:00:00").toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"});
+  const ydK=localDate(Date.now()-864e5),dLab=k=>k===todayK?"Today":k===tomK?"Tomorrow":k===ydK?"Yesterday":new Date(k+"T12:00:00").toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"});
   $("dayFilter").innerHTML=[["all",`All (${gs.length})`],["live",`<span class="ldot" aria-hidden="true"></span>Live (${liveN})`],...days.map(k=>[k,`${dLab(k)} (${gs.filter(g=>dayKey(g)===k).length})`])]
     .map(([k,t])=>`<button class="btn sm ghost" data-df="${k}" aria-pressed="${df===k}">${t}</button>`).join("");
   $("dayFilter").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{DF=b.dataset.df;try{localStorage.setItem("ge-df",DF)}catch(e){}filterChanged()}));
@@ -2210,7 +2210,7 @@ async function tpRender(){const card=$("tpCard");if(!card)return;const gs=tpGame
 document.addEventListener("change",e=>{if(e.target&&e.target.id==="tpSel"){TP.sel=e.target.value||null;try{TP.sel?localStorage.setItem("ge-tpsel",TP.sel):localStorage.removeItem("ge-tpsel")}catch(x){}const b=$("tpBody");if(b)b.innerHTML="";tpRender()}});
 setInterval(()=>{try{if(document.hidden||$("p-props").hidden||!TP.sel)return;const [lg,tid,gid]=TP.sel.split(":");const s=D[lg]&&D[lg].live&&(D[lg].live.games||[]).find(x=>String(x.id)===gid);if(s&&isLive({...s,lg})){(async()=>{try{await loadScores(lg)}catch(e){}tpRender()})()}}catch(e){}},30000);
 /* --- NBA player props --- */
-function dayLabel(k){const t=localDate(Date.now()),m=localDate(Date.now()+864e5);return k===t?"Today":k===m?"Tomorrow":new Date(k+"T12:00:00").toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"})}
+function dayLabel(k){const t=localDate(Date.now()),m=localDate(Date.now()+864e5),y=localDate(Date.now()-864e5);return k===t?"Today":k===m?"Tomorrow":k===y?"Yesterday":new Date(k+"T12:00:00").toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"})}
 function propDayFilter(gs,lgName){const dk=g=>localDate(g.start_time),days=[...new Set(gs.map(dk))];let df=DF,note="";
   if(df==="live"){df="all";note="Props are for games that haven't started, so every upcoming day is shown."}
   else if(df!=="all"&&!days.includes(df)){note=`No ${lgName} games on ${dayLabel(df)}, so every upcoming day is shown.`;df="all"}
