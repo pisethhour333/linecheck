@@ -24,6 +24,8 @@ h1{font-size:1.35rem;margin:14px 0 4px;line-height:1.4}
 .link code{flex:1;min-width:0;font:600 .9rem ui-monospace,Menlo,monospace;color:var(--acc);overflow-wrap:anywhere}
 .btn{font:600 .9rem "Kantumruy Pro",system-ui,sans-serif;background:var(--acc);color:#14110a;border:0;border-radius:10px;padding:9px 14px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
 .btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
+.lang{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}.lang button{font:600 .8rem "Kantumruy Pro",system-ui,sans-serif;padding:6px 12px;border:0;background:none;color:var(--muted);cursor:pointer}.lang button[aria-pressed=true]{background:var(--acc);color:#14110a}
+html[lang=en] body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
 .tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0 0 16px;position:sticky;top:8px;z-index:3;background:var(--card)}
 .tabs button{font:600 1rem "Kantumruy Pro",system-ui,sans-serif;padding:12px 6px;border:0;background:none;color:var(--muted);cursor:pointer}
 .tabs button[aria-pressed=true]{background:var(--acc);color:#14110a}
@@ -43,27 +45,23 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:28px;line
 </head>
 <body>
 <main>
-  <div class="top"><img src="icon-192.png" alt=""><div class="brand">LINE<span>CHECK</span></div></div>
-  <h1>របៀបដាក់ Linecheck នៅលើអេក្រង់ទូរស័ព្ទ</h1>
-  <p class="sub">ធ្វើតែម្តង ប្រើបានរហូត។ មិនចាំបាច់ទាញយកពី App Store ឬ Play Store ទេ។</p>
+  <div class="top"><img src="icon-192.png" alt=""><div class="brand">LINE<span>CHECK</span></div><div class="lang" role="group" aria-label="Language"><button type="button" data-lang="km">ខ្មែរ</button><button type="button" data-lang="en">English</button></div></div>
+  <h1 data-i="h1"></h1>
+  <p class="sub" data-i="sub"></p>
 
-  <div class="link"><code id="url">https://pisethhour333.github.io/linecheck/</code><button class="btn" id="copy" type="button">ចម្លង</button></div>
+  <div class="link"><code id="url">https://pisethhour333.github.io/linecheck/</code><button class="btn" id="copy" type="button" data-i="copy"></button></div>
 
   <div class="tabs" role="tablist"><button type="button" data-os="ios" aria-pressed="true">📱 iPhone</button><button type="button" data-os="and" aria-pressed="false">🤖 Android</button></div>
 
   <section id="ios"></section>
   <section id="and" hidden></section>
 
-  <h2>📌 ចំណាំសំខាន់ៗ</h2>
-  <ul>
-    <li>លើកដំបូងដែលបើក Linecheck អ្នកត្រូវបញ្ជាក់ថាអ្នក<b>មានអាយុ ២១ ឆ្នាំ ឬលើសនេះ</b></li>
-    <li>ពេលមានកំណែថ្មី Linecheck ធ្វើបច្ចុប្បន្នភាពដោយខ្លួនឯង គ្រាន់តែបិទ ហើយបើកម្តងទៀត</li>
-    <li>ចង់ប្រើលើទូរស័ព្ទច្រើនគ្រឿង? ចុចប៊ូតុង<b>រូបមនុស្ស</b>នៅខាងលើ ហើយបង្កើតគណនី (Create account) ដើម្បីរក្សាសំបុត្រ និងប្រវត្តិភ្នាល់របស់អ្នក</li>
-  </ul>
+  <h2 data-i="notesH"></h2>
+  <ul data-i="notes"></ul>
 
-  <div class="done"><a class="btn" href="./" id="open">បើក Linecheck ឥឡូវនេះ</a></div>
+  <div class="done"><a class="btn" href="./" id="open" data-i="open"></a></div>
 
-  <footer>អាយុ ២១ ឆ្នាំឡើងទៅប៉ុណ្ណោះ។ មានបញ្ហាល្បែង? ទូរស័ព្ទ ឬផ្ញើសារទៅ 1-800-GAMBLER។<br>Linecheck ជាឧបករណ៍ស្រាវជ្រាវឯករាជ្យ មិនទទួលភ្នាល់ ហើយមិនពាក់ព័ន្ធនឹង DraftKings ឬក្រុមហ៊ុនភ្នាល់ណាមួយទេ។<br><a href="privacy.html" style="color:inherit">Privacy policy</a> · <a href="terms.html" style="color:inherit">Terms of use</a></footer>
+  <footer><span data-i="foot"></span><br><a href="privacy.html" style="color:inherit">Privacy policy</a> · <a href="terms.html" style="color:inherit">Terms of use</a></footer>
 </main>
 <script>
 (function(){
@@ -81,37 +79,54 @@ const appIcon=(x,y,s)=>`<image href="icon-192.png" x="${x}" y="${y}" width="${s}
 const grid=(y)=>Array.from({length:8},(_,i)=>`<rect x="${20+(i%4)*24}" y="${y+Math.floor(i/4)*28}" width="16" height="16" rx="4" fill="var(--line)"/>`).join("");
 
 const IOS=[
- {t:`បើកកម្មវិធី <b>Safari</b> (រូបត្រីវិស័យពណ៌ខៀវ) ហើយចូលទៅតំណភ្ជាប់ខាងលើ។ ត្រូវប្រើ Safari ព្រោះវាដំណើរការល្អបំផុតលើ iPhone។`,
+ {t:{km:`បើកកម្មវិធី <b>Safari</b> (រូបត្រីវិស័យពណ៌ខៀវ) ហើយចូលទៅតំណភ្ជាប់ខាងលើ។ ត្រូវប្រើ Safari ព្រោះវាដំណើរការល្អបំផុតលើ iPhone។`,en:`Open <b>Safari</b> (the blue compass app) and go to the link above. Use Safari: it works best on iPhone.`},
   s:phone(urlbar(20)+lines(48,9)+bar(204,24,"var(--card)")+shareIco(66,217))},
- {t:`ចុចប៊ូតុង <b>ចែករំលែក (Share)</b> ដែលមានរូប<b>ការ៉េ និងព្រួញចង្អុលឡើងលើ</b> ⬆️ នៅខាងក្រោមអេក្រង់។`,
+ {t:{km:`ចុចប៊ូតុង <b>ចែករំលែក (Share)</b> ដែលមានរូប<b>ការ៉េ និងព្រួញចង្អុលឡើងលើ</b> ⬆️ នៅខាងក្រោមអេក្រង់។`,en:`Tap the <b>Share</b> button, the <b>square with an arrow pointing up</b> ⬆️ at the bottom of the screen.`},
   s:phone(urlbar(20)+lines(48,9)+bar(204,24,"var(--card)")+shareIco(66,217)+ring(66,216,10)+hand(70,222))},
- {t:`អូសបញ្ជីចុះក្រោម រួចចុច <b>"Add to Home Screen"</b> (បន្ថែមទៅអេក្រង់ដើម) ដែលមានរូប ➕ ក្នុងការ៉េ។`,
+ {t:{km:`អូសបញ្ជីចុះក្រោម រួចចុច <b>"Add to Home Screen"</b> (បន្ថែមទៅអេក្រង់ដើម) ដែលមានរូប ➕ ក្នុងការ៉េ។`,en:`Scroll down the list and tap <b>"Add to Home Screen"</b> (the icon with ➕ in a square).`},
   s:phone(bar(12,216,"#000",.35)+`<rect x="12" y="92" width="108" height="132" rx="10" fill="var(--card)"/>`+[0,1,2,3].map(i=>`<rect x="18" y="${100+i*30}" width="96" height="24" rx="6" fill="${i===2?"rgba(245,166,35,.18)":"var(--scr)"}" ${i===2?`stroke="${A}" stroke-width="2"`:""}/>`).join("")+txt(24,115,"Copy",7.5)+txt(24,145,"Add to Reading List",7.5)+txt(24,175,"Add to Home Screen",7.5,"var(--ink)",700)+`<g stroke="var(--ink)" stroke-width="1.2" fill="none"><rect x="100" y="167" width="9" height="9" rx="2"/><path d="M104.5 169 v5 M102 171.5 h5"/></g>`+txt(24,205,"Add Bookmark",7.5)+hand(88,178))},
- {t:`ឈ្មោះ <b>Linecheck</b> នឹងបង្ហាញឡើង។ ចុច <b>"Add"</b> (បន្ថែម) នៅជ្រុងខាងលើស្តាំ។`,
+ {t:{km:`ឈ្មោះ <b>Linecheck</b> នឹងបង្ហាញឡើង។ ចុច <b>"Add"</b> (បន្ថែម) នៅជ្រុងខាងលើស្តាំ។`,en:`The name <b>Linecheck</b> appears. Tap <b>"Add"</b> in the top right corner.`},
   s:phone(bar(12,216,"var(--card)")+txt(18,30,"Cancel",7.5,"#3b82f6")+txt(66,30,"Add to Home Screen",7,"var(--ink)",700,"middle")+txt(114,30,"Add",8,"#3b82f6",700,"end")+ring(107,27,10)+appIcon(20,46,26)+`<rect x="52" y="50" width="62" height="16" rx="4" fill="var(--scr)"/>`+txt(56,61,"Linecheck",7.5,"var(--ink)",600)+hand(106,32))},
- {t:`រួចរាល់! រូបតំណាង <b>Linecheck</b> នៅលើអេក្រង់ទូរស័ព្ទ។ ចុចលើវាដើម្បីបើកដូចកម្មវិធីធម្មតា។`,
+ {t:{km:`រួចរាល់! រូបតំណាង <b>Linecheck</b> នៅលើអេក្រង់ទូរស័ព្ទ។ ចុចលើវាដើម្បីបើកដូចកម្មវិធីធម្មតា។`,en:`Done! The <b>Linecheck</b> icon is on your home screen. Tap it to open Linecheck like any other app.`},
   s:phone(grid(30)+appIcon(44,96,20)+`<rect x="40" y="92" width="28" height="28" rx="8" fill="none" stroke="${A}" stroke-width="2.5"/>`+txt(54,128,"Linecheck",6.5,"var(--ink)",600,"middle")+grid(140))}
 ];
 const AND=[
- {t:`បើកកម្មវិធី <b>Chrome</b> ហើយចូលទៅតំណភ្ជាប់ខាងលើ។ រង់ចាំឲ្យទំព័របើករួចរាល់។`,
+ {t:{km:`បើកកម្មវិធី <b>Chrome</b> ហើយចូលទៅតំណភ្ជាប់ខាងលើ។ រង់ចាំឲ្យទំព័របើករួចរាល់។`,en:`Open <b>Chrome</b> and go to the link above. Wait for the page to finish loading.`},
   s:phone(urlbar(20)+txt(120,30,"⋮",11,"var(--ink)",700,"end")+lines(48,12))},
- {t:`ចុចសញ្ញា <b>ចំណុចបី ⋮</b> នៅជ្រុងខាងលើស្តាំនៃអេក្រង់។`,
+ {t:{km:`ចុចសញ្ញា <b>ចំណុចបី ⋮</b> នៅជ្រុងខាងលើស្តាំនៃអេក្រង់។`,en:`Tap the <b>three dots ⋮</b> in the top right corner of the screen.`},
   s:phone(urlbar(20)+txt(120,30,"⋮",11,"var(--ink)",700,"end")+ring(117,27,9)+lines(48,12)+hand(112,32))},
- {t:`ចុច <b>"Install app"</b> (ដំឡើងកម្មវិធី) ឬ <b>"Add to Home screen"</b> (បន្ថែមទៅអេក្រង់ដើម)។`,
+ {t:{km:`ចុច <b>"Install app"</b> (ដំឡើងកម្មវិធី) ឬ <b>"Add to Home screen"</b> (បន្ថែមទៅអេក្រង់ដើម)។`,en:`Tap <b>"Install app"</b> or <b>"Add to Home screen"</b>.`},
   s:phone(lines(30,14)+`<rect x="46" y="22" width="76" height="132" rx="6" fill="var(--card)" stroke="var(--line)"/>`+["New tab","History","Downloads","Install app","Settings"].map((s,i)=>(i===3?`<rect x="49" y="${26+i*25}" width="70" height="20" rx="4" fill="rgba(245,166,35,.18)" stroke="${A}" stroke-width="2"/>`:"")+txt(54,40+i*25,s,7.5,"var(--ink)",i===3?700:400)).join("")+hand(100,108))},
- {t:`ចុច <b>"Install"</b> (ដំឡើង) ឬ <b>"Add"</b> ដើម្បីបញ្ជាក់។`,
+ {t:{km:`ចុច <b>"Install"</b> (ដំឡើង) ឬ <b>"Add"</b> ដើម្បីបញ្ជាក់។`,en:`Tap <b>"Install"</b> or <b>"Add"</b> to confirm.`},
   s:phone(bar(12,216,"#000",.35)+`<rect x="16" y="80" width="100" height="80" rx="10" fill="var(--card)"/>`+txt(66,98,"Install app?",8.5,"var(--ink)",700,"middle")+appIcon(28,106,18)+txt(52,119,"Linecheck",7.5,"var(--ink)",600)+txt(74,150,"Cancel",7.5,"var(--muted)",400,"end")+`<rect x="80" y="140" width="30" height="14" rx="7" fill="${A}"/>`+txt(95,150,"Install",7,"#14110a",700,"middle")+ring(95,147,12)+hand(96,152))},
- {t:`រួចរាល់! រូបតំណាង <b>Linecheck</b> លេចឡើងលើអេក្រង់ទូរស័ព្ទ ឬក្នុងបញ្ជីកម្មវិធី។ ចុចលើវាដើម្បីបើក។`,
+ {t:{km:`រួចរាល់! រូបតំណាង <b>Linecheck</b> លេចឡើងលើអេក្រង់ទូរស័ព្ទ ឬក្នុងបញ្ជីកម្មវិធី។ ចុចលើវាដើម្បីបើក។`,en:`Done! The <b>Linecheck</b> icon appears on your home screen or in your app list. Tap it to open.`},
   s:phone(grid(30)+appIcon(44,96,20)+`<rect x="40" y="92" width="28" height="28" rx="14" fill="none" stroke="${A}" stroke-width="2.5"/>`+txt(54,128,"Linecheck",6.5,"var(--ink)",600,"middle")+grid(140))}
 ];
-const render=(id,steps,tips)=>{document.getElementById(id).innerHTML=steps.map((s,i)=>`<div class="step"><div><span class="n">${i+1}</span><p>${s.t}</p></div>${s.s}</div>`).join("")+tips};
-render("ios",IOS,`<div class="tip"><strong>🔔 ការជូនដំណឹងពេលសំបុត្រឈ្នះ៖</strong> នៅលើ iPhone ការជូនដំណឹងដំណើរការតែពេលអ្នកបើក Linecheck ពី<b>រូបតំណាងនៅលើអេក្រង់ដើម</b>ប៉ុណ្ណោះ (មិនមែនពី Safari ទេ)។ បើកពីរូបតំណាង ចូលទៅផ្ទាំង <b>Live</b> ចុច <b>"Notify me when closed"</b> រួចចុច <b>Allow</b> (អនុញ្ញាត)។ ត្រូវការ iOS 16.4 ឬថ្មីជាងនេះ។</div>`);
-render("and",AND,`<div class="tip"><strong>💡 ប្រើ Samsung Internet?</strong> ចុចសញ្ញា <b>☰</b> (បន្ទាត់បី) នៅខាងក្រោម រួចចុច <b>"Add page to"</b> ហើយជ្រើសរើស <b>"Home screen"</b>។</div><div class="tip"><strong>🔔 ការជូនដំណឹងពេលសំបុត្រឈ្នះ៖</strong> បើក Linecheck ចូលទៅផ្ទាំង <b>Live</b> ចុច <b>"Notify me when closed"</b> ហើយចុច <b>Allow</b> (អនុញ្ញាត)។</div>`);
+const TIPS={ios:{km:`<div class="tip"><strong>🔔 ការជូនដំណឹងពេលសំបុត្រឈ្នះ៖</strong> នៅលើ iPhone ការជូនដំណឹងដំណើរការតែពេលអ្នកបើក Linecheck ពី<b>រូបតំណាងនៅលើអេក្រង់ដើម</b>ប៉ុណ្ណោះ (មិនមែនពី Safari ទេ)។ បើកពីរូបតំណាង ចូលទៅផ្ទាំង <b>Live</b> ចុច <b>"Notify me when closed"</b> រួចចុច <b>Allow</b> (អនុញ្ញាត)។ ត្រូវការ iOS 16.4 ឬថ្មីជាងនេះ។</div>`,
+  en:`<div class="tip"><strong>🔔 Ticket won alerts:</strong> on iPhone, alerts only work when you open Linecheck from its <b>home screen icon</b> (not from Safari). Open it from the icon, go to the <b>Live</b> tab, tap <b>"Notify me when closed"</b>, then tap <b>Allow</b>. Needs iOS 16.4 or newer.</div>`},
+ and:{km:`<div class="tip"><strong>💡 ប្រើ Samsung Internet?</strong> ចុចសញ្ញា <b>☰</b> (បន្ទាត់បី) នៅខាងក្រោម រួចចុច <b>"Add page to"</b> ហើយជ្រើសរើស <b>"Home screen"</b>។</div><div class="tip"><strong>🔔 ការជូនដំណឹងពេលសំបុត្រឈ្នះ៖</strong> បើក Linecheck ចូលទៅផ្ទាំង <b>Live</b> ចុច <b>"Notify me when closed"</b> ហើយចុច <b>Allow</b> (អនុញ្ញាត)។</div>`,
+  en:`<div class="tip"><strong>💡 Using Samsung Internet?</strong> Tap the <b>☰</b> menu (three lines) at the bottom, tap <b>"Add page to"</b>, then choose <b>"Home screen"</b>.</div><div class="tip"><strong>🔔 Ticket won alerts:</strong> open Linecheck, go to the <b>Live</b> tab, tap <b>"Notify me when closed"</b>, then tap <b>Allow</b>.</div>`}};
+const TX={h1:{km:"របៀបដាក់ Linecheck នៅលើអេក្រង់ទូរស័ព្ទ",en:"How to add Linecheck to your home screen"},
+ sub:{km:"ធ្វើតែម្តង ប្រើបានរហូត។ មិនចាំបាច់ទាញយកពី App Store ឬ Play Store ទេ។",en:"Do it once and it works like an app. No App Store or Play Store download needed."},
+ copy:{km:"ចម្លង",en:"Copy"},copied:{km:"បានចម្លង ✓",en:"Copied ✓"},copyMenu:{km:"ចម្លងពីម៉ឺនុយ",en:"Copy from menu"},
+ notesH:{km:"📌 ចំណាំសំខាន់ៗ",en:"📌 Good to know"},
+ notes:{km:`<li>លើកដំបូងដែលបើក Linecheck អ្នកត្រូវបញ្ជាក់ថាអ្នក<b>មានអាយុ ២១ ឆ្នាំ ឬលើសនេះ</b></li><li>ពេលមានកំណែថ្មី Linecheck ធ្វើបច្ចុប្បន្នភាពដោយខ្លួនឯង គ្រាន់តែបិទ ហើយបើកម្តងទៀត</li><li>ចង់ប្រើលើទូរស័ព្ទច្រើនគ្រឿង? ចុចប៊ូតុង<b>រូបមនុស្ស</b>នៅខាងលើ ហើយបង្កើតគណនី (Create account) ដើម្បីរក្សាសំបុត្រ និងប្រវត្តិភ្នាល់របស់អ្នក</li>`,
+   en:`<li>The first time you open Linecheck, you confirm you're <b>21 or older</b></li><li>Linecheck updates itself: when there's a new version, just close it and open it again</li><li>Using more than one phone? Tap the <b>person button</b> at the top and choose <b>Create account</b> to keep your tickets and bet tracker on every device</li>`},
+ open:{km:"បើក Linecheck ឥឡូវនេះ",en:"Open Linecheck now"},
+ foot:{km:"អាយុ ២១ ឆ្នាំឡើងទៅប៉ុណ្ណោះ។ មានបញ្ហាល្បែង? ទូរស័ព្ទ ឬផ្ញើសារទៅ 1-800-GAMBLER។<br>Linecheck ជាឧបករណ៍ស្រាវជ្រាវឯករាជ្យ មិនទទួលភ្នាល់ ហើយមិនពាក់ព័ន្ធនឹង DraftKings ឬក្រុមហ៊ុនភ្នាល់ណាមួយទេ។",en:"21+ only. Gambling problem? Call or text 1-800-GAMBLER.<br>Linecheck is an independent research tool. It doesn't take bets and isn't affiliated with DraftKings or any sportsbook."},
+ title:{km:"ដំឡើង Linecheck",en:"Install Linecheck"}};
+let LANG="km";
+const render=(id,steps)=>{document.getElementById(id).innerHTML=steps.map((s,i)=>`<div class="step"><div><span class="n">${i+1}</span><p>${s.t[LANG]}</p></div>${s.s}</div>`).join("")+TIPS[id][LANG]};
+const setLang=l=>{LANG=l==="en"?"en":"km";document.documentElement.lang=LANG;document.title=TX.title[LANG];document.querySelectorAll("[data-i]").forEach(el=>{el.innerHTML=TX[el.dataset.i][LANG]});document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===LANG));render("ios",IOS);render("and",AND);try{localStorage.setItem("lc-install-lang",LANG)}catch(e){}
+  try{const u=new URL(location.href);if(LANG==="en")u.searchParams.set("lang","en");else u.searchParams.delete("lang");history.replaceState(null,"",u)}catch(e){}};
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+let start="km";try{const q=new URLSearchParams(location.search).get("lang");start=q?(q==="en"?"en":"km"):(localStorage.getItem("lc-install-lang")||"km")}catch(e){}
+setLang(start);
 const pick=os=>{document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.os===os));document.getElementById("ios").hidden=os!=="ios";document.getElementById("and").hidden=os!=="and"};
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.os)));
 if(/android/i.test(navigator.userAgent))pick("and");
 const url=document.getElementById("url").textContent;
-document.getElementById("copy").addEventListener("click",e=>{const b=e.currentTarget;(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>{b.textContent="បានចម្លង ✓"}).catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("url"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="ចម្លងពីម៉ឺនុយ"});setTimeout(()=>b.textContent="ចម្លង",2500)});
+document.getElementById("copy").addEventListener("click",e=>{const b=e.currentTarget;(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>{b.textContent=TX.copied[LANG]}).catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("url"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=TX.copyMenu[LANG]});setTimeout(()=>b.textContent=TX.copy[LANG],2500)});
 })();
 </script>
 </body>
