@@ -361,6 +361,10 @@ html.store a[href*="draftkings"],html.store .dkonly{display:none!important}html[
 .tvl.ttv{font-size:.66rem;margin-top:2px;gap:4px;overflow:hidden;white-space:nowrap}.tvl.ttv span{overflow:hidden;text-overflow:ellipsis}.tvl.ttv svg{width:11px;height:11px}
 .tile .tflag:empty{display:none}
 .tlast{font-size:.66rem;color:var(--ink);opacity:.85;margin-top:3px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:left}
+.ppctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:6px 0 10px}.ppctl .tpl{margin:0}.ppctl select{width:100%}
+.ppctl .tpl{display:flex;flex-direction:column;align-items:stretch;gap:3px}.ppctl .tpl .lab{font-size:.7rem}
+.pp{margin-top:10px}.pp .tdl{list-style:none;padding-left:0;gap:0}.pp .tdl li{align-items:center;padding:8px 0;border-top:1px solid var(--line)}.pp .tdl li:first-child{border-top:0}
+.ppn{display:flex;flex-direction:column;gap:1px;min-width:0}.ppn .ppl{color:var(--ink);font-size:.92rem}.ppn .note{font-size:.72rem}.pp h3 .note{font-weight:400;text-transform:none;letter-spacing:0}
 .blegs{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.blegs li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--muted) 10%,transparent)}.blegs li .note{grid-column:1/-1;font-size:.75rem}.blegs li.up b{color:var(--good)}.blegs li.dn b{color:var(--bad)}.bl-g{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:.85rem;color:var(--muted)}.bl-g b{color:var(--ink)}
 .mixn{font-size:.8rem}.mixd{color:var(--warn)}
 .pmore{margin-top:6px}.pmore>summary{cursor:pointer;color:var(--turf);font-weight:700;padding:6px 0}
@@ -459,12 +463,14 @@ html.store a[href*="draftkings"],html.store .dkonly{display:none!important}html[
     <div id="tpBody"><p class="note">Pick a team to see every player's numbers.</p></div></div>
   <div id="propsNba" style="display:flex;flex-direction:column;gap:10px">
     <div class="card"><h2>NBA props</h2><details class="lwhelp"><summary>How this works</summary><p class="note" id="propIntro-nba"></p></details><h3 id="boardH-nba">Top projected scorers</h3><p class="note" id="boardNote-nba"></p><div id="tdBoard-nba"></div></div>
+    <div class="card ppc" id="pp-nba" hidden></div>
     <div id="propList-nba" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsNfl" style="display:flex;flex-direction:column;gap:10px">
     <div class="card pfcard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">NFL props</h2></div><div class="row dfsel pfsel" id="pf-nfl" role="group" aria-label="Filter NFL props by stat"></div></div>
     <div id="liveTd-nfl" style="display:flex;flex-direction:column;gap:10px"></div>
     <div class="card" id="nflBoardCard"><details class="lwhelp"><summary>How these projections work</summary><p class="note" id="propIntro-nfl"></p></details><h3 id="boardH-nfl">Most likely touchdown scorers</h3><p class="note" id="boardNote-nfl"></p><div id="tdBoard-nfl"></div></div>
+    <div class="card ppc" id="pp-nfl" hidden></div>
     <div id="propList-nfl" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
   <div id="propsSoc" style="display:flex;flex-direction:column;gap:10px">
@@ -662,7 +668,7 @@ html.store a[href*="draftkings"],html.store .dkonly{display:none!important}html[
   </div>
   <div class="card" id="acctCard"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Your account</h2><span class="tag" id="acctTag" hidden></span></div><div id="acctBody"></div></div>
   <div class="card">
-    <p class="note" style="margin:0 0 6px">Linecheck version 97. If a friend sees something different, compare this number.</p>
+    <p class="note" style="margin:0 0 6px">Linecheck version 98. If a friend sees something different, compare this number.</p>
     <h2>App colors</h2>
     <p class="note">Pick a look. It applies right away and the app remembers it. Light or dark follows your phone's setting.</p>
     <div class="skinpick" id="skinPick"></div>
@@ -694,6 +700,7 @@ html.store a[href*="draftkings"],html.store .dkonly{display:none!important}html[
     <details><summary>DraftKings lines in the boxes</summary><p>Open <b>Totals and team totals</b> on a game and the game total, spread and team total boxes fill with DraftKings' current line by themselves. Live games refresh about every 10 seconds and upcoming games every 2 minutes; the status line under the DraftKings info shows the last update. During a game the app uses ESPN's DraftKings live-odds line when ESPN lists one; the bold label shows which line you're seeing. If you type or step a box, that box stays as you set it while the others keep following DraftKings. Tap <b>Book line</b> to snap every box back. ESPN's free feed can trail DraftKings' own app by a little, so compare with DraftKings before you bet. Refreshes only redraw games whose numbers changed, so the screen stays still.</p></details>
     <details><summary>Ticket won alerts</summary><p>When every bet on a ticket has won (your current ticket or any saved ticket), Linecheck shows a green "won!" alert at the top of the screen and the phone vibrates. There are no alerts for single bets or for tickets that are only winning for now. Turn alerts on or off on the Live tab.</p><p><b>When Linecheck is closed:</b> tap <b>Notify me when closed</b> on the Live tab and allow notifications. Your saved tickets' picks (no money or account details) are sent to Linecheck's alert server, which checks final scores every 2 minutes and sends a phone notification when a whole ticket wins. On iPhone this needs Linecheck added to the Home Screen (Share › Add to Home Screen) and opened from there. Tickets with player props, tennis, UFC, golf or racing picks can't be checked while the app is closed; the Live tab lists them.</p></details>
     <details><summary>Refreshing</summary><p>Scores and chances refresh by themselves every minute (every 30 seconds on the Live tab). To refresh right away on a phone, pull down from the top of the screen and let go when the circle turns gold. On a computer, use the refresh button at the top.</p></details>
+    <details><summary>Player parlays</summary><p>On the Props tab, the NBA and NFL sections have a <b>Player parlays</b> card that builds parlays of 2 to 7 players for you, like "Player A 20+ points, Player B 25+ points" or "Player A anytime TD, Player B anytime TD". Choose how many players, whether they come from <b>any games</b>, the <b>same game</b> or the <b>same team</b> (with a game or team picker), and which stats: points or all stats for the NBA, anytime TD, yards or both for the NFL. It shows up to three builds. <b>Safest</b> uses each player's surest line, <b>Balanced</b> takes a bit more risk, and <b>Bigger payout</b> uses harder lines. Each shows the chance every pick hits, the fair odds, and what $10 should pay. The chance multiplies the picks as if they were unrelated; same-game picks are linked in real life and DraftKings prices same-game parlays differently, so compare its payout with the fair odds. + Ticket adds the whole parlay, and it settles itself with ✓ and ✗ marks when the games end.</p></details>
     <details><summary>Win and loss marks on your picks</summary><p>Every pick on a ticket, a live tile and a saved bet has a small mark beside it, like a sportsbook bet slip: a green <b>✓</b> when the pick won, a red <b>✗</b> when it lost, a dash for a push, a dot while the game is on (green if it's on track, red if it's behind) and an empty circle if the game hasn't started. Under each pick it says why: the final score and the line for game bets ("Chiefs won by 3 (27–24) · line -6.5"), or the player's number for props ("22 points · needed 25"). On the Bets tab, parlays show the row of marks and "5/6 hit" right on the card, so you can see which leg lost without opening it.</p></details>
     <details><summary>Where to watch and last play</summary><p>Each game that hasn't finished shows a small TV line with the channels or streaming services carrying it (for example "CBS · Paramount+"), taken from ESPN's schedule. When only local channels are listed it says "Local TV". Linecheck doesn't stream games itself. Live tiles also show the last play (for example "J.Love pass short right to J.Reed for 12 yards"), and the full play list is one tap away. Turn either line off in <b>Customize tiles</b>.</p></details>
     <details><summary>Bet tracker</summary><p>The Bets tab (My bets) keeps a record of the bets you actually placed. The easiest way: after you place a bet on DraftKings, open <b>Bets › My bets</b>, pick the ticket in <b>From a ticket</b>, enter the odds and stake from your DraftKings slip, and tap <b>Save bet</b>. There's no result box to set for these: a bet from a ticket or a game says <b>Settles automatically</b> and updates itself; if a result ever looks wrong, tap <b>Wrong result?</b> to set it by hand. Bets typed in by hand keep the Result box. Ticket bets settle by themselves: <b>Won</b> when every pick hits, <b>Lost</b> as soon as any pick misses, <b>Push</b> if every pick pushes, including player props. You can also pick a single game from the <b>Game</b> list, or type any bet by hand (those, and anything Linecheck can't check like tennis or UFC parlays, you mark Won, Lost or Push yourself). Under <b>Your bets</b>, every bet is a card with its ticket name, stake and result (Open, Won, Lost or Push, with profit or what it pays). Filter with All, Open, Won, Lost and Push. Tap a bet to see each pick with its score and live status, the odds, stake and payout, and to change the result or delete it. The top card shows your record, win rate, profit and ROI. When you're signed in, the tracker syncs to your account.</p><p><b>Find bets by date:</b> at the top of <b>Your bets</b>, use the date menu (Any date, Today, Yesterday, Last 7 days, Last 30 days) or tap the <b>calendar</b> button beside it to choose any day. Below it, tap All, Open, Won, Lost or Push; each shows how many bets it has. The list, those counts and a short line with the stake and profit all follow the date you pick. Pick <b>Any date</b> to see everything again.</p></details>
@@ -2108,7 +2115,7 @@ function applyNflFilter(){document.querySelectorAll("#propList-nfl .pmore").forE
   const bc=$("nflBoardCard"),lt=$("liveTd-nfl");if(bc){const show=NFLF==="all"||NFLF==="td";["boardH-nfl","boardNote-nfl","tdBoard-nfl"].forEach(id=>{const x=$(id);if(x)x.hidden=!show})}if(lt)lt.hidden=!(NFLF==="all"||NFLF==="td")}
 nflFilterBar();
 async function renderNflProps(){
-  setPropText("nfl");
+  setPropText("nfl");ppSet("nfl",[]);
   renderLiveTd();
   if(DF==="live"){$("propList-nfl").innerHTML=`<div class="empty">Pregame NFL props are hidden while Live is selected. Pick Today or All at the top to see them.</div>`;$("tdBoard-nfl").innerHTML="";return}
   const gs=dateFilter(lgSlate("nfl").filter(upcoming));
@@ -2116,12 +2123,13 @@ async function renderNflProps(){
   const missing=gs.filter(g=>!PROPS[g.id]);
   if(missing.length&&!propsLoading){propsLoading=true;$("propMsg").textContent="Loading player stats…";
     await Promise.all(missing.map(g=>loadProps(g).catch(()=>{PROPS[g.id]={}})));propsLoading=false;$("propMsg").textContent="";}
-  const tds=[];let ninj=null;try{ninj=await lwInjuries("nfl")}catch(e){}
+  const tds=[],ppc=[];let ninj=null;try{ninj=await lwInjuries("nfl")}catch(e){}
   $("propList-nfl").innerHTML=gs.map(g=>{const pg=PROPS[g.id]||{};
     const teams=[g.away,g.home].map(tid=>{const ps=(pg[tid]||[]);const outN=[];
       const seenK=new Set(),more=[];const rows=ps.map((p,i)=>{const it=ninj&&(ninj[String(tid)]||[]).find(x=>qbNorm(x.n)===qbNorm(p.name));if(it&&stSev(it.st)===0){outN.push(p.name);return""}
         const pr=projFor(g,tid,p);if(!pr)return"";const cfg=PROPCFG[p.kind];
         if(pr.anyTD!=null&&p.td>0)tds.push({p,g,tid,ch:pr.anyTD});
+        try{const pl=[];if(pr.anyTD!=null&&p.td>0)pl.push({stat:"td",lab:"anytime TD",pick:p.name+" anytime TD",p:pr.anyTD});(NFLPPL[p.kind]||[]).forEach(L=>pl.push({stat:p.kind,lab:`${L}+ ${cfg.label.toLowerCase()}`,pick:`${p.name} ${L}+ ${cfg.label.toLowerCase()}`,p:overP(pr,L)}));ppAdd(ppc,g,tid,p.name,it&&stSev(it.st)<=3?it.st:"",pl)}catch(e){}
         return`<div class="prop" data-kind="${esc(p.kind)}" data-td="${pr.anyTD!=null?1:0}"><div class="ph"><span><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)} · ${esc(p.line)}</span>${it&&stSev(it.st)<=3?` <span class="qtag">${esc(it.st)}</span>`:""}</span>${dkA(g,tid,"",p.name)}</div>
           <div class="pr"><span class="lab">${cfg.label}</span><span class="pv">Proj ${Math.round(pr.proj)}</span></div>
           <div class="chips">${cfg.lines.map(L=>`<button type="button" class="chip tap" data-tkq="${tkQ(g,tid,`${p.name} ${L}+ ${cfg.label.toLowerCase()}`,overP(pr,L),"Prop",p.name)}">${L}+ <b>${pct(overP(pr,L),0)}</b><i>+</i></button>`).join("")}
@@ -2136,6 +2144,7 @@ async function renderNflProps(){
   applyNflFilter();
   tds.sort((a,b)=>b.ch-a.ch);
   $("tdBoard-nfl").innerHTML=tds.length?`<ol class="tdl">${tds.slice(0,10).map(t=>`<li><span><b>${esc(t.p.name)}</b> <span class="note">${esc(t.p.pos)}, ${esc(short(t.g,t.tid))} · ${esc(whenTxt(t.g))}</span></span><span class="pv">${pct(t.ch,0)}${rowAct(t.g,t.tid,t.p.name+" anytime TD",t.ch,"Prop",t.p.name)}</span></li>`).join("")}</ol>`:`<p class="note">No touchdown data yet.</p>`;
+  ppSet("nfl",ppc);
 }
 
 if(!$("p-props").hidden)setTimeout(renderProps,500);
@@ -2298,9 +2307,55 @@ function chipRow(s,k){const c=LAD[k].map(x=>[x,geP(s,x)]).filter(([x,p])=>p<=0.9
   return c.length?c.map(([x,p])=>`<span class="chip">${x}+ <b>${pct(p,0)}</b></span>`).join(""):`<span class="note">No common milestone in range</span>`}
 const one=n=>(Math.round(n*10)/10).toFixed(1);
 const injBad=st=>/out|suspend/i.test(st||""),injQ=st=>/day|question|doubt|probable|gtd/i.test(st||"");
+/* ---- Player parlays (v98) ---- */
+var PPC={},PPS={nba:{n:3,mix:"any",st:"pts",g:""},nfl:{n:3,mix:"any",st:"td",g:""}};
+try{const s=JSON.parse(localStorage.getItem("ge-pp")||"null");if(s)for(const k in s)if(PPS[k])PPS[k]=Object.assign({},PPS[k],s[k])}catch(e){}
+var PPBAND={std:[[0.72,1.01],[0.55,0.72],[0.38,0.55]],td:[[0.38,1.01],[0.27,0.38],[0.15,0.27]]};
+var PPNAME=["Safest","Balanced","Bigger payout"],PPSUB=["Highest chance to hit","A little more risk, more pay","Fewer sure things, much bigger payout"];
+function ppAdd(arr,g,tid,name,st,legs){legs=legs.filter(l=>l.p>=0.1&&l.p<=0.93);if(!legs.length)return;const k=g.id+"|"+name;let c=arr.find(x=>x.k===k);
+  if(!c){c={k,g,tid,name,q:!!st,legs:[]};arr.push(c)}legs.forEach(l=>{if(!c.legs.some(y=>y.pick===l.pick))c.legs.push(l)})}
+function nbaPPLegs(name,s){const W={pts:"points",reb:"rebounds",ast:"assists",tpm:"threes"},out=[];
+  ["pts","reb","ast","tpm"].forEach(k=>{if(!s[k]||!LAD[k])return;LAD[k].forEach(x=>{const p=geP(s[k],x);out.push({stat:k,lab:`${x}+ ${W[k]}`,pick:`${name} ${x}+ ${W[k]}`,p})})});return out}
+var NFLPPL={pass:[175,200,225,250,275,300],rush:[25,40,50,60,75,100],rec:[25,40,50,60,75,100]};
+function ppPick(cs,band,n){const pick=[],used=new Set(),names=new Set();const mid=(band[0]+Math.min(1,band[1]))/2;
+  const put=o=>{if(pick.length>=n||names.has(o.x.c.name))return;pick.push(o);used.add(o.x);names.add(o.x.c.name)};
+  cs.map(x=>{const L=x.legs.filter(l=>l.p>=band[0]&&l.p<band[1]).sort((a,b)=>a.p-b.p)[0];return L?{x,l:L}:null}).filter(Boolean).sort((a,b)=>b.l.p-a.l.p).forEach(put);
+  if(pick.length<n)cs.filter(x=>!used.has(x)).map(x=>{const L=x.legs.slice().sort((a,b)=>Math.abs(a.p-mid)-Math.abs(b.p-mid)||b.p-a.p)[0];return L?{x,l:L}:null}).filter(Boolean)
+    .sort((a,b)=>Math.abs(a.l.p-mid)-Math.abs(b.l.p-mid)).forEach(put);
+  return pick.length===n?pick.sort((a,b)=>b.l.p-a.l.p):null}
+function ppSet(sp,c){PPC[sp]=c;try{ppRender(sp)}catch(e){}}
+function ppRender(sp){const box=$("pp-"+sp);if(!box)return;const C=PPC[sp]||[];if(!C.length){box.hidden=true;box.innerHTML="";return}box.hidden=false;const S=PPS[sp];
+  const stO=sp==="nba"?[["pts","Points"],["all","Points, rebounds, assists, threes"]]:[["td","Anytime TD"],["yds","Yards"],["all","TDs and yards"]];
+  if(!stO.some(o=>o[0]===S.st))S.st=stO[0][0];
+  const okL=l=>S.st==="all"||(sp==="nba"?l.stat===S.st:S.st==="td"?l.stat==="td":l.stat!=="td");
+  const cs=C.map(c=>({c,legs:c.legs.filter(okL)})).filter(x=>x.legs.length);
+  const gk=x=>S.mix==="game"?x.c.g.id:S.mix==="team"?x.c.g.id+"|"+x.c.tid:"all";
+  const G={};cs.forEach(x=>{(G[gk(x)]=G[gk(x)]||[]).push(x)});
+  const glab=k=>{const x=G[k][0].c;return S.mix==="team"?tname(x.g,x.tid):`${short(x.g,x.g.away)} @ ${short(x.g,x.g.home)}`};
+  let keys=Object.keys(G);if(S.mix!=="any"&&S.g&&G[S.g])keys=[S.g];else if(S.mix!=="any"&&S.g&&!G[S.g])S.g="";
+  const bands=sp==="nfl"&&S.st==="td"?PPBAND.td:PPBAND.std,seen=new Set(),cards=[];
+  bands.forEach((b,i)=>{let best=null;keys.forEach(k=>{const pk=ppPick(G[k],b,S.n);if(!pk)return;const pr=pk.reduce((s,o)=>s*o.l.p,1);if(!best||pr>best.p)best={pk,p:pr,k}});
+    if(!best)return;const sig=best.pk.map(o=>o.l.pick).sort().join("|");if(seen.has(sig))return;seen.add(sig);
+    const legs=best.pk.map(o=>({key:o.x.c.g.lg+":"+o.x.c.g.id,pick:o.l.pick,p:+o.l.p.toFixed(4),type:"Prop",tid:String(o.x.c.tid),player:o.x.c.name}));
+    cards.push(`<div class="pl pp"><div class="hd"><h3>${PPNAME[i]} <span class="note">· ${S.n} legs</span></h3><span class="chance">${pct(best.p,best.p<0.1?1:0)} to hit</span></div>
+      <p class="note">${PPSUB[i]}${S.mix!=="any"?` · ${S.mix==="team"?"Same team":"Same game"}: <b>${esc(glab(best.k))}</b>`:""}</p>
+      <ol class="tdl">${best.pk.map(o=>{const c=o.x.c;return`<li><span class="ppn"><span><b>${esc(c.name)}</b>${c.q?` <span class="qtag">Q</span>`:""}</span><span class="ppl">${esc(o.l.lab)}</span><span class="note">${esc(short(c.g,c.tid))} · ${esc(whenTxt(c.g))}</span></span><span class="pv">${pct(o.l.p,0)}${rowAct(c.g,c.tid,o.l.pick,o.l.p,"Prop",c.name)}</span></li>`}).join("")}</ol>
+      <div class="row" style="justify-content:space-between;align-items:center;gap:8px"><span class="note">Fair odds <b>${fairOdds(best.p)}</b> · $10 should pay about <b>$${Math.round(10/best.p).toLocaleString()}</b></span><button type="button" class="btn sm tkb" data-tkmulti="${esc(JSON.stringify(legs))}">+ Ticket (${S.n})</button></div></div>`)});
+  const sel=(id,lab,opts,v)=>`<label class="tpl"><span class="lab">${lab}</span><select data-pp="${id}">${opts.map(([k,t])=>`<option value="${esc(k)}"${String(k)===String(v)?" selected":""}>${esc(t)}</option>`).join("")}</select></label>`;
+  const gOpts=S.mix==="any"?null:[["","Best match"]].concat(Object.keys(G).filter(k=>G[k].length>=S.n).map(k=>[k,glab(k)]));
+  box.innerHTML=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Player parlays</h2><span class="tag">2 to 7 players</span></div>
+    <details class="lwhelp"><summary>How this works</summary><p class="note">Linecheck builds parlays from its own player projections: ${sp==="nba"?"milestones like 20+ or 25+ points":"anytime touchdowns and yardage milestones like 50+ rushing yards"}. Pick how many players, whether they come from any game, the same game or the same team, and which stats. You get up to three builds: <b>Safest</b> uses each player's surest line, <b>Balanced</b> takes a bit more risk, and <b>Bigger payout</b> uses harder lines that pay much more. The chance to hit multiplies the picks together, as if they were unrelated. Picks from the same game are linked in real life (a high-scoring game lifts everyone), and DraftKings prices same-game parlays with that in mind, so compare its payout with the fair odds. "Fair odds" is what it should pay if the chances are right. Questionable players are marked Q. Tap + on a row for one pick, or + Ticket to add the whole parlay; it settles itself when the games end.</p></details>
+    <div class="ppctl">${sel("n","Players",[2,3,4,5,6,7].map(n=>[n,n+" legs"]),S.n)}${sel("mix","From",[["any","Any games"],["game","Same game"],["team","Same team"]],S.mix)}${sel("st","Stats",stO,S.st)}${gOpts?sel("g",S.mix==="team"?"Team":"Game",gOpts,S.g):""}</div>
+    ${cards.join("")||`<p class="note">${S.mix==="any"?"Not enough players with projections for "+S.n+" legs. Try fewer legs, other stats, or another day at the top.":"No single "+(S.mix==="team"?"team":"game")+" has "+S.n+" players with projections. Try fewer legs or Any games."}</p>`}`}
+document.addEventListener("change",e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.pp)return;const box=t.closest(".ppc");if(!box)return;const sp=box.id.slice(3);const S=PPS[sp];if(!S)return;
+  const k=t.dataset.pp;S[k]=k==="n"?+t.value:t.value;if(k==="mix")S.g="";try{localStorage.setItem("ge-pp",JSON.stringify(PPS))}catch(err){}ppRender(sp)});
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-tkmulti]");if(!t)return;e.preventDefault();e.stopPropagation();
+  try{const L=JSON.parse(t.dataset.tkmulti);let n=0;L.forEach(q=>{const g=findGame(q.key);if(!g)return;if(TK.some(y=>y.key===q.key&&y.pick===q.pick))return;
+    TK.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),done:false,...legBase(g),type:"Prop",pick:q.pick,p:q.p,tname:tname(g,q.tid),player:q.player});n++});
+    tkSave();tkToast(n?`Added ${n} pick${n===1?"":"s"} to your ticket`:"Already on your ticket");t.classList.add("on");setTimeout(()=>t.classList.remove("on"),900)}catch(err){}});
 let nbaLoading=false;
 async function renderNbaProps(){
-  setPropText("nba");
+  setPropText("nba");ppSet("nba",[]);
   if(DF==="live"){$("propList-nba").innerHTML=`<div class="empty">NBA props are for games that haven't started. Pick Today or All at the top.</div>`;$("tdBoard-nba").innerHTML="";return}
   const gs=dateFilter(lgSlate("nba").filter(upcoming));
   if(!gs.length){$("propList-nba").innerHTML=`<div class="empty">${DF!=="all"&&DF!=="live"?"No NBA games on "+dayLabel(DF)+".":"No upcoming NBA games right now. Check back on game day."}</div>`;$("tdBoard-nba").innerHTML="";return}
@@ -2309,13 +2364,14 @@ async function renderNbaProps(){
   try{await loadNbaPlayers();await Promise.all(gs.flatMap(g=>[loadRoster(g.home),loadRoster(g.away),loadInj(g)]))}
   catch(e){nbaLoading=false;$("propMsg").textContent="Couldn't load NBA player stats. Check your connection, then open this tab again to retry.";$("propList-nba").innerHTML="";$("tdBoard-nba").innerHTML="";return}
   nbaLoading=false;$("propMsg").textContent="";
-  const board=[];
+  const board=[],ppc=[];
   $("propList-nba").innerHTML=gs.map((g,gi)=>{const inj=NBAP.inj[g.id]||{};const P=nbaProj(g);
     const teams=[g.away,g.home].map(tid=>{const all=teamPlayers(tid);const out=[],q=[];const act=[];
       let outPts=0;const tg=(teamInfo("nba",tid)||{}).gp||0;
       all.forEach(p=>{const st=(inj[p.id]||{}).status;if(injBad(st)){out.push(p.name);outPts+=p.pts*(tg?Math.min(1,(p.gpCur||0)/tg):(p.gpCur?1:0.5))}else{if(injQ(st))q.push(p.name);act.push({...p,st})}});
       const actSum=act.slice(0,8).reduce((s,p)=>s+p.pts,0)||1,bf=1+Math.min(0.15,0.55*outPts/actSum),bst=p=>bf>1.005?{...p,pts:p.pts*bf,ast:p.ast*bf,tpm:p.tpm*bf,reb:p.reb*(1+(bf-1)/2)}:p;
       const top=act.slice(0,3);
+      act.slice(0,8).forEach(p=>{try{const s=nbaStats(g,tid,bst(p));if(!s||!s.pts||s.pts.proj<6)return;ppAdd(ppc,g,tid,p.name,injQ(p.st)?p.st:"",nbaPPLegs(p.name,s))}catch(e){}});
       const rows=top.map((p,i)=>{const s=nbaStats(g,tid,bst(p));const d=ddP(s);board.push({p,g,tid,s});
         const opts=ORDER.map(k=>`<option value="${k}" data-proj="${s[k].proj.toFixed(3)}" data-sd="${(s[k].sd||0).toFixed(3)}" data-pois="${s[k].pois?1:""}">${STL[k]}</option>`).join("");
         return`<details class="prop"${gi===0&&i===0?" open":""}><summary><b>${esc(p.name)}</b> <span class="note">${esc(p.pos)}${injQ(p.st)?` · <span class="qtag">${esc(p.st)}</span>`:""}</span><span class="psum">${one(s.pts.proj)} pts · ${one(s.reb.proj)} reb · ${one(s.ast.proj)} ast</span></summary>
@@ -2340,6 +2396,7 @@ async function renderNbaProps(){
   const seenB=new Set();board.splice(0,board.length,...board.filter(t=>{if(seenB.has(t.p.id))return false;seenB.add(t.p.id);return true}));
   board.sort((a,b)=>b.s.pts.proj-a.s.pts.proj);
   $("tdBoard-nba").innerHTML=board.length?`<ol class="tdl">${board.slice(0,10).map(t=>`<li><span><b>${esc(t.p.name)}</b> <span class="note">${esc(short(t.g,t.tid))} · ${esc(whenTxt(t.g))} · 25+ ${pct(geP(t.s.pts,25),0)}</span></span><span class="pv">${one(t.s.pts.proj)}${rowAct(t.g,t.tid,t.p.name+" 25+ points",geP(t.s.pts,25),"Prop",t.p.name)}</span></li>`).join("")}</ol>`:`<p class="note">No player data yet.</p>`;
+  ppSet("nba",ppc);
 }
 
 setInterval(()=>{if(!document.hidden)renderGames()},60000);
